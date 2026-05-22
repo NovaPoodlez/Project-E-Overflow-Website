@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lama Lama Community — E-Overflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body {
+      font-family: 'Readex Pro', system-ui, -apple-system, sans-serif;
+      background: #000; color: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+    function LogoSVG() {
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="49.47 49.42 277.54 276.4" style={{ height: "20px", width: "20px", display: "block" }} fill="#ffffff" aria-hidden="true">
+          <path fillRule="evenodd" d="M182.100 49.516 C 145.533 51.664,114.833 65.171,89.884 90.089 C 35.961 143.943,36.010 231.471,89.992 285.405 C 152.531 347.888,257.073 336.334,304.405 261.707 C 314.924 245.122,323.277 222.051,324.710 205.628 L 324.852 203.997 312.076 204.049 L 299.300 204.100 298.784 207.000 C 284.676 286.234,195.323 325.781,127.300 282.899 C 72.968 248.649,58.388 175.002,95.563 122.600 C 137.823 63.031,224.798 58.613,272.728 113.600 C 276.242 117.632,282.600 126.184,282.600 126.879 C 282.600 126.927,277.695 128.602,271.700 130.600 C 265.705 132.598,260.807 134.293,260.815 134.367 C 260.854 134.707,312.501 180.598,312.579 180.362 C 312.873 179.483,327.117 112.291,327.018 112.250 C 326.952 112.222,322.579 113.639,317.301 115.400 C 306.111 119.131,307.545 118.822,306.869 117.650 C 285.983 81.415,247.067 55.744,205.200 50.585 C 198.018 49.700,187.360 49.207,182.100 49.516 M174.870 108.999 C 174.634 109.094,174.385 109.263,174.316 109.374 C 174.247 109.485,171.183 123.239,167.507 139.938 C 160.359 172.412,159.927 174.321,157.791 182.860 C 157.026 185.917,156.400 188.719,156.400 189.087 L 156.400 189.754 162.150 189.880 C 177.701 190.219,179.044 190.278,179.269 190.636 C 179.617 191.190,173.483 223.249,167.299 253.200 C 164.968 264.489,164.689 266.524,165.589 265.710 C 167.829 263.682,218.098 172.360,218.740 169.152 L 218.850 168.600 208.612 168.600 C 197.734 168.600,197.600 168.588,197.600 167.643 C 197.600 167.344,202.387 154.106,208.238 138.225 C 218.371 110.721,218.859 109.338,218.500 109.075 C 218.063 108.756,175.657 108.681,174.870 108.999 " />
+        </svg>
+      );
+    }
+
+    function SiteNav({ active }) {
+      const { useState, useRef } = React;
+      const [missionOpen, setMissionOpen] = React.useState(false);
+      const [strategyOpen, setStrategyOpen] = React.useState(false);
+      const [feasibilityOpen, setFeasibilityOpen] = React.useState(false);
+      const [reportOpen, setReportOpen] = React.useState(false);
+      const missionTimer = useRef(null);
+      const strategyTimer = useRef(null);
+      const feasibilityTimer = useRef(null);
+      const reportTimer = React.useRef(null);
+
+      const openMission = () => { clearTimeout(missionTimer.current); setMissionOpen(true); };
+      const closeMission = () => { missionTimer.current = setTimeout(() => setMissionOpen(false), 120); };
+      const openStrategy = () => { clearTimeout(strategyTimer.current); setStrategyOpen(true); };
+      const closeStrategy = () => { strategyTimer.current = setTimeout(() => setStrategyOpen(false), 120); };
+      const openFeasibility = () => { clearTimeout(feasibilityTimer.current); setFeasibilityOpen(true); };
+      const closeFeasibility = () => { feasibilityTimer.current = setTimeout(() => setFeasibilityOpen(false), 120); };
+      const openReport = () => { clearTimeout(reportTimer.current); setReportOpen(true); };
+      const closeReport = () => { reportTimer.current = setTimeout(() => setReportOpen(false), 120); };
+
+      const navItems = [
+        { label: "strategy", href: "index.html#strategy", strategyDropdown: true },
+        { label: "mission",  href: "index.html#mission",  missionDropdown: true },
+        { label: "feasibility", href: "index.html#feasibility", feasibilityDropdown: true },
+        { label: "report", href: "contents.html", reportDropdown: true },
+        { label: "team",     href: "index.html#team" },
+      ];
+
+      const chevron = (open) => (
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.5, transition: "transform 0.25s", transform: open ? "rotate(180deg)" : "rotate(0deg)" }}>
+          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      );
+
+      const dropdownShell = (open) => ({
+        position: "absolute", top: "calc(100% + 10px)", left: "50%",
+        background: "rgba(23,23,23,0.97)", backdropFilter: "blur(16px)",
+        border: "1px solid rgba(255,255,255,0.1)", borderRadius: "16px",
+        padding: "8px", minWidth: "220px",
+        opacity: open ? 1 : 0,
+        pointerEvents: open ? "auto" : "none",
+        transform: open ? "translateX(-50%) translateY(0)" : "translateX(-50%) translateY(-6px)",
+        transition: "opacity 0.2s ease, transform 0.2s ease",
+        zIndex: 100,
+      });
+
+      const arrowTip = {
+        position: "absolute", top: "-5px", left: "50%", transform: "translateX(-50%) rotate(45deg)",
+        width: "10px", height: "10px", background: "rgba(23,23,23,0.97)",
+        border: "1px solid rgba(255,255,255,0.1)", borderBottom: "none", borderRight: "none",
+      };
+
+      const dropItem = (href, icon, title, sub) => (
+        <a href={href} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 14px", borderRadius: "10px", textDecoration: "none", transition: "background 0.15s", color: "#fff" }}
+          onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
+          onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+          <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{icon}</div>
+          <div>
+            <p style={{ fontSize: "13px", fontWeight: 500, margin: 0, letterSpacing: "-0.02em" }}>{title}</p>
+            <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", margin: "2px 0 0" }}>{sub}</p>
+          </div>
+        </a>
+      );
+
+      return (
+        <nav style={{ padding: "20px 40px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.06)", position: "sticky", top: 0, background: "rgba(0,0,0,0.92)", backdropFilter: "blur(14px)", zIndex: 50 }}>
+          <a href="index.html" style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none" }}>
+            <LogoSVG />
+            <span style={{ color: "#fff", fontSize: "14px", letterSpacing: "-0.02em" }}>E-Overflow</span>
+          </a>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            {navItems.map(({ label, href, strategyDropdown, missionDropdown, feasibilityDropdown, reportDropdown }) => {
+              if (strategyDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openStrategy} onMouseLeave={closeStrategy}>
+                  <a href={href} style={{ color: active === "strategy" ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(strategyOpen)}
+                  </a>
+                  <div style={dropdownShell(strategyOpen)}>
+                    <div style={arrowTip}></div>
+                    {dropItem("solution-one.html", <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, "Solution One — Timer", "Scheduled load shifting")}
+                    {dropItem("solution-two.html", <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>, "Solution Two — Diverter", "Real-time surplus sensing")}
+                  </div>
+                </div>
+              );
+              if (missionDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openMission} onMouseLeave={closeMission}>
+                  <a href={href} style={{ color: active === "mission" ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(missionOpen)}
+                  </a>
+                  <div style={dropdownShell(missionOpen)}>
+                    <div style={arrowTip}></div>
+                    {dropItem("lama-lama.html",
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><line x1="2" y1="12" x2="22" y2="12"/></svg>,
+                      "Lama Lama Community", "Cape York, Queensland"
+                    )}
+                  </div>
+                </div>
+              );
+              if (feasibilityDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openFeasibility} onMouseLeave={closeFeasibility}>
+                  <a href={href} style={{ color: active === "feasibility" || feasibilityOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(feasibilityOpen)}
+                  </a>
+                  <div style={dropdownShell(feasibilityOpen)}>
+                    <div style={arrowTip}></div>
+                    {dropItem("lama-lama-feasibility.html",
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>,
+                      "Lama Lama — Feasibility Study", "Preliminary draft, 2026"
+                    )}
+                  </div>
+                </div>
+              );
+              if (reportDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openReport} onMouseLeave={closeReport}>
+                  <a href={href} style={{ color: reportOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(reportOpen)}
+                  </a>
+                  <div style={{ ...dropdownShell(reportOpen), minWidth: "300px" }}>
+                    <div style={arrowTip}></div>
+                    {dropItem("contents.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>00</span>, "Contents", "Table of contents")}
+                    {dropItem("executive-summary.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>01</span>, "Executive Summary", "Project at a glance")}
+                    {dropItem("problem.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>03</span>, "Problem & Brief", "Needs & success criteria")}
+                    {dropItem("design-process.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>04</span>, "Design Process", "Ideation, decision matrix")}
+                    {dropItem("considerations.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>06</span>, "Considerations", "Social, cultural, environmental")}
+                    {dropItem("risks.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>08</span>, "Risks & Concerns", "Register + FAQ")}
+                    {dropItem("implementation.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>09</span>, "Implementation Plan", "Timeline, training, M&E")}
+                    {dropItem("recommendations.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>10</span>, "Recommendations", "What's next")}
+                    {dropItem("references.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>12</span>, "References", "APA 7 bibliography")}
+                  </div>
+                </div>
+              );
+                            return (
+                <a key={label} href={href} style={{ color: active === label ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s" }}
+                  onMouseEnter={e => e.target.style.color = "#fff"}
+                  onMouseLeave={e => e.target.style.color = active === label ? "#fff" : "rgba(212,212,212,1)"}
+                >{label}</a>
+              );
+            })}
+          </div>
+
+          <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "14px", fontWeight: 400, borderRadius: "999px", padding: "10px 22px", textDecoration: "none", transition: "background 0.2s" }}
+            onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
+            onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+          >learn more</a>
+        </nav>
+      );
+    }
+
+    function Page() {
+      return (
+        <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+          <SiteNav active="mission" />
+
+          {/* Hero image */}
+          <div style={{ position: "relative", height: "60vh", overflow: "hidden" }}>
+            <img
+              src="uploads/20231005-175252-1-jpg_upscayl_3x_upscayl-standard-4x.png"
+              alt="Cape York landscape"
+              style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.6)" }}
+            />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 40%, #000 100%)", pointerEvents: "none" }}></div>
+            <div style={{ position: "absolute", bottom: "48px", left: "40px" }}>
+              <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)", margin: "0 0 12px" }}>case study</p>
+              <h1 style={{ fontSize: "clamp(40px, 6vw, 80px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.92, color: "#fff", margin: 0 }}>
+                Lama Lama<br />Community
+              </h1>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "80px", padding: "80px 40px 120px", maxWidth: "1200px", margin: "0 auto", width: "100%" }}>
+
+            {/* Left — meta */}
+            <div>
+              <div style={{ marginBottom: "40px" }}>
+                <p style={{ fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 8px" }}>location</p>
+                <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.7)", margin: 0 }}>Cape York, Queensland<br />Australia</p>
+              </div>
+              <div style={{ marginBottom: "40px" }}>
+                <p style={{ fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 8px" }}>scope</p>
+                <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.7)", margin: 0 }}>Off-grid energy system<br />design &amp; feasibility</p>
+              </div>
+              <div style={{ marginBottom: "40px" }}>
+                <p style={{ fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 8px" }}>status</p>
+                <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.7)", margin: 0 }}>In progress — 2026</p>
+              </div>
+              <div>
+                <p style={{ fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 8px" }}>expected outcome</p>
+                <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.7)", margin: 0 }}>Up to 70% reduction<br />in generator reliance</p>
+              </div>
+            </div>
+
+            {/* Right — body */}
+            <div>
+              <h2 style={{ fontSize: "clamp(28px, 3vw, 44px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 1.0, color: "#fff", margin: "0 0 40px" }}>
+                reliable power for a community that can't afford for the lights to go out
+              </h2>
+
+              <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.8, margin: "0 0 24px" }}>
+                The Lama Lama people are the Traditional Owners of land around the McIlwraith Range and Bathurst Bay area of Cape York Peninsula in Far North Queensland. Like many remote communities across Australia, their access to reliable, affordable energy has been limited by geography and infrastructure.
+              </p>
+
+              <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.8, margin: "0 0 24px" }}>
+                E-Overflow's engagement with the Lama Lama Community is our first project in Australia, and our most important. We're conducting a full feasibility study to design an energy system that prioritises essential loads — refrigeration for medicines and food, communications, lighting, and small tools — with minimal reliance on diesel generation.
+              </p>
+
+              <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.8, margin: "0 0 64px" }}>
+                The project is being developed in close collaboration with community leaders, with self-determination and long-term community ownership at its core. We're not building for the Lama Lama people — we're building with them.
+              </p>
+
+              {/* Stats row */}
+              <div style={{ display: "flex", gap: "48px", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "48px" }}>
+                {[
+                  { num: "70%", label: "target reduction in diesel use" },
+                  { num: "∞", label: "community ownership model" },
+                  { num: "2026", label: "project commencement" },
+                ].map(s => (
+                  <div key={s.label}>
+                    <p style={{ fontSize: "clamp(28px, 3vw, 44px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 6px" }}>{s.num}</p>
+                    <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.4 }}>{s.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* What we learned — case study insight + upgrade pitch */}
+          <section style={{ borderTop: "1px solid rgba(255,255,255,0.08)", padding: "120px 40px 40px", background: "#000", position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: "-15%", right: "-10%", width: "55%", height: "55%", background: "radial-gradient(circle, rgba(232,192,98,0.06) 0%, transparent 60%)", pointerEvents: "none" }}></div>
+
+            <div style={{ position: "relative", maxWidth: "1200px", margin: "0 auto" }}>
+              <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", margin: "0 0 56px" }}>
+                what we learned from port stewart
+              </p>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "80px", alignItems: "start", marginBottom: "100px" }}>
+                <h2 style={{ fontSize: "clamp(36px, 4.5vw, 64px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0 }}>
+                  the system worked.<br />
+                  <span style={{ color: "rgba(255,255,255,0.4)" }}>it can work harder.</span>
+                </h2>
+                <div>
+                  <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", lineHeight: 1.75, margin: "0 0 20px" }}>
+                    In 2005, Bushlight commissioned two off-grid solar systems on Lama Lama country — at Moojeeba and Theethinji — replacing diesel generators that had been running seven to eight hours every day at a combined annual fuel cost of nearly $10,000.
+                  </p>
+                  <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", lineHeight: 1.75, margin: "0 0 20px" }}>
+                    Two decades on, the systems still work. Power is reliable around the clock, refrigeration never drops out, and the generators sit quiet most days. Those installations changed what was possible on country.
+                  </p>
+                  <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.5)", lineHeight: 1.75, margin: 0 }}>
+                    We studied them carefully — and we found a gap worth closing.
+                  </p>
+                </div>
+              </div>
+
+              {/* Three findings */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, borderTop: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)", marginBottom: "100px" }}>
+                {[
+                  { num: "01", label: "what works",   body: "Each dwelling has an Energy Management Unit (EMU) that allocates a daily energy budget at noon. Essential circuits — fridges, lighting, medical — are protected first. Reliable, equitable, community-owned.", tone: "good" },
+                  { num: "02", label: "what's lost",  body: "If a household doesn't spend its discretionary budget before the next noon reset, that energy is gone. Surplus solar that could be doing useful work disappears back into the system, day after day.", tone: "warn" },
+                  { num: "03", label: "what still costs", body: "Generators still kick in for heavier appliances and extended cloud cover. Every generator hour is diesel that has to be hauled in by hand — a recurring cost the community absorbs from its own budget.", tone: "bad" },
+                ].map((f, i) => (
+                  <div key={f.num} style={{ padding: "40px 36px 44px", borderRight: i < 2 ? "1px solid rgba(255,255,255,0.08)" : "none" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "28px" }}>
+                      <div style={{
+                        width: "10px", height: "10px", borderRadius: "50%",
+                        background: f.tone === "good" ? "#9ae66e" : f.tone === "warn" ? "#e8c062" : "#e87b6e",
+                        boxShadow: f.tone === "good" ? "0 0 16px rgba(154,230,110,0.5)" : f.tone === "warn" ? "0 0 16px rgba(232,192,98,0.45)" : "0 0 16px rgba(232,123,110,0.45)",
+                      }}></div>
+                      <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.35)", letterSpacing: "0.12em" }}>{f.num}</span>
+                    </div>
+                    <p style={{ fontSize: "20px", fontWeight: 500, color: "#fff", margin: "0 0 14px", letterSpacing: "-0.025em" }}>{f.label}</p>
+                    <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0 }}>{f.body}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* The upgrade pitch */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start", marginBottom: "80px" }}>
+                <div>
+                  <p style={{ fontSize: "11px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", margin: "0 0 18px" }}>the upgrade</p>
+                  <h3 style={{ fontSize: "clamp(30px, 3.4vw, 50px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 1.0, color: "#fff", margin: 0 }}>
+                    don't budget the surplus.<br />divert it.
+                  </h3>
+                </div>
+                <div>
+                  <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.75)", lineHeight: 1.75, margin: "0 0 20px" }}>
+                    A solar diverter sits between the array and the loads. When the panels are generating more than the household is using, it sends the excess to the next most useful place — hot water, water pumps, tool batteries, freezer pulldown — instead of letting it expire at noon.
+                  </p>
+                  <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.75, margin: 0 }}>
+                    The original Bushlight system stays exactly as it is. The EMUs still protect the essentials. We're adding a layer that captures the value the current system can't reach.
+                  </p>
+                </div>
+              </div>
+
+              {/* Outcome / emotional close */}
+              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "24px", padding: "56px 48px", display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "60px", alignItems: "center" }}>
+                <p style={{ fontSize: "clamp(22px, 2.4vw, 32px)", fontWeight: 400, letterSpacing: "-0.03em", lineHeight: 1.3, color: "rgba(255,255,255,0.92)", margin: 0 }}>
+                  Fewer generator hours. More hot water. Longer freezer life. A wider margin between the community and the next fuel run.
+                </p>
+                <div>
+                  <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: "0 0 28px" }}>
+                    Every kilowatt-hour we recover is one less hour of diesel — and one more increment of self-determination. This isn't a replacement system. It's an investment in the one Lama Lama already owns.
+                  </p>
+                  <a href="lama-lama-feasibility.html" style={{ display: "inline-flex", alignItems: "center", gap: "10px", background: "#fff", color: "#000", fontSize: "14px", borderRadius: "999px", padding: "14px 26px", textDecoration: "none", transition: "background 0.2s" }}
+                    onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
+                    onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+                  >read the feasibility study →</a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Footer CTA */}
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", padding: "48px 40px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <p style={{ fontSize: "clamp(18px, 2vw, 28px)", fontWeight: 400, letterSpacing: "-0.03em", color: "rgba(255,255,255,0.6)", margin: 0 }}>
+              interested in a similar project?
+            </p>
+            <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "14px", borderRadius: "999px", padding: "14px 28px", textDecoration: "none", transition: "background 0.2s" }}
+              onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
+              onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+            >start the conversation</a>
+          </div>
+
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<Page />);
+  </script>
+
+  <!-- Back-to-top button (universal) -->
+  <button id="back-to-top" type="button" aria-label="Back to top"
+    style="position:fixed;right:24px;bottom:24px;z-index:200;width:44px;height:44px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);background:rgba(23,23,23,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;font-family:inherit;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+  </button>
+  <script>
+    (function () {
+      var btn = document.getElementById('back-to-top');
+      if (!btn) return;
+      var threshold = 400;
+      function update() {
+        var y = window.scrollY || document.documentElement.scrollTop || 0;
+        if (y > threshold) {
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+          btn.style.transform = 'translateY(0)';
+        } else {
+          btn.style.opacity = '0';
+          btn.style.pointerEvents = 'none';
+          btn.style.transform = 'translateY(8px)';
+        }
+      }
+      btn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      btn.addEventListener('mouseenter', function () { btn.style.background = 'rgba(255,255,255,0.95)'; btn.style.color = '#000'; btn.style.borderColor = 'rgba(255,255,255,0.95)'; });
+      btn.addEventListener('mouseleave', function () { btn.style.background = 'rgba(23,23,23,0.85)'; btn.style.color = '#fff'; btn.style.borderColor = 'rgba(255,255,255,0.18)'; });
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+  </script>
+
+</body>
+</html>

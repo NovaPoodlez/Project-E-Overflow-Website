@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design Process — E-Overflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body { font-family: 'Readex Pro', system-ui, -apple-system, sans-serif; background: #000; color: #fff; -webkit-font-smoothing: antialiased; }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace; }
+    em { font-style: normal; color: #fff; }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="report-shell.jsx"></script>
+  <script type="text/babel" src="report-primitives.jsx"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const phases = [
+      { num: "01", title: "discover", body: "Site visit (virtual + brief docs), stakeholder interviews via Yintjingga liaison, baseline load and PV data review. Output: needs statement and ranked requirements." },
+      { num: "02", title: "diverge", body: "Brainstorm sessions producing 11 candidate concepts — from behavioural nudges to hardware retrofits to full architecture replacements. No filtering at this stage." },
+      { num: "03", title: "converge", body: "Concepts filtered against hard constraints (off-grid compatible, retrofit-able, ≤ A$1,500). Shortlist of 4 carried into structured evaluation." },
+      { num: "04", title: "decide", body: "Weighted decision matrix scoring shortlist against 7 community-derived criteria. Two concepts selected for prototype, ranked by complexity." },
+      { num: "05", title: "prototype", body: "Bench-test both concepts on a representative load. Capture failure modes, install difficulty, and behaviour under simulated weather variability." },
+      { num: "06", title: "iterate", body: "Two design revisions per concept based on test data. Final BOM, install procedure, and feasibility document set produced." },
+    ];
+
+    const concepts = [
+      { id: "C1", name: "Behavioural campaign", verdict: "rejected", note: "Required residents to change daily routines. Conflicts with 'no behaviour change' constraint." },
+      { id: "C2", name: "Schedule timer on hot water", verdict: "shortlist → Solution One", note: "Cheap, simple, no sensing. Trade-off: blind to actual weather and other loads." },
+      { id: "C3", name: "Solar diverter with CT clamp", verdict: "shortlist → Solution Two", note: "Real-time surplus sensing; modulates element duty cycle. Best technical fit." },
+      { id: "C4", name: "Battery capacity expansion", verdict: "rejected", note: "Does not solve allocation problem. Adds capex and treats symptom not cause." },
+      { id: "C5", name: "Replace electric HWS with heat pump", verdict: "rejected", note: "Reduces draw but capex > A$4,000 and adds refrigerant maintenance burden." },
+      { id: "C6", name: "Smart-home hub (Home Assistant + relays)", verdict: "rejected", note: "Requires constant network + software updates; fragile in remote context." },
+      { id: "C7", name: "Replace inverter with smart hybrid model", verdict: "shortlist", note: "Capable but A$3,500+ and discards existing serviceable equipment." },
+      { id: "C8", name: "Solar pre-heat element on tank exterior", verdict: "shortlist", note: "Mechanical solution. Lower efficiency than electrical diversion." },
+    ];
+
+    const criteria = [
+      { name: "low capex (≤ A$1,500)", weight: 5 },
+      { name: "low maintenance burden", weight: 5 },
+      { name: "no behaviour change required", weight: 4 },
+      { name: "energy reallocation effectiveness", weight: 5 },
+      { name: "retrofit complexity", weight: 3 },
+      { name: "robustness in tropics", weight: 4 },
+      { name: "cultural / community fit", weight: 4 },
+    ];
+
+    // Scores: Timer / Diverter / Hybrid Inverter / Pre-heat
+    const matrix = [
+      { criterion: 0, timer: 5, diverter: 4, hybrid: 1, preheat: 3 },
+      { criterion: 1, timer: 4, diverter: 4, hybrid: 3, preheat: 5 },
+      { criterion: 2, timer: 5, diverter: 5, hybrid: 4, preheat: 5 },
+      { criterion: 3, timer: 2, diverter: 5, hybrid: 5, preheat: 3 },
+      { criterion: 4, timer: 5, diverter: 4, hybrid: 1, preheat: 2 },
+      { criterion: 5, timer: 4, diverter: 4, hybrid: 4, preheat: 4 },
+      { criterion: 6, timer: 5, diverter: 5, hybrid: 4, preheat: 4 },
+    ];
+
+    const totals = matrix.reduce((acc, row) => {
+      const w = criteria[row.criterion].weight;
+      acc.timer += row.timer * w; acc.diverter += row.diverter * w;
+      acc.hybrid += row.hybrid * w; acc.preheat += row.preheat * w;
+      return acc;
+    }, { timer: 0, diverter: 0, hybrid: 0, preheat: 0 });
+
+    const cellScore = (n, max=5) => {
+      const op = n / max;
+      return (
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "32px", borderRadius: "6px", background: `rgba(154,230,110,${op * 0.22})`, color: op > 0.6 ? "#fff" : "rgba(255,255,255,0.55)", fontSize: "13px", fontWeight: 500, letterSpacing: "-0.01em" }}>{n}</div>
+      );
+    };
+
+    function Page() {
+      return (
+        <div>
+          <ReportNav active="report" />
+          <PageHero chapter="04 — design process" title={<>how we<br/>got here</>} sub="Eleven ideas, four shortlisted, two prototyped, one recommended. The audit trail behind the Solar Switch." />
+
+          <Section bg="#000" pad="100px 40px 60px">
+            <SectionLabel>process</SectionLabel>
+            <H2>a structured loop —<br/>diverge then converge.</H2>
+            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "720px", margin: "24px 0 0" }}>
+              We deliberately separated idea generation from idea filtering. Concept generation prioritised breadth and absurdity; filtering then applied hard constraints and weighted criteria derived from stakeholder needs.
+            </p>
+          </Section>
+
+          <Section bg="#000" pad="40px 40px 100px">
+            <NumberRow rows={phases.slice(0,3)} />
+            <div style={{ height: "2px" }}></div>
+            <NumberRow rows={phases.slice(3,6)} />
+          </Section>
+
+          <Section bg="#0a0a0a" pad="100px 40px">
+            <SectionLabel>concept generation</SectionLabel>
+            <H2>eleven candidates,<br/>four survived.</H2>
+            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "640px", margin: "24px 0 56px" }}>
+              A subset of the candidates is shown below. The full ideation map is in the Appendix.
+            </p>
+            <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+              {concepts.map(c => {
+                const isShortlist = c.verdict.includes("shortlist");
+                return (
+                  <div key={c.id} style={{ display: "grid", gridTemplateColumns: "60px 1.4fr 1fr 2fr", gap: "32px", padding: "20px 0", borderBottom: "1px solid rgba(255,255,255,0.08)", alignItems: "center" }}>
+                    <span className="mono" style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)" }}>{c.id}</span>
+                    <p style={{ fontSize: "16px", fontWeight: 500, letterSpacing: "-0.02em", color: "#fff", margin: 0 }}>{c.name}</p>
+                    <p style={{ fontSize: "12px", color: isShortlist ? "rgba(154,230,110,0.9)" : "rgba(232,123,110,0.7)", margin: 0, letterSpacing: "0.04em", textTransform: "uppercase", fontWeight: 500 }}>{c.verdict}</p>
+                    <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.45)", margin: 0, lineHeight: 1.55 }}>{c.note}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </Section>
+
+          <Section bg="#000" pad="100px 40px">
+            <SectionLabel>decision matrix</SectionLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "end", marginBottom: "56px" }}>
+              <H2>weighted<br/>scoring.</H2>
+              <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0 }}>
+                Each shortlisted concept was scored 1–5 against the seven community-derived criteria, each weighted by stakeholder priority. The two highest-scoring concepts proceeded to prototyping.
+              </p>
+            </div>
+
+            <div style={{ overflowX: "auto" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "minmax(220px, 2fr) 60px repeat(4, minmax(110px, 1fr))", gap: "8px", minWidth: "780px" }}>
+                {/* Header */}
+                <div style={{ padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}><span className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase" }}>criterion</span></div>
+                <div style={{ padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.15)", textAlign: "center" }}><span className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>w</span></div>
+                {["Timer", "Diverter", "Hybrid Inv.", "Pre-heat"].map(h => (
+                  <div key={h} style={{ padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.15)", textAlign: "center" }}>
+                    <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.7)", fontWeight: 500 }}>{h}</span>
+                  </div>
+                ))}
+
+                {matrix.map(row => (
+                  <React.Fragment key={row.criterion}>
+                    <div style={{ padding: "10px 0", display: "flex", alignItems: "center" }}>
+                      <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", margin: 0 }}>{criteria[row.criterion].name}</p>
+                    </div>
+                    <div style={{ padding: "10px 0", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <span className="mono" style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)" }}>{criteria[row.criterion].weight}</span>
+                    </div>
+                    {[row.timer, row.diverter, row.hybrid, row.preheat].map((s, i) => (
+                      <div key={i} style={{ padding: "6px 4px" }}>{cellScore(s)}</div>
+                    ))}
+                  </React.Fragment>
+                ))}
+
+                {/* Totals row */}
+                <div style={{ padding: "20px 0 12px", borderTop: "1px solid rgba(255,255,255,0.15)" }}>
+                  <p style={{ fontSize: "13px", color: "#fff", fontWeight: 500, margin: 0, letterSpacing: "-0.01em" }}>weighted total</p>
+                </div>
+                <div style={{ padding: "20px 0 12px", borderTop: "1px solid rgba(255,255,255,0.15)" }}></div>
+                {[
+                  { v: totals.timer, win: false },
+                  { v: totals.diverter, win: true },
+                  { v: totals.hybrid, win: false },
+                  { v: totals.preheat, win: false },
+                ].map((t, i) => (
+                  <div key={i} style={{ padding: "20px 0 12px", borderTop: "1px solid rgba(255,255,255,0.15)", textAlign: "center" }}>
+                    <p style={{ fontSize: "20px", fontWeight: 500, letterSpacing: "-0.02em", color: t.win ? "rgba(154,230,110,1)" : "#fff", margin: 0 }}>{t.v}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", lineHeight: 1.7, marginTop: "40px", maxWidth: "640px" }}>
+              <em>Diverter</em> scored highest, with <em>Timer</em> as second best and a substantially lower capex. Both were carried into prototyping; both are recommended for deployment in different contexts.
+            </p>
+          </Section>
+
+          <Section bg="#0a0a0a" pad="100px 40px">
+            <SectionLabel>evidence base · proven, not prototyped</SectionLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "end", marginBottom: "56px" }}>
+              <H2>we didn't invent this.<br/>we adapted it.</H2>
+              <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.6)", lineHeight: 1.75, margin: 0 }}>
+                Solar surplus diversion is a mature technology in Australia. The same hardware pattern we recommend for Lama Lama has been operating in Sydney homes for more than a decade — long enough to fail in known ways, be refined, and standardise around a few proven vendors. We are taking a tested grid-connected pattern and adapting it to an off-grid Cape York context, not asking the community to be a first deployment.
+              </p>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0", borderTop: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)", marginBottom: "64px" }}>
+              {[
+                { v: "1 in 3", l: "Greater Sydney homes with rooftop PV (indicative; NSW DPE / Solar Analytics, 2024)" },
+                { v: "~1.1 M", l: "NSW homes generating their own solar (Clean Energy Regulator, 2024)" },
+                { v: "10+ yrs", l: "solar diverters in the Australian market (Catch Power, MyEnergi, Paladin)" },
+                { v: "60–80%", l: "typical reduction in hot-water grid draw reported by diverter users" },
+              ].map((s, i) => (
+                <div key={s.l} style={{ padding: "32px 24px 36px", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
+                  <p style={{ fontSize: "clamp(28px, 3.5vw, 52px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 12px", lineHeight: 1 }}>{s.v}</p>
+                  <p style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.5)", margin: 0, lineHeight: 1.55 }}>{s.l}</p>
+                </div>
+              ))}
+            </div>
+
+            <p style={{ fontSize: "11px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 28px" }}>products & deployments referenced in our design</p>
+            <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+              {[
+                {
+                  prod: "Catch Power — Green Catch",
+                  base: "Adelaide-based, deployed across NSW since 2014",
+                  note: "Direct lineage of our Solution Two: CT-clamp surplus sensing + SSR modulation on a hot-water element. Thousands of Sydney installs documented through Solar Analytics datasets."
+                },
+                {
+                  prod: "MyEnergi — Eddi",
+                  base: "UK origin, certified for AS/NZS, common in Sydney inner-west and Northern Beaches retrofits",
+                  note: "Same control principle, modulated PWM. Confirms our duty-cycle approach is established in the field — not an experimental control strategy."
+                },
+                {
+                  prod: "Bushlight RE systems — Port Stewart",
+                  base: "Lama Lama country, commissioned 2005, still operational",
+                  note: "Demonstrates that Energy-Management-Unit-style load prioritisation succeeds on Country. Validates the community-acceptance side of our design (see references)."
+                },
+                {
+                  prod: "AGL / Endeavour Energy trials",
+                  base: "Western Sydney, 2019–2022",
+                  note: "Demand-flexibility and surplus-routing pilots across thousands of grid-connected homes. Public reporting confirms load-shift economics translate at scale."
+                },
+              ].map((p, i) => {
+                const [hov, setHov] = useState(false);
+                return (
+                  <div key={p.prod}
+                    onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+                    style={{ display: "grid", gridTemplateColumns: "1.2fr 1.3fr 2fr", gap: "32px", padding: "24px 0", borderBottom: "1px solid rgba(255,255,255,0.08)", alignItems: "start", transition: "background 0.2s" }}>
+                    <p style={{ fontSize: "15px", fontWeight: 500, color: "#fff", margin: 0, letterSpacing: "-0.02em" }}>{p.prod}</p>
+                    <p style={{ fontSize: "13px", color: hov ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.55, transition: "color 0.3s" }}>{p.base}</p>
+                    <p style={{ fontSize: "13px", color: hov ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.55)", margin: 0, lineHeight: 1.6, transition: "color 0.3s" }}>{p.note}</p>
+                  </div>
+                );
+              })}
+            </div>
+
+            <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.55)", lineHeight: 1.75, margin: "48px 0 0", maxWidth: "880px" }}>
+              The implication for Yintjingga is concrete: the failure modes, warranties, install procedures and electrician familiarity for this class of hardware are <i style={{ fontStyle: "italic", color: "#fff" }}>already understood</i> in the Australian market. Our prototyping work focuses on the off-grid integration and the Cape York environmental conditions — not on whether the core control principle works. That question was settled a decade ago.
+            </p>
+          </Section>
+
+          <Section bg="#000" pad="100px 40px">
+            <SectionLabel>prototyping & iteration</SectionLabel>
+            <H2>two passes per concept.</H2>
+            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "640px", margin: "24px 0 64px" }}>
+              Both shortlisted concepts were prototyped on a representative resistive load (3.6 kW element, 250 L cylinder) connected to a bench PV emulator simulating Lama Lama irradiance profiles.
+            </p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px" }}>
+              {[
+                {
+                  v: "v1",
+                  title: "Bench rig — Timer",
+                  body: "Manual 24-hour mechanical timer on a switched 10A circuit. Demonstrated principle but no surplus awareness — element drew from battery on cloudy 'days'.",
+                  changes: ["Replaced mechanical timer with programmable digital timer", "Added second window to span dry-season solar tail"],
+                },
+                {
+                  v: "v2",
+                  title: "Pilot rig — Timer",
+                  body: "Digital timer with 2 programmable windows. Acceptable for dry season but still 18 % surplus wasted on overcast days.",
+                  changes: ["Documented as Solution One — Timer", "Recommended only where capex is the dominant constraint"],
+                },
+                {
+                  v: "v1",
+                  title: "Bench rig — Diverter",
+                  body: "CT clamp + microcontroller modulating SSR. Successfully held export to near-zero on dynamic loads, but SSR ran hot under continuous switching.",
+                  changes: ["Upsized heatsink, lowered switching frequency to 1 Hz", "Added 80 °C tank-temperature interlock"],
+                },
+                {
+                  v: "v2",
+                  title: "Pilot rig — Diverter",
+                  body: "Sealed enclosure, 80 °C cutout, surplus sensing accurate to ±50 W. Captured ~91 % of available surplus in test runs.",
+                  changes: ["Documented as Solution Two — Diverter", "Ready for in-situ pilot at Lama Lama"],
+                },
+              ].map((p, i) => (
+                <div key={i} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", padding: "28px 28px 32px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                    <p style={{ fontSize: "18px", fontWeight: 500, letterSpacing: "-0.02em", color: "#fff", margin: 0 }}>{p.title}</p>
+                    <span className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", padding: "4px 10px", borderRadius: "999px", background: "rgba(255,255,255,0.06)" }}>{p.v}</span>
+                  </div>
+                  <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)", lineHeight: 1.65, margin: "0 0 16px" }}>{p.body}</p>
+                  <p style={{ fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "16px 0 8px" }}>changes</p>
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "6px" }}>
+                    {p.changes.map((c, j) => (
+                      <li key={j} style={{ fontSize: "13px", color: "rgba(255,255,255,0.55)", lineHeight: 1.55, paddingLeft: "16px", position: "relative" }}>
+                        <span style={{ position: "absolute", left: 0, color: "rgba(255,255,255,0.3)" }}>›</span>{c}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <ReportFooter prev={{ href: "problem.html", label: "Problem & Brief" }} next={{ href: "considerations.html", label: "Considerations" }} />
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById("root")).render(<Page />);
+  </script>
+  <button id="back-to-top" type="button" aria-label="Back to top"
+    style="position:fixed;right:24px;bottom:24px;z-index:200;width:44px;height:44px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);background:rgba(23,23,23,0.85);backdrop-filter:blur(12px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity 0.25s ease, transform 0.25s ease;font-family:inherit;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+  </button>
+  <script>
+    (function () { var btn = document.getElementById('back-to-top'); if (!btn) return;
+      function update() { var y = window.scrollY || 0; if (y > 400) { btn.style.opacity='1'; btn.style.pointerEvents='auto'; btn.style.transform='translateY(0)'; } else { btn.style.opacity='0'; btn.style.pointerEvents='none'; btn.style.transform='translateY(8px)'; } }
+      btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      window.addEventListener('scroll', update, { passive: true }); update();
+    })();
+  </script>
+</body>
+</html>

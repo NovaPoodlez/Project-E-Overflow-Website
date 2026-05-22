@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-Overflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ["'Readex Pro'", "system-ui", "-apple-system", "sans-serif"] } } }
+    };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    #root { min-height: 100%; }
+    body {
+      font-family: 'Readex Pro', system-ui, -apple-system, sans-serif;
+      background: #000; color: #fff;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .hero-title { letter-spacing: -0.04em; line-height: 0.95; }
+    ::placeholder { color: rgba(255,255,255,0.25); }
+    @keyframes switchFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+    @keyframes switchShadow { 0%,100%{transform:translateX(-50%) scale(1);opacity:.45} 50%{transform:translateX(-50%) scale(.7);opacity:.2} }
+    @keyframes scrollDot { 0%{transform:translateY(0);opacity:0} 30%{opacity:1} 80%{opacity:1} 100%{transform:translateY(10px);opacity:0} }
+    @keyframes scrollBob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+
+
+    const { useState, useEffect, useRef } = React;
+
+    function LogoSVG() {
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="49.47 49.42 277.54 276.4" style={{ height: "20px", width: "20px", display: "block" }} fill="#ffffff" aria-hidden="true">
+          <path fillRule="evenodd" d="M182.100 49.516 C 145.533 51.664,114.833 65.171,89.884 90.089 C 35.961 143.943,36.010 231.471,89.992 285.405 C 152.531 347.888,257.073 336.334,304.405 261.707 C 314.924 245.122,323.277 222.051,324.710 205.628 L 324.852 203.997 312.076 204.049 L 299.300 204.100 298.784 207.000 C 284.676 286.234,195.323 325.781,127.300 282.899 C 72.968 248.649,58.388 175.002,95.563 122.600 C 137.823 63.031,224.798 58.613,272.728 113.600 C 276.242 117.632,282.600 126.184,282.600 126.879 C 282.600 126.927,277.695 128.602,271.700 130.600 C 265.705 132.598,260.807 134.293,260.815 134.367 C 260.854 134.707,312.501 180.598,312.579 180.362 C 312.873 179.483,327.117 112.291,327.018 112.250 C 326.952 112.222,322.579 113.639,317.301 115.400 C 306.111 119.131,307.545 118.822,306.869 117.650 C 285.983 81.415,247.067 55.744,205.200 50.585 C 198.018 49.700,187.360 49.207,182.100 49.516 M174.870 108.999 C 174.634 109.094,174.385 109.263,174.316 109.374 C 174.247 109.485,171.183 123.239,167.507 139.938 C 160.359 172.412,159.927 174.321,157.791 182.860 C 157.026 185.917,156.400 188.719,156.400 189.087 L 156.400 189.754 162.150 189.880 C 177.701 190.219,179.044 190.278,179.269 190.636 C 179.617 191.190,173.483 223.249,167.299 253.200 C 164.968 264.489,164.689 266.524,165.589 265.710 C 167.829 263.682,218.098 172.360,218.740 169.152 L 218.850 168.600 208.612 168.600 C 197.734 168.600,197.600 168.588,197.600 167.643 C 197.600 167.344,202.387 154.106,208.238 138.225 C 218.371 110.721,218.859 109.338,218.500 109.075 C 218.063 108.756,175.657 108.681,174.870 108.999 " />
+        </svg>
+      );
+    }
+
+    function Navbar() {
+      const [opacity, setOpacity] = useState(1);
+      const [missionOpen, setMissionOpen] = useState(false);
+      const [strategyOpen, setStrategyOpen] = useState(false);
+      const [feasibilityOpen, setFeasibilityOpen] = useState(false);
+      const [reportOpen, setReportOpen] = useState(false);
+      const lastY = useRef(0);
+      const closeTimer = useRef(null);
+      const strategyCloseTimer = useRef(null);
+      const feasibilityCloseTimer = useRef(null);
+      const reportCloseTimer = useRef(null);
+
+      useEffect(() => {
+        const scroller = document.getElementById("root").firstChild;
+        const onScroll = () => {
+          const y = scroller.scrollTop;
+          const goingDown = y > lastY.current;
+          lastY.current = y;
+          if (y < 10) setOpacity(1);
+          else if (goingDown) setOpacity(0);
+          else setOpacity(1);
+        };
+        scroller.addEventListener("scroll", onScroll, { passive: true });
+        return () => scroller.removeEventListener("scroll", onScroll);
+      }, []);
+
+      const openMission = () => { clearTimeout(closeTimer.current); setMissionOpen(true); };
+      const schedulClose = () => { closeTimer.current = setTimeout(() => setMissionOpen(false), 120); };
+      const openStrategy = () => { clearTimeout(strategyCloseTimer.current); setStrategyOpen(true); };
+      const closeStrategy = () => { strategyCloseTimer.current = setTimeout(() => setStrategyOpen(false), 120); };
+      const openFeasibility = () => { clearTimeout(feasibilityCloseTimer.current); setFeasibilityOpen(true); };
+      const closeFeasibility = () => { feasibilityCloseTimer.current = setTimeout(() => setFeasibilityOpen(false), 120); };
+      const openReport = () => { clearTimeout(reportCloseTimer.current); setReportOpen(true); };
+      const closeReport = () => { reportCloseTimer.current = setTimeout(() => setReportOpen(false), 120); };
+
+      const navItems = [
+        { label: "strategy", href: "#strategy", strategyDropdown: true },
+        { label: "mission", href: "#mission", dropdown: true },
+        { label: "feasibility", href: "#feasibility", feasibilityDropdown: true },
+        { label: "report", href: "contents.html", reportDropdown: true },
+        { label: "team", href: "#team" },
+      ];
+
+      const chevron = (open) => (
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.5, transition: "transform 0.25s", transform: open ? "rotate(180deg)" : "rotate(0deg)" }}>
+          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      );
+
+      const dropdownShell = (open) => ({
+        position: "absolute", top: "calc(100% + 10px)", left: "50%",
+        background: "rgba(23,23,23,0.97)", backdropFilter: "blur(16px)",
+        border: "1px solid rgba(255,255,255,0.1)", borderRadius: "16px",
+        padding: "8px", minWidth: "220px",
+        opacity: open ? 1 : 0,
+        pointerEvents: open ? "auto" : "none",
+        transform: open ? "translateX(-50%) translateY(0)" : "translateX(-50%) translateY(-6px)",
+        transition: "opacity 0.2s ease, transform 0.2s ease",
+      });
+
+      const arrowTip = {
+        position: "absolute", top: "-5px", left: "50%", transform: "translateX(-50%) rotate(45deg)",
+        width: "10px", height: "10px", background: "rgba(23,23,23,0.97)",
+        border: "1px solid rgba(255,255,255,0.1)", borderBottom: "none", borderRight: "none",
+      };
+
+      const dropItem = (href, icon, title, sub) => (
+        <a href={href} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 14px", borderRadius: "10px", textDecoration: "none", transition: "background 0.15s", color: "#fff" }}
+          onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
+          onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+          <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{icon}</div>
+          <div>
+            <p style={{ fontSize: "13px", fontWeight: 500, margin: 0, letterSpacing: "-0.02em" }}>{title}</p>
+            <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", margin: "2px 0 0" }}>{sub}</p>
+          </div>
+        </a>
+      );
+
+      return (
+        <nav style={{ position: "fixed", zIndex: 50, top: 0, left: 0, right: 0, padding: "24px 40px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", opacity, transition: "opacity 0.5s ease", pointerEvents: opacity < 0.5 ? "none" : "auto" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(23,23,23,0.9)", backdropFilter: "blur(12px)", borderRadius: "999px", padding: "12px 24px 12px 16px" }}>
+            <LogoSVG />
+            <span style={{ color: "#fff", fontSize: "14px", fontWeight: 400, letterSpacing: "-0.02em" }}>E-Overflow</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "rgba(23,23,23,0.9)", backdropFilter: "blur(12px)", borderRadius: "999px", padding: "8px 12px" }}>
+            {navItems.map(({ label, href, dropdown, strategyDropdown, feasibilityDropdown, reportDropdown }) => {
+              if (strategyDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openStrategy} onMouseLeave={closeStrategy}>
+                  <a href={href} style={{ color: strategyOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(strategyOpen)}
+                  </a>
+                  <div style={dropdownShell(strategyOpen)}>
+                    <div style={arrowTip}></div>
+                    {dropItem("solution-one.html",
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+                      "Solution One — Timer", "Scheduled load shifting")}
+                    {dropItem("solution-two.html",
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>,
+                      "Solution Two — Diverter", "Real-time surplus sensing")}
+                  </div>
+                </div>
+              );
+              if (dropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openMission} onMouseLeave={schedulClose}>
+                  <a href={href} style={{ color: missionOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(missionOpen)}
+                  </a>
+                  <div style={dropdownShell(missionOpen)}>
+                    <div style={arrowTip}></div>
+                    {dropItem("lama-lama.html",
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><line x1="2" y1="12" x2="22" y2="12"/></svg>,
+                      "Lama Lama Community", "Cape York, Queensland")}
+                  </div>
+                </div>
+              );
+              if (feasibilityDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openFeasibility} onMouseLeave={closeFeasibility}>
+                  <a href={href} style={{ color: feasibilityOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(feasibilityOpen)}
+                  </a>
+                  <div style={dropdownShell(feasibilityOpen)}>
+                    <div style={arrowTip}></div>
+                    {dropItem("lama-lama-feasibility.html",
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,
+                      "Lama Lama — Feasibility Study", "Preliminary draft, 2026")}
+                  </div>
+                </div>
+              );
+              if (reportDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openReport} onMouseLeave={closeReport}>
+                  <a href={href} style={{ color: reportOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(reportOpen)}
+                  </a>
+                  <div style={{ ...dropdownShell(reportOpen), minWidth: "300px" }}>
+                    <div style={arrowTip}></div>
+                    {dropItem("contents.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>00</span>, "Contents", "Table of contents")}
+                    {dropItem("executive-summary.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>01</span>, "Executive Summary", "Project at a glance")}
+                    {dropItem("problem.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>03</span>, "Problem & Brief", "Needs & success criteria")}
+                    {dropItem("design-process.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>04</span>, "Design Process", "Ideation, decision matrix")}
+                    {dropItem("considerations.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>06</span>, "Considerations", "Social, cultural, environmental")}
+                    {dropItem("risks.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>08</span>, "Risks & Concerns", "Register + FAQ")}
+                    {dropItem("implementation.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>09</span>, "Implementation Plan", "Timeline, training, M&E")}
+                    {dropItem("recommendations.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>10</span>, "Recommendations", "What's next")}
+                    {dropItem("references.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>12</span>, "References", "APA 7 bibliography")}
+                  </div>
+                </div>
+              );
+                            return (
+                <a key={label} href={href} style={{ color: "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s" }}
+                  onMouseEnter={e => e.target.style.color = "#fff"}
+                  onMouseLeave={e => e.target.style.color = "rgba(212,212,212,1)"}
+                >{label}</a>
+              );
+            })}
+          </div>
+          <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "14px", fontWeight: 400, borderRadius: "999px", padding: "12px 24px", textDecoration: "none", transition: "background 0.2s" }}
+            onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
+            onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+          >learn more</a>
+        </nav>
+      );
+    }
+
+    function StatBlock({ position, number, label, dividerRotate, dividerSide, alignRight, labelAbove }) {
+      const isRightSide = dividerSide === "left";
+      return (
+        <div className={`absolute ${position}`}>
+          {labelAbove && label && <p className={`text-xs md:text-sm mb-1 text-white/70 ${alignRight ? "text-right" : ""}`}>{label}</p>}
+          <div className={`flex items-center gap-3 ${alignRight ? "justify-end" : ""}`}>
+            {isRightSide && <div className="hidden md:block h-px w-24 bg-white/40" style={{ transform: `rotate(${dividerRotate}deg)` }}></div>}
+            <span className="text-4xl md:text-5xl font-medium tracking-tight" style={{ fontSize: "40px" }}>{number}</span>
+            {!isRightSide && <div className="hidden md:block h-px w-24 bg-white/40" style={{ transform: `rotate(${dividerRotate}deg)` }}></div>}
+          </div>
+          {!labelAbove && label && <p className={`text-xs md:text-sm mt-1 text-white/70 ${alignRight ? "text-right" : ""}`}>{label}</p>}
+        </div>
+      );
+    }
+
+    function Hero() {
+      return (
+        <section className="relative h-screen w-full overflow-hidden bg-black">
+          <video className="absolute inset-0 w-full h-full object-cover" autoPlay loop muted playsInline src="uploads/8295518-hd_1920_1080_30fps.mp4"></video>
+          <Navbar />
+          <div className="relative h-full w-full">
+            <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(60px, 14vw, 14vw)", left: "1rem", top: "18%", lineHeight: 0.95, letterSpacing: "-0.04em", textAlign: "left" }}>Don't</h1>
+            <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(60px, 13vw, 13vw)", right: "1rem", top: "38%", lineHeight: 0.95, letterSpacing: "-0.04em" }}>Waste</h1>
+            <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(60px, 13vw, 13vw)", left: "18%", top: "58%", lineHeight: 0.95, letterSpacing: "-0.04em" }}>Energy</h1>
+            <p className="absolute text-white/90 leading-snug" style={{ left: "1.5rem", top: "46%", maxWidth: "240px", fontSize: "15px" }}>divert to essentials</p>
+            <StatBlock position="right-6 md:right-24 top-[14%]" number="70% energy reduction" label="up to" labelAbove={true} dividerRotate={20} dividerSide="left" alignRight={true} />
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent to-black"></div>
+            <StatBlock position="left-6 md:left-20 bottom-32 md:bottom-40" number="+reallocate" label="" dividerRotate={-20} dividerSide="right" alignRight={false} />
+            <StatBlock position="right-6 md:right-20 bottom-32 md:bottom-36" number="+decarbonise" label="reuse > redo" dividerRotate={-20} dividerSide="left" alignRight={true} />
+
+            {/* Scroll indicator */}
+            <div style={{ position: "absolute", bottom: "32px", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", animation: "scrollBob 2.4s ease-in-out infinite", pointerEvents: "none" }}>
+              <span style={{ fontSize: "10px", letterSpacing: "0.3em", color: "rgba(255,255,255,0.55)", textTransform: "uppercase" }}>scroll</span>
+              <div style={{ width: "20px", height: "32px", border: "1.5px solid rgba(255,255,255,0.5)", borderRadius: "10px", position: "relative" }}>
+                <div style={{ position: "absolute", left: "50%", top: "6px", width: "2px", height: "6px", borderRadius: "1px", background: "rgba(255,255,255,0.8)", transform: "translateX(-50%)", animation: "scrollDot 1.6s ease-in-out infinite" }}></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function CommonProblem() {
+      const flow = [
+        { num: "01", label: "generation", body: "Panels produce surplus during peak sun hours.", tone: "good" },
+        { num: "02", label: "battery first", body: "Most systems prioritise filling the battery — regardless of what's about to happen.", tone: "warn" },
+        { num: "03", label: "big draw hits", body: "Hot water cycles, pumps, HVAC — high-load appliances pull immediately from those reserves.", tone: "bad" },
+        { num: "04", label: "depleted", body: "Batteries are drained almost as fast as they filled. Net benefit: marginal.", tone: "bad" },
+      ];
+      const dot = (tone) => ({
+        width: "10px", height: "10px", borderRadius: "50%", flexShrink: 0,
+        background: tone === "good" ? "#9ae66e" : tone === "warn" ? "#e8c062" : "#e87b6e",
+        boxShadow: tone === "good" ? "0 0 16px rgba(154,230,110,0.5)" : tone === "warn" ? "0 0 16px rgba(232,192,98,0.45)" : "0 0 16px rgba(232,123,110,0.45)",
+      });
+
+      return (
+        <section id="common-problem" style={{ background: "#000", minHeight: "100vh", padding: "120px 40px 120px", display: "flex", flexDirection: "column", justifyContent: "center", position: "relative", overflow: "hidden" }}>
+          {/* Ambient backdrop */}
+          <div style={{ position: "absolute", top: "-20%", right: "-10%", width: "60%", height: "60%", background: "radial-gradient(circle, rgba(232,123,110,0.08) 0%, transparent 60%)", pointerEvents: "none" }}></div>
+
+          <div style={{ position: "relative", maxWidth: "1280px", margin: "0 auto", width: "100%" }}>
+            <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "64px" }}>THE COMMON PROBLEM</p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "100px", alignItems: "start", marginBottom: "100px" }}>
+              <h2 style={{ fontSize: "clamp(40px, 5.5vw, 5.5vw)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0 }}>
+                solar is solved.<br />
+                <span style={{ color: "rgba(255,255,255,0.4)" }}>allocation isn't.</span>
+              </h2>
+              <div style={{ paddingTop: "12px" }}>
+                <p style={{ fontSize: "17px", color: "rgba(255,255,255,0.7)", lineHeight: 1.7, margin: "0 0 20px" }}>
+                  Standard solar setups treat the battery as the default destination for any surplus energy. It sounds smart — store first, use later — until you look at when the loads actually arrive.
+                </p>
+                <p style={{ fontSize: "17px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0 }}>
+                  Hot water systems, pumps, and other major in-house appliances draw the moment they cycle on. The battery you just filled is depleted within minutes, and the surplus you could have used <em style={{ fontStyle: "normal", color: "#fff" }}>directly</em> is gone.
+                </p>
+              </div>
+            </div>
+
+            {/* Timeline of where it goes wrong */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0", borderTop: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
+              {flow.map((f, i) => (
+                <div key={f.num} style={{ padding: "32px 28px 36px", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.08)" : "none", position: "relative" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "24px" }}>
+                    <div style={dot(f.tone)}></div>
+                    <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.35)", letterSpacing: "0.12em" }}>{f.num}</span>
+                  </div>
+                  <p style={{ fontSize: "20px", fontWeight: 500, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.025em" }}>{f.label}</p>
+                  <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", lineHeight: 1.6, margin: 0 }}>{f.body}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Result + bridge to solution */}
+            <div style={{ marginTop: "80px", display: "grid", gridTemplateColumns: "1fr auto", gap: "48px", alignItems: "center" }}>
+              <p style={{ fontSize: "clamp(22px, 2.6vw, 38px)", fontWeight: 400, letterSpacing: "-0.03em", lineHeight: 1.25, color: "rgba(255,255,255,0.85)", margin: 0, maxWidth: "760px" }}>
+                The energy was generated. The energy was stored. The energy was wasted on the wrong load, in the wrong order. <span style={{ color: "#fff" }}>That's the gap our Solar Switch closes.</span>
+              </p>
+              <a href="solution-one.html" style={{ display: "inline-flex", alignItems: "center", gap: "10px", background: "#fff", color: "#000", fontSize: "14px", borderRadius: "999px", padding: "14px 26px", textDecoration: "none", flexShrink: 0, transition: "background 0.2s" }}
+                onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
+                onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+              >see our solutions →</a>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function SecondPage() {
+      const pillars = [
+        { num: "01", title: "audit", body: "Map every watt. We identify where energy is being consumed, wasted, and misallocated across your operations." },
+        { num: "02", title: "implement", body: "Rebuild from first principles. Smarter load sequencing, storage integration, and renewable-first architecture." },
+        { num: "03", title: "operate", body: "Ongoing monitoring and optimisation. Systems that learn, adapt, and keep performing as conditions change." },
+      ];
+      return (
+        <section id="strategy" style={{ background: "#0a0a0a", padding: "120px 40px 80px" }}>
+          <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "64px" }}>THE STRATEGY</p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", alignItems: "center", margin: "0 0 100px" }}>
+            <h2 style={{ fontSize: "clamp(40px, 6vw, 6vw)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0 }}>
+              time to switch<br />to net zero
+            </h2>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <div style={{ position: "relative", width: "500px", height: "500px", flexShrink: 0 }}>
+                <div style={{ position: "absolute", bottom: "8%", left: "50%", width: "55%", height: "7%", background: "radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(4px)", transform: "translateX(-50%)", animation: "switchShadow 4.5s ease-in-out infinite" }}></div>
+                <a href="solution-two.html"><img src="uploads/switch.png" alt="Tesla SHT-1" style={{ width: "100%", height: "100%", objectFit: "contain", animation: "switchFloat 4.5s ease-in-out infinite", filter: "drop-shadow(0 14px 28px rgba(0,0,0,0.55)) drop-shadow(0 4px 8px rgba(0,0,0,0.3))", userSelect: "none", cursor: "pointer" }} /></a>
+              </div>
+            </div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "2px" }}>
+            {pillars.map((p, i) => {
+              const [hov, setHov] = useState(false);
+              return (
+                <div key={p.num}
+                  onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+                  style={{ borderTop: `1px solid ${hov ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.12)"}`, paddingTop: "32px", paddingRight: i < 2 ? "48px" : "0", paddingBottom: "40px", transition: "border-color 0.3s", cursor: "default" }}>
+                  <span style={{ fontSize: "11px", color: hov ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)", letterSpacing: "0.1em", transition: "color 0.3s" }}>{p.num}</span>
+                  <h3 style={{ fontSize: "clamp(36px, 4vw, 72px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "16px 0 24px", transform: hov ? "translateX(8px)" : "translateX(0)", transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)" }}>{p.title}</h3>
+                  <p style={{ fontSize: "15px", color: hov ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.55)", lineHeight: 1.6, maxWidth: "320px", transition: "color 0.3s" }}>{p.body}</p>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ marginTop: "100px", display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "40px" }}>
+            <p style={{ fontSize: "clamp(20px, 2.5vw, 36px)", fontWeight: 400, letterSpacing: "-0.03em", color: "rgba(255,255,255,0.7)", margin: 0 }}>ready to stop wasting energy?</p>
+            <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "14px", fontWeight: 400, borderRadius: "999px", padding: "16px 32px", textDecoration: "none", display: "inline-block", flexShrink: 0, transition: "background 0.2s" }}
+              onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
+              onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+            >start the conversation</a>
+          </div>
+        </section>
+      );
+    }
+
+    function MissionPage() {
+      return (
+        <section id="mission" style={{ background: "#000", minHeight: "100vh", display: "grid", gridTemplateColumns: "1fr 1fr", overflow: "hidden" }}>
+          <div style={{ position: "relative", overflow: "hidden", minHeight: "100vh" }}>
+            <img src="https://i.guim.co.uk/img/media/3f9e844d58b7fc9e19c5a65986e50144e248c157/0_236_3543_2126/master/3543.jpg?width=1200&height=900&quality=85&auto=format&fit=crop&s=74b3e85233066ff1ec31c451e38db7c4"
+              alt="mission" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+            <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: "180px", background: "linear-gradient(to right, transparent, #000)", pointerEvents: "none" }}></div>
+            <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: "160px", background: "linear-gradient(to bottom, transparent, #000)", pointerEvents: "none" }}></div>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "100px 64px 100px 48px" }}>
+            <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "48px" }}>our mission</p>
+            <h2 style={{ fontSize: "clamp(36px, 4.5vw, 4.5vw)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "0 0 40px" }}>
+              we are burning<br />through more than<br />just energy.
+            </h2>
+            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "420px", margin: "0 0 32px" }}>
+              We believe that the longest journey begins with a single step. Our first step is with the <a href="lama-lama.html" style={{color:"#fff",textDecoration:"underline",textUnderlineOffset:"3px",textDecorationColor:"rgba(255,255,255,0.45)"}}>Lama Lama Community</a> in Cape York, Queensland Australia.
+            </p>
+            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "420px", margin: "0 0 64px" }}>
+              For remote communities across Australia, we review and build systems that do more with less — cleaner, quieter, and built to last.
+            </p>
+            <div style={{ display: "flex", gap: "48px" }}>
+              <div>
+                <p style={{ fontSize: "clamp(28px, 3vw, 48px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 4px" }}>2026</p>
+                <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>founded</p>
+              </div>
+              <div>
+                <p style={{ fontSize: "clamp(28px, 3vw, 48px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 4px" }}>1</p>
+                <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>countries active</p>
+              </div>
+              <div>
+                <p style={{ fontSize: "clamp(28px, 3vw, 48px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 4px" }}>zero</p>
+                <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>compromise on quality</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function FeasibilityPage() {
+      const items = [
+        { label: "site assessment", desc: "On-the-ground load profiling, solar irradiance mapping, and grid connection analysis." },
+        { label: "financial modelling", desc: "Full lifecycle cost analysis, payback periods, and carbon credit potential across scenarios." },
+        { label: "risk analysis", desc: "Technology risk, regulatory exposure, and supply chain contingency — quantified, not hand-waved." },
+        { label: "roadmap", desc: "A phased implementation plan you can take to funders, boards, or government stakeholders." },
+      ];
+      return (
+        <section id="feasibility" style={{ background: "#0a0a0a", padding: "100px 40px 100px" }}>
+          <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "64px" }}>feasibility</p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start" }}>
+            <div>
+              <h2 style={{ fontSize: "clamp(40px, 5.5vw, 5.5vw)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "0 0 32px" }}>
+                know before<br />you build
+              </h2>
+              <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.5)", lineHeight: 1.7, maxWidth: "380px", margin: "0 0 40px" }}>
+                Every project we undertake starts with a rigorous feasibility study. No guesswork, no optimistic projections — just the numbers you need to make a confident decision.
+              </p>
+              <a href="lama-lama-feasibility.html" style={{
+                display: "inline-flex", alignItems: "center", gap: "10px",
+                background: "transparent", border: "1px solid rgba(255,255,255,0.25)",
+                color: "#fff", fontSize: "13px", borderRadius: "999px",
+                padding: "12px 24px", textDecoration: "none", transition: "all 0.2s",
+              }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+                </svg>
+                view lama lama feasibility study
+              </a>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {items.map((item, i) => {
+                const [hov, setHov] = useState(false);
+                return (
+                  <div key={item.label}
+                    onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+                    style={{ borderTop: i === 0 ? "1px solid rgba(255,255,255,0.12)" : "none", borderBottom: "1px solid rgba(255,255,255,0.12)", padding: "28px 0", display: "grid", gridTemplateColumns: "1fr 2fr", gap: "32px", alignItems: "start", cursor: "default" }}>
+                    <p style={{ fontSize: "15px", fontWeight: 500, color: hov ? "#fff" : "rgba(255,255,255,0.7)", margin: 0, transition: "color 0.2s", letterSpacing: "-0.02em" }}>{item.label}</p>
+                    <p style={{ fontSize: "14px", color: hov ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.35)", margin: 0, lineHeight: 1.6, transition: "color 0.3s" }}>{item.desc}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function TeamPage() {
+      const members = [
+        { name: "Adrian Lalic", role: "STU ID: 26467389", bio: "Visionary behind the project, developing an entrepreneurial drive from conceiving the original idea to shaping the design model that underpins the business.", photo: "uploads/Generated Image May 22, 2026 - 6_18PM.png", photoPos: "center 30%" },
+        { name: "Parham Shirazi", role: "STU ID: 26557482", bio: "Upcoming engineer known for their sharp analytical thinking, meticulous attention to detail, and structured approach to problem-solving.", photo: "uploads/ParhamCorporate.jpg" },
+        { name: "Jasmine Valencia", role: "STU ID: 26485767", bio: "Driven engineer whose sharp initiative, outside-the-box thinking, and meticulous attention to detail bring the structure, cooperation, and reliability that keep the team on solid ground." },
+        { name: "Dario Jerkovic", role: "STU ID: 14541282", bio: "Lead engineer and a key asset to the team — bringing deep technical insight, sharp logical thinking, and a naturally personable presence that makes him as effective as he is easy to work with and stands as the cornerstone of our project's success." },
+        { name: "Lav Pesika", role: "STU ID: 26600611", bio: "Reliable and consistent engineer who brings a calm, steady presence to the team — delivering his work with quiet efficiency and a dependable professionalism that keeps things moving.", photo: "uploads/LavCorp.png", photoPos: "center 55%" },
+        { name: "Jaywon Lee", role: "STU ID: 14732768", bio: "Internationally-minded engineer who brings a fresh perspective and an infectious energy to the team. With a natural curiosity and an easy-going presence that keeps the mood light, he knows how to balance the moment." },
+      ];
+      return (
+        <section id="team" style={{ background: "#000", padding: "100px 40px 100px" }}>
+          <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "64px" }}>the team</p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start" }}>
+            <h2 style={{ fontSize: "clamp(40px, 5.5vw, 5.5vw)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0 }}>
+              built by people<br />who've done it
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "2px" }}>
+              {members.map((m, i) => {
+                const [hov, setHov] = useState(false);
+                return (
+                  <div key={m.name}
+                    onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+                    style={{ borderTop: `1px solid ${hov ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.1)"}`, paddingTop: "28px", paddingRight: i % 2 === 0 ? "28px" : "0", paddingBottom: "32px", transition: "border-color 0.3s" }}>
+                    {m.photo ? (
+                      <div style={{ width: "48px", height: "48px", borderRadius: "50%", marginBottom: "20px", overflow: "hidden", background: "#222" }}>
+                        <img src={m.photo} alt={m.name} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: m.photoPos || "center top" }} />
+                      </div>
+                    ) : (
+                      <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: `oklch(${0.35 + i * 0.05} 0.04 ${200 + i * 40})`, marginBottom: "20px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", fontWeight: 500, color: "rgba(255,255,255,0.7)", letterSpacing: "-0.02em" }}>
+                        {m.name.split(" ").map(n => n[0]).join("")}
+                      </div>
+                    )}
+                    <p style={{ fontSize: "16px", fontWeight: 500, color: "#fff", margin: "0 0 4px", letterSpacing: "-0.03em" }}>{m.name}</p>
+                    <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", margin: "0 0 16px", letterSpacing: "0.05em", textTransform: "uppercase" }}>{m.role}</p>
+                    <p style={{ fontSize: "13px", color: hov ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.35)", lineHeight: 1.6, transition: "color 0.3s" }}>{m.bio}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function Footer() {
+      return (
+        <footer style={{ background: "#0a0a0a", borderTop: "1px solid rgba(255,255,255,0.08)", padding: "64px 40px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: "48px", marginBottom: "64px" }}>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
+                <LogoSVG />
+                <span style={{ color: "#fff", fontSize: "14px", fontWeight: 400, letterSpacing: "-0.02em" }}>E-Overflow</span>
+              </div>
+              <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.4)", lineHeight: 1.7, maxWidth: "280px", margin: "0 0 28px" }}>
+                Smarter energy systems implementations for a world that can't afford to waste.
+              </p>
+              <a href="contact.html" style={{ display: "inline-block", background: "#fff", color: "#000", fontSize: "13px", borderRadius: "999px", padding: "10px 20px", textDecoration: "none" }}>get in touch →</a>
+            </div>
+            {[
+              { heading: "company", links: [{l:"strategy",h:"#strategy"},{l:"mission",h:"#mission"},{l:"feasibility",h:"#feasibility"},{l:"team",h:"#team"}] },
+              { heading: "contact", links: [{l:"hello@e-overflow.com",h:"mailto:hello@e-overflow.com"},{l:"linkedin",h:"#"},{l:"twitter / x",h:"#"}] },
+              { heading: "location", links: [{l:"Sydney, AU",h:null}] },
+            ].map(col => (
+              <div key={col.heading}>
+                <p style={{ fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 20px" }}>{col.heading}</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {col.links.map(({l,h}) => h
+                    ? <a key={l} href={h} style={{ fontSize: "14px", color: "rgba(255,255,255,0.55)", textDecoration: "none" }}>{l}</a>
+                    : <span key={l} style={{ fontSize: "14px", color: "rgba(255,255,255,0.3)" }}>{l}</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "32px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.25)", margin: 0 }}>© 2026 E-Overflow Ltd. All rights reserved.</p>
+            <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.25)", margin: 0 }}>designed to last</p>
+          </div>
+        </footer>
+      );
+    }
+
+    function AudioControl() {
+      const [muted, setMuted] = useState(false);
+      const audioRef = useRef(null);
+
+      useEffect(() => {
+        const audio = audioRef.current;
+        audio.volume = 0.35;
+        audio.play().catch(() => {
+          const unlock = () => { audio.play(); document.removeEventListener('click', unlock); };
+          document.addEventListener('click', unlock);
+        });
+      }, []);
+
+      const toggle = () => {
+        const audio = audioRef.current;
+        audio.muted = !audio.muted;
+        setMuted(audio.muted);
+      };
+
+      return (
+        <>
+          <audio ref={audioRef} src="uploads/YuraSoop - Beautiful Nature Ambient.mp3" loop preload="auto"></audio>
+          <button onClick={toggle} style={{
+            position: "fixed", bottom: "24px", right: "78px", zIndex: 100,
+            background: "rgba(23,23,23,0.85)", backdropFilter: "blur(12px)",
+            border: "1px solid rgba(255,255,255,0.18)", borderRadius: "999px",
+            color: "#fff", cursor: "pointer", padding: "10px 18px",
+            display: "flex", alignItems: "center", gap: "8px",
+            fontSize: "12px", letterSpacing: "0.05em",
+            transition: "background 0.2s",
+          }}
+            onMouseEnter={e => e.currentTarget.style.background = "rgba(40,40,40,0.95)"}
+            onMouseLeave={e => e.currentTarget.style.background = "rgba(23,23,23,0.85)"}>
+            {muted ? (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+              </svg>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              </svg>
+            )}
+            {muted ? "unmute" : "mute"}
+          </button>
+        </>
+      );
+    }
+
+    function ExecSummary() {
+      const beats = [
+        { k: "01", h: "problem", b: "Surplus solar is routed into batteries, then drained by hot water and other resistive loads minutes later — wasting both the storage cycle and the surplus itself." },
+        { k: "02", h: "solution", b: "A Solar Switch that re-prioritises PV surplus directly to essential deferrable loads before any battery charging. Timer and Diverter variants documented." },
+        { k: "03", h: "fit", b: "Retrofittable, low-cost, low-complexity, culturally light-touch. No behaviour change required of residents. No software dependency." },
+        { k: "04", h: "next", b: "Single-dwelling Diverter pilot at Lama Lama, full seasonal monitoring, then community-wide deployment with Yintjingga oversight." },
+      ];
+      return (
+        <section id="summary" style={{ background: "#000", padding: "120px 40px 100px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "56px", flexWrap: "wrap", gap: "24px" }}>
+              <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", margin: 0 }}>EXECUTIVE SUMMARY · for Yintjingga Aboriginal Corporation</p>
+              <a href="executive-summary.html" style={{ fontSize: "13px", color: "rgba(255,255,255,0.65)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.25)", paddingBottom: "2px" }}
+                onMouseEnter={e => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderBottomColor = "#fff"; }}
+                onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.65)"; e.currentTarget.style.borderBottomColor = "rgba(255,255,255,0.25)"; }}
+              >read the full executive summary →</a>
+            </div>
+            <h2 style={{ fontSize: "clamp(40px, 5.5vw, 5.5vw)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "0 0 64px", maxWidth: "1080px" }}>
+              the project,<br /><span style={{ color: "rgba(255,255,255,0.4)" }}>at a glance.</span>
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0", borderTop: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
+              {beats.map((b, i) => (
+                <div key={b.k} style={{ padding: "32px 24px 36px", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.08)" : "none" }}>
+                  <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.35)", letterSpacing: "0.12em" }}>{b.k}</span>
+                  <p style={{ fontSize: "20px", fontWeight: 500, color: "#fff", margin: "20px 0 12px", letterSpacing: "-0.025em" }}>{b.h}</p>
+                  <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", lineHeight: 1.7, margin: 0 }}>{b.b}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function ReportIndex() {
+      const reportLinks = [
+        { num: "00", title: "Contents", href: "contents.html", note: "Table of contents" },
+        { num: "01", title: "Executive Summary", href: "executive-summary.html", note: "Project at a glance" },
+        { num: "03", title: "Problem & Brief", href: "problem.html", note: "Needs, scope, success criteria" },
+        { num: "04", title: "Design Process", href: "design-process.html", note: "Ideation → decision matrix → prototype" },
+        { num: "06", title: "Considerations", href: "considerations.html", note: "Social, cultural, environmental, budgetary" },
+        { num: "08", title: "Risks & Concerns", href: "risks.html", note: "Register + FAQ" },
+        { num: "09", title: "Implementation Plan", href: "implementation.html", note: "Timeline, training, M&E" },
+        { num: "10", title: "Recommendations", href: "recommendations.html", note: "What's next" },
+        { num: "12", title: "References", href: "references.html", note: "Bibliography" },
+      ];
+      return (
+        <section id="report" style={{ background: "#0a0a0a", padding: "120px 40px 80px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+            <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", margin: "0 0 56px" }}>the full report</p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start", marginBottom: "72px" }}>
+              <h2 style={{ fontSize: "clamp(40px, 5.5vw, 5.5vw)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0 }}>
+                everything we<br />wrote down.
+              </h2>
+              <p style={{ fontSize: "17px", color: "rgba(255,255,255,0.65)", lineHeight: 1.7, margin: 0, paddingTop: "12px" }}>
+                The technology report that accompanies this design. Twelve sections covering the problem, the solution, our process, the trade-offs, and the path to deployment for the Lama Lama community.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0", borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+              {reportLinks.map((r, i) => {
+                const [hov, setHov] = useState(false);
+                return (
+                  <a key={r.num} href={r.href}
+                    onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+                    style={{ borderRight: (i + 1) % 3 !== 0 ? "1px solid rgba(255,255,255,0.06)" : "none", borderBottom: "1px solid rgba(255,255,255,0.08)", padding: "28px 28px 32px", textDecoration: "none", color: "#fff", transition: "background 0.2s", background: hov ? "rgba(255,255,255,0.025)" : "transparent", display: "block" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "16px" }}>
+                      <span style={{ fontSize: "11px", color: hov ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)", letterSpacing: "0.12em", transition: "color 0.3s" }}>{r.num}</span>
+                      <span style={{ fontSize: "16px", color: hov ? "#fff" : "rgba(255,255,255,0.3)", transition: "color 0.2s, transform 0.2s", transform: hov ? "translateX(4px)" : "translateX(0)" }}>→</span>
+                    </div>
+                    <p style={{ fontSize: "22px", fontWeight: 500, letterSpacing: "-0.03em", color: "#fff", margin: "0 0 12px", lineHeight: 1.05, transform: hov ? "translateX(6px)" : "translateX(0)", transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)" }}>{r.title}</p>
+                    <p style={{ fontSize: "13px", color: hov ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.55, transition: "color 0.3s" }}>{r.note}</p>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function App() {
+      return (
+        <div style={{ overflowY: "auto", height: "100%" }}>
+          <AudioControl />
+          <Hero />
+          <ExecSummary />
+          <CommonProblem />
+          <MissionPage />
+          <SecondPage />
+          <FeasibilityPage />
+          <ReportIndex />
+          <TeamPage />
+          <Footer />
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  
+
+</script>
+
+  <!-- Back-to-top button (universal) -->
+  <button id="back-to-top" type="button" aria-label="Back to top"
+    style="position:fixed;right:24px;bottom:24px;z-index:200;width:44px;height:44px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);background:rgba(23,23,23,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;font-family:inherit;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+  </button>
+  <script>
+    (function () {
+      var btn = document.getElementById('back-to-top');
+      if (!btn) return;
+      var threshold = 400;
+      function getY() {
+        return window.scrollY || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      }
+      function update() {
+        var y = getY();
+        if (y > threshold) {
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+          btn.style.transform = 'translateY(0)';
+        } else {
+          btn.style.opacity = '0';
+          btn.style.pointerEvents = 'none';
+          btn.style.transform = 'translateY(8px)';
+        }
+      }
+      btn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      btn.addEventListener('mouseenter', function () { btn.style.background = 'rgba(255,255,255,0.95)'; btn.style.color = '#000'; btn.style.borderColor = 'rgba(255,255,255,0.95)'; });
+      btn.addEventListener('mouseleave', function () { btn.style.background = 'rgba(23,23,23,0.85)'; btn.style.color = '#fff'; btn.style.borderColor = 'rgba(255,255,255,0.18)'; });
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+  </script>
+</body>
+</html>

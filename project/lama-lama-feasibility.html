@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lama Lama Feasibility Study — E-Overflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body {
+      font-family: 'Readex Pro', system-ui, -apple-system, sans-serif;
+      background: #000; color: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::placeholder { color: rgba(255,255,255,0.25); }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    function LogoSVG() {
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="49.47 49.42 277.54 276.4" style={{ height: "20px", width: "20px", display: "block" }} fill="#ffffff" aria-hidden="true">
+          <path fillRule="evenodd" d="M182.100 49.516 C 145.533 51.664,114.833 65.171,89.884 90.089 C 35.961 143.943,36.010 231.471,89.992 285.405 C 152.531 347.888,257.073 336.334,304.405 261.707 C 314.924 245.122,323.277 222.051,324.710 205.628 L 324.852 203.997 312.076 204.049 L 299.300 204.100 298.784 207.000 C 284.676 286.234,195.323 325.781,127.300 282.899 C 72.968 248.649,58.388 175.002,95.563 122.600 C 137.823 63.031,224.798 58.613,272.728 113.600 C 276.242 117.632,282.600 126.184,282.600 126.879 C 282.600 126.927,277.695 128.602,271.700 130.600 C 265.705 132.598,260.807 134.293,260.815 134.367 C 260.854 134.707,312.501 180.598,312.579 180.362 C 312.873 179.483,327.117 112.291,327.018 112.250 C 326.952 112.222,322.579 113.639,317.301 115.400 C 306.111 119.131,307.545 118.822,306.869 117.650 C 285.983 81.415,247.067 55.744,205.200 50.585 C 198.018 49.700,187.360 49.207,182.100 49.516 M174.870 108.999 C 174.634 109.094,174.385 109.263,174.316 109.374 C 174.247 109.485,171.183 123.239,167.507 139.938 C 160.359 172.412,159.927 174.321,157.791 182.860 C 157.026 185.917,156.400 188.719,156.400 189.087 L 156.400 189.754 162.150 189.880 C 177.701 190.219,179.044 190.278,179.269 190.636 C 179.617 191.190,173.483 223.249,167.299 253.200 C 164.968 264.489,164.689 266.524,165.589 265.710 C 167.829 263.682,218.098 172.360,218.740 169.152 L 218.850 168.600 208.612 168.600 C 197.734 168.600,197.600 168.588,197.600 167.643 C 197.600 167.344,202.387 154.106,208.238 138.225 C 218.371 110.721,218.859 109.338,218.500 109.075 C 218.063 108.756,175.657 108.681,174.870 108.999 " />
+        </svg>
+      );
+    }
+
+    // ── Section components ────────────────────────────────────────────────────
+    function SectionLabel({ children }) {
+      return <p style={{ fontSize: "11px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 24px" }}>{children}</p>;
+    }
+
+    function DataRow({ label, value, sub }) {
+      const [hov, setHov] = useState(false);
+      return (
+        <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px", padding: "20px 0", borderBottom: "1px solid rgba(255,255,255,0.08)", transition: "background 0.2s", cursor: "default" }}>
+          <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.5 }}>{label}</p>
+          <div>
+            <p style={{ fontSize: "14px", color: hov ? "#fff" : "rgba(255,255,255,0.8)", margin: 0, transition: "color 0.2s", fontWeight: 500 }}>{value}</p>
+            {sub && <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)", margin: "3px 0 0", lineHeight: 1.5 }}>{sub}</p>}
+          </div>
+        </div>
+      );
+    }
+
+    function Card({ label, value, unit, note, accent }) {
+      return (
+        <div style={{ borderTop: `2px solid ${accent || "rgba(255,255,255,0.2)"}`, paddingTop: "24px" }}>
+          <SectionLabel>{label}</SectionLabel>
+          <p style={{ fontSize: "clamp(32px, 4vw, 56px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "0 0 8px" }}>
+            {value}<span style={{ fontSize: "0.5em", opacity: 0.5, marginLeft: "4px" }}>{unit}</span>
+          </p>
+          {note && <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.5 }}>{note}</p>}
+        </div>
+      );
+    }
+
+    function SiteNav({ active }) {
+      const [missionOpen, setMissionOpen] = React.useState(false);
+      const [strategyOpen, setStrategyOpen] = React.useState(false);
+      const [feasibilityOpen, setFeasibilityOpen] = React.useState(false);
+      const [reportOpen, setReportOpen] = React.useState(false);
+      const missionTimer = React.useRef(null);
+      const strategyTimer = React.useRef(null);
+      const feasibilityTimer = React.useRef(null);
+      const reportTimer = React.useRef(null);
+
+      const openMission = () => { clearTimeout(missionTimer.current); setMissionOpen(true); };
+      const closeMission = () => { missionTimer.current = setTimeout(() => setMissionOpen(false), 120); };
+      const openStrategy = () => { clearTimeout(strategyTimer.current); setStrategyOpen(true); };
+      const closeStrategy = () => { strategyTimer.current = setTimeout(() => setStrategyOpen(false), 120); };
+      const openFeasibility = () => { clearTimeout(feasibilityTimer.current); setFeasibilityOpen(true); };
+      const closeFeasibility = () => { feasibilityTimer.current = setTimeout(() => setFeasibilityOpen(false), 120); };
+      const openReport = () => { clearTimeout(reportTimer.current); setReportOpen(true); };
+      const closeReport = () => { reportTimer.current = setTimeout(() => setReportOpen(false), 120); };
+
+      const chevron = (open) => (
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.5, transition: "transform 0.25s", transform: open ? "rotate(180deg)" : "rotate(0deg)" }}>
+          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      );
+
+      const dropdownShell = (open) => ({
+        position: "absolute", top: "calc(100% + 10px)", left: "50%",
+        background: "rgba(23,23,23,0.97)", backdropFilter: "blur(16px)",
+        border: "1px solid rgba(255,255,255,0.1)", borderRadius: "16px",
+        padding: "8px", minWidth: "220px",
+        opacity: open ? 1 : 0,
+        pointerEvents: open ? "auto" : "none",
+        transform: open ? "translateX(-50%) translateY(0)" : "translateX(-50%) translateY(-6px)",
+        transition: "opacity 0.2s ease, transform 0.2s ease",
+        zIndex: 100,
+      });
+
+      const arrowTip = {
+        position: "absolute", top: "-5px", left: "50%", transform: "translateX(-50%) rotate(45deg)",
+        width: "10px", height: "10px", background: "rgba(23,23,23,0.97)",
+        border: "1px solid rgba(255,255,255,0.1)", borderBottom: "none", borderRight: "none",
+      };
+
+      const dropItem = (href, icon, title, sub) => (
+        <a href={href} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 14px", borderRadius: "10px", textDecoration: "none", transition: "background 0.15s", color: "#fff" }}
+          onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
+          onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+          <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{icon}</div>
+          <div>
+            <p style={{ fontSize: "13px", fontWeight: 500, margin: 0, letterSpacing: "-0.02em" }}>{title}</p>
+            <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", margin: "2px 0 0" }}>{sub}</p>
+          </div>
+        </a>
+      );
+
+      const navItems = [
+        { label: "strategy", href: "index.html#strategy", strategyDropdown: true },
+        { label: "mission",  href: "index.html#mission",  missionDropdown: true },
+        { label: "feasibility", href: "index.html#feasibility", feasibilityDropdown: true },
+        { label: "report", href: "contents.html", reportDropdown: true },
+        { label: "team",     href: "index.html#team" },
+      ];
+
+      return (
+        <nav style={{ padding: "20px 40px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.06)", position: "sticky", top: 0, background: "rgba(0,0,0,0.92)", backdropFilter: "blur(14px)", zIndex: 50 }}>
+          <a href="index.html" style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none" }}>
+            <LogoSVG />
+            <span style={{ color: "#fff", fontSize: "14px", letterSpacing: "-0.02em" }}>E-Overflow</span>
+          </a>
+          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            {navItems.map(({ label, href, strategyDropdown, missionDropdown, feasibilityDropdown, reportDropdown }) => {
+              if (strategyDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openStrategy} onMouseLeave={closeStrategy}>
+                  <a href={href} style={{ color: active === "strategy" ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(strategyOpen)}
+                  </a>
+                  <div style={dropdownShell(strategyOpen)}>
+                    <div style={arrowTip}></div>
+                    {dropItem("solution-one.html", <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, "Solution One — Timer", "Scheduled load shifting")}
+                    {dropItem("solution-two.html", <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>, "Solution Two — Diverter", "Real-time surplus sensing")}
+                  </div>
+                </div>
+              );
+              if (missionDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openMission} onMouseLeave={closeMission}>
+                  <a href={href} style={{ color: active === "mission" ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(missionOpen)}
+                  </a>
+                  <div style={dropdownShell(missionOpen)}>
+                    <div style={arrowTip}></div>
+                    {dropItem("lama-lama.html", <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><line x1="2" y1="12" x2="22" y2="12"/></svg>, "Lama Lama Community", "Cape York, Queensland")}
+                  </div>
+                </div>
+              );
+              if (feasibilityDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openFeasibility} onMouseLeave={closeFeasibility}>
+                  <a href={href} style={{ color: active === "feasibility" || feasibilityOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(feasibilityOpen)}
+                  </a>
+                  <div style={dropdownShell(feasibilityOpen)}>
+                    <div style={arrowTip}></div>
+                    {dropItem("lama-lama-feasibility.html",
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>,
+                      "Lama Lama — Feasibility Study", "Preliminary draft, 2026"
+                    )}
+                  </div>
+                </div>
+              );
+              if (reportDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openReport} onMouseLeave={closeReport}>
+                  <a href={href} style={{ color: reportOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(reportOpen)}
+                  </a>
+                  <div style={{ ...dropdownShell(reportOpen), minWidth: "300px" }}>
+                    <div style={arrowTip}></div>
+                    {dropItem("contents.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>00</span>, "Contents", "Table of contents")}
+                    {dropItem("executive-summary.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>01</span>, "Executive Summary", "Project at a glance")}
+                    {dropItem("problem.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>03</span>, "Problem & Brief", "Needs & success criteria")}
+                    {dropItem("design-process.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>04</span>, "Design Process", "Ideation, decision matrix")}
+                    {dropItem("considerations.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>06</span>, "Considerations", "Social, cultural, environmental")}
+                    {dropItem("risks.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>08</span>, "Risks & Concerns", "Register + FAQ")}
+                    {dropItem("implementation.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>09</span>, "Implementation Plan", "Timeline, training, M&E")}
+                    {dropItem("recommendations.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>10</span>, "Recommendations", "What's next")}
+                    {dropItem("references.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>12</span>, "References", "APA 7 bibliography")}
+                  </div>
+                </div>
+              );
+                            return (
+                <a key={label} href={href} style={{ color: active === label ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s" }}
+                  onMouseEnter={e => e.target.style.color = "#fff"}
+                  onMouseLeave={e => e.target.style.color = active === label ? "#fff" : "rgba(212,212,212,1)"}
+                >{label}</a>
+              );
+            })}
+          </div>
+          <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "14px", fontWeight: 400, borderRadius: "999px", padding: "10px 22px", textDecoration: "none", transition: "background 0.2s" }}
+            onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
+            onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+          >learn more</a>
+        </nav>
+      );
+    }
+
+    function Page() {
+      return (
+        <div style={{ minHeight: "100vh" }}>
+          <SiteNav active="feasibility" />
+
+          {/* Hero cover image */}
+          <div style={{ position: "relative", height: "60vh", overflow: "hidden" }}>
+            <img
+              src="https://www.4wdingaustralia.com/wp-content/uploads/2021/09/Yardie-Creek-with-a-drone.jpg"
+              alt="Remote Australia landscape"
+              style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.6)" }}
+            />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 40%, #000 100%)", pointerEvents: "none" }}></div>
+            <div style={{ position: "absolute", bottom: "48px", left: "40px", right: "40px" }}>
+              <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", margin: "0 0 16px" }}>feasibility study · may 2026 · upgrade scope</p>
+              <h1 style={{ fontSize: "clamp(40px, 6vw, 80px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.92, color: "#fff", margin: 0 }}>
+                Heat pump retrofit<br />+ solar diverter for<br />the Bushlight system
+              </h1>
+            </div>
+          </div>
+
+          {/* Intro + meta */}
+          <div style={{ padding: "80px 40px 60px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "grid", gridTemplateColumns: "2fr 1fr", gap: "48px", alignItems: "start" }}>
+            <div style={{ maxWidth: "640px" }}>
+              <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.75, margin: "0 0 20px" }}>
+                A scoped feasibility assessment for retrofitting solar diverters to the existing Bushlight PV + battery installations at Moojeeba and Theethinji, paired with replacing the dwellings&apos; instantaneous gas hot-water systems (IGS) with electric heat pumps. We are not replacing the PV array &mdash; we are recovering the mid-day surplus the current EMU can&apos;t allocate before its daily reset.
+              </p>
+              <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.75, margin: 0 }}>
+                The heat pump tank acts as a thermal battery: surplus solar is converted to stored hot water during the day, rather than being burned later through the IGS on demand. With a COP of ~3.5, each kWh of diverted surplus delivers roughly 3.5 kWh of useful heat &mdash; multiplying the recovered energy and erasing the LPG dependency entirely. Federal STC and Queensland government rebates further reduce the up-front cost (see section 03).
+              </p>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              {[
+                { l: "prepared by", v: "E-Overflow Pty Ltd" },
+                { l: "client", v: "Lama Lama Community" },
+                { l: "location", v: "Cape York, QLD, AU" },
+                { l: "document status", v: "Preliminary Draft" },
+              ].map(({ l, v }) => (
+                <div key={l} style={{ display: "flex", justifyContent: "space-between", gap: "16px" }}>
+                  <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.08em" }}>{l}</span>
+                  <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", textAlign: "right" }}>{v}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Key metrics */}
+          <div style={{ padding: "60px 40px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+            <SectionLabel>key findings</SectionLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "40px" }}>
+              <Card label="surplus recovered" value="~4.2" unit="kWh/day" note="Mid-day solar surplus per dwelling, currently lost at the noon EMU reset" accent="rgba(255,255,255,0.6)" />
+              <Card label="heat delivered" value="~14.7" unit="kWh/day" note="Effective hot-water energy stored in the heat-pump tank (COP ~3.5)" accent="rgba(255,255,255,0.6)" />
+              <Card label="net capex (after rebates)" value="$5.0k" unit="AUD/dwelling" note="After federal STC and Queensland heat-pump rebates — see section 03" accent="rgba(255,255,255,0.3)" />
+              <Card label="simple payback" value="2.4" unit="yrs" note="Against avoided LPG, reduced diesel run-hours, and the IGS phase-out" accent="rgba(255,255,255,0.3)" />
+            </div>
+          </div>
+
+          {/* Two-column content */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+
+            {/* Site Assessment */}
+            <div style={{ padding: "60px 40px", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
+              <SectionLabel>01 · existing system</SectionLabel>
+              <h2 style={{ fontSize: "clamp(24px, 2.5vw, 36px)", fontWeight: 500, letterSpacing: "-0.03em", color: "#fff", margin: "0 0 32px", lineHeight: 1.0 }}>What Bushlight already delivers</h2>
+              <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                <DataRow label="Installation year" value="2005" sub="Bushlight stage 2 — Port Stewart, ongoing service" />
+                <DataRow label="PV array (per dwelling)" value="1.28 kWp" sub="Roof-mounted, north-facing, performing within design" />
+                <DataRow label="Battery bank (per dwelling)" value="~14 kWh" sub="Original lead-acid; replacement scheduled separately" />
+                <DataRow label="Allocation method" value="EMU daily budget" sub="Resets at solar noon — surplus beyond budget is lost" />
+                <DataRow label="Backup generation" value="6 kVA diesel" sub="Used for peak loads and extended overcast periods" />
+                <DataRow label="Hot water (existing)" value="LPG instantaneous" sub="Bottled gas, continuous-flow — cannot store mid-day surplus" />
+                <DataRow label="Hot water (proposed)" value="Heat pump + 250 L tank" sub="Thermal battery — stores diverted solar as hot water for evening use" />
+              </div>
+            </div>
+
+            {/* Financial Modelling */}
+            <div style={{ padding: "60px 40px" }}>
+              <SectionLabel>02 · financial modelling</SectionLabel>
+              <h2 style={{ fontSize: "clamp(24px, 2.5vw, 36px)", fontWeight: 500, letterSpacing: "-0.03em", color: "#fff", margin: "0 0 32px", lineHeight: 1.0 }}>Retrofit economics</h2>
+              <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                <DataRow label="Heat-pump units (×2)" value="$7.6k AUD" sub="300 L all-in-one units, supplied for off-grid use" />
+                <DataRow label="Solar diverters (×2)" value="$1.8k AUD" sub="Load-following, sized to heat-pump compressor draw" />
+                <DataRow label="Install, plumbing &amp; IGS removal" value="$3.4k AUD" sub="Replaces existing LPG units; existing PV/battery wiring re-used" />
+                <DataRow label="Freight &amp; training" value="$1.5k AUD" sub="Cape York logistics + half-day community handover" />
+                <DataRow label="Gross project capex" value="$14.3k AUD" sub="Before federal and Queensland government incentives" />
+                <DataRow label="Annual LPG saving" value="$2.6k AUD" sub="IGS bottled-gas spend fully displaced once tanks are commissioned" />
+                <DataRow label="Annual diesel saving" value="$1.8k AUD" sub="Reduced generator run-hours; heat pump only draws from solar surplus" />
+                <DataRow label="Net annual benefit" value="$4.4k AUD" sub="Excludes carbon credit revenue; conservative base case" />
+              </div>
+            </div>
+          </div>
+
+          {/* Government incentives */}
+          <div style={{ padding: "60px 40px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+            <SectionLabel>03 · government incentives</SectionLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", alignItems: "start" }}>
+              <div>
+                <h2 style={{ fontSize: "clamp(24px, 2.5vw, 36px)", fontWeight: 500, letterSpacing: "-0.03em", color: "#fff", margin: "0 0 24px", lineHeight: 1.0 }}>Rebates lower the capex by ~30%</h2>
+                <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: "0 0 16px", maxWidth: "460px" }}>
+                  Replacing an LPG IGS with a high-efficiency heat pump triggers two stacked schemes: the federal Small-scale Technology Certificate (STC) program, paid as an up-front discount via the installer, and the Queensland Climate Smart Energy Savers rebate, which co-funds eligible heat-pump hot-water replacements.
+                </p>
+                <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.35)", lineHeight: 1.6, margin: 0, maxWidth: "460px" }}>
+                  Rebate values quoted are conservative against the May 2026 schedules. Final amounts confirmed at procurement; the project is structured so it remains payback-positive even if the QLD scheme is partially withdrawn.
+                </p>
+              </div>
+              <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                <DataRow label="Gross project capex" value="$14.3k AUD" sub="From section 02 above" />
+                <DataRow label="Federal STC discount (×2)" value="-$2.4k AUD" sub="Small-scale Technology Certificates, applied at point of sale" />
+                <DataRow label="QLD heat-pump rebate (×2)" value="-$2.0k AUD" sub="Climate Smart Energy Savers — eligible heat-pump replacement" />
+                <DataRow label="Net project capex" value="$9.9k AUD" sub="Roughly $5.0k per dwelling, all in" />
+                <DataRow label="Effective rebate share" value="~31%" sub="Of gross capex covered by federal + state incentives" />
+              </div>
+            </div>
+          </div>
+
+          {/* Risk & Roadmap */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+
+            {/* Risk */}
+            <div style={{ padding: "60px 40px", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
+              <SectionLabel>04 · risk analysis</SectionLabel>
+              <h2 style={{ fontSize: "clamp(24px, 2.5vw, 36px)", fontWeight: 500, letterSpacing: "-0.03em", color: "#fff", margin: "0 0 32px", lineHeight: 1.0 }}>Key risks &amp; mitigations</h2>
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                {[
+                  { risk: "Integration with existing EMU", rating: "medium", note: "Diverter must sit downstream of the budget allocator without confusing it. Mitigated by sensing on the dwelling-side feed only." },
+                  { risk: "IGS removal &amp; heat-pump install", rating: "medium", note: "Existing LPG instantaneous units removed and replaced with heat-pump + tank. Stock items; both dwellings serviced in a single trip by a licensed plumber + electrician." },
+                  { risk: "Rebate scheme availability", rating: "medium", note: "Federal STC is structurally stable; QLD Climate Smart rebate is subject to annual budget. Project remains viable on STC alone — QLD rebate sized conservatively in §03." },
+                  { risk: "Bushlight system age", rating: "medium", note: "Original lead-acid batteries are nearing end of life. Diverter operates regardless — but battery refresh recommended within 24 months." },
+                  { risk: "Community training", rating: "low", note: "Diverter is set-and-forget; no daily interaction required. One half-day handover session covers both dwellings." },
+                  { risk: "Weather &amp; access", rating: "low", note: "Install scheduled outside wet season. Equipment fits a single 4WD load." },
+                ].map(({ risk, rating, note }) => (
+                  <div key={risk} style={{ paddingBottom: "16px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                      <p style={{ fontSize: "14px", fontWeight: 500, color: "#fff", margin: 0 }}>{risk}</p>
+                      <span style={{ fontSize: "11px", letterSpacing: "0.08em", textTransform: "uppercase", padding: "3px 10px", borderRadius: "999px", background: rating === "medium" ? "rgba(255,200,80,0.15)" : "rgba(80,220,120,0.15)", color: rating === "medium" ? "rgba(255,200,80,0.9)" : "rgba(80,220,120,0.9)" }}>{rating}</span>
+                    </div>
+                    <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.6 }}>{note}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Roadmap */}
+            <div style={{ padding: "60px 40px" }}>
+              <SectionLabel>05 · implementation roadmap</SectionLabel>
+              <h2 style={{ fontSize: "clamp(24px, 2.5vw, 36px)", fontWeight: 500, letterSpacing: "-0.03em", color: "#fff", margin: "0 0 32px", lineHeight: 1.0 }}>Phased delivery plan</h2>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+                {[
+                  { phase: "Phase 1", period: "May 2026", title: "On-country site audit", desc: "One-week visit to log existing inverter outputs, EMU behaviour, and noon-reset surplus across both dwellings. Confirm load profile with community." },
+                  { phase: "Phase 2", period: "Jun 2026", title: "Procurement & rebate lodgement", desc: "Order heat-pump units, diverters, and monitoring hardware. Lodge federal STC claim and Queensland Climate Smart application before dispatch to lock in rebate values." },
+                  { phase: "Phase 3", period: "Jul 2026", title: "IGS removal & heat-pump install", desc: "Four-day install across both dwellings. LPG IGS units decommissioned, heat-pump tanks fitted, diverters wired downstream of EMU. Community handover same day." },
+                  { phase: "Phase 4", period: "Aug 2026 →", title: "Monitor & report", desc: "12 months of remote logging. Quarterly performance reports to community, with quantified surplus recovered and generator-hours avoided." },
+                ].map(({ phase, period, title, desc }, i) => (
+                  <div key={phase} style={{ display: "grid", gridTemplateColumns: "80px 1fr", gap: "24px", paddingBottom: "28px", marginBottom: "28px", borderBottom: i < 3 ? "1px solid rgba(255,255,255,0.07)" : "none" }}>
+                    <div>
+                      <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", margin: "0 0 4px", letterSpacing: "0.06em", textTransform: "uppercase" }}>{phase}</p>
+                      <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", margin: 0 }}>{period}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: "14px", fontWeight: 500, color: "#fff", margin: "0 0 6px" }}>{title}</p>
+                      <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.6 }}>{desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Footer CTA */}
+          <div style={{ padding: "48px 40px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div>
+              <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)", margin: "0 0 4px", letterSpacing: "0.08em", textTransform: "uppercase" }}>next step</p>
+              <p style={{ fontSize: "clamp(18px, 2vw, 28px)", fontWeight: 400, letterSpacing: "-0.03em", color: "rgba(255,255,255,0.7)", margin: 0 }}>
+                ready to schedule the on-country site audit?
+              </p>
+            </div>
+            <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "14px", borderRadius: "999px", padding: "16px 32px", textDecoration: "none", flexShrink: 0, transition: "background 0.2s" }}
+              onMouseEnter={e => e.currentTarget.style.background="#e5e5e5"}
+              onMouseLeave={e => e.currentTarget.style.background="#fff"}
+            >start the conversation</a>
+          </div>
+
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<Page />);
+  </script>
+
+  <!-- Back-to-top button (universal) -->
+  <button id="back-to-top" type="button" aria-label="Back to top"
+    style="position:fixed;right:24px;bottom:24px;z-index:200;width:44px;height:44px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);background:rgba(23,23,23,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;font-family:inherit;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+  </button>
+  <script>
+    (function () {
+      var btn = document.getElementById('back-to-top');
+      if (!btn) return;
+      var threshold = 400;
+      function update() {
+        var y = window.scrollY || document.documentElement.scrollTop || 0;
+        if (y > threshold) {
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+          btn.style.transform = 'translateY(0)';
+        } else {
+          btn.style.opacity = '0';
+          btn.style.pointerEvents = 'none';
+          btn.style.transform = 'translateY(8px)';
+        }
+      }
+      btn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      btn.addEventListener('mouseenter', function () { btn.style.background = 'rgba(255,255,255,0.95)'; btn.style.color = '#000'; btn.style.borderColor = 'rgba(255,255,255,0.95)'; });
+      btn.addEventListener('mouseleave', function () { btn.style.background = 'rgba(23,23,23,0.85)'; btn.style.color = '#fff'; btn.style.borderColor = 'rgba(255,255,255,0.18)'; });
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+  </script>
+
+</body>
+</html>

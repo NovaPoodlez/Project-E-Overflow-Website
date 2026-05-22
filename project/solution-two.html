@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solution Two — Diverter — E-Overflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body {
+      font-family: 'Readex Pro', system-ui, -apple-system, sans-serif;
+      background: #000; color: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+    @keyframes switchFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+    @keyframes switchShadow { 0%,100%{transform:translateX(-50%) scale(1);opacity:.45} 50%{transform:translateX(-50%) scale(.7);opacity:.2} }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+    const { useState } = React;
+
+    function LogoSVG() {
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="49.47 49.42 277.54 276.4" style={{ height: "20px", width: "20px", display: "block" }} fill="#ffffff" aria-hidden="true">
+          <path fillRule="evenodd" d="M182.100 49.516 C 145.533 51.664,114.833 65.171,89.884 90.089 C 35.961 143.943,36.010 231.471,89.992 285.405 C 152.531 347.888,257.073 336.334,304.405 261.707 C 314.924 245.122,323.277 222.051,324.710 205.628 L 324.852 203.997 312.076 204.049 L 299.300 204.100 298.784 207.000 C 284.676 286.234,195.323 325.781,127.300 282.899 C 72.968 248.649,58.388 175.002,95.563 122.600 C 137.823 63.031,224.798 58.613,272.728 113.600 C 276.242 117.632,282.600 126.184,282.600 126.879 C 282.600 126.927,277.695 128.602,271.700 130.600 C 265.705 132.598,260.807 134.293,260.815 134.367 C 260.854 134.707,312.501 180.598,312.579 180.362 C 312.873 179.483,327.117 112.291,327.018 112.250 C 326.952 112.222,322.579 113.639,317.301 115.400 C 306.111 119.131,307.545 118.822,306.869 117.650 C 285.983 81.415,247.067 55.744,205.200 50.585 C 198.018 49.700,187.360 49.207,182.100 49.516 M174.870 108.999 C 174.634 109.094,174.385 109.263,174.316 109.374 C 174.247 109.485,171.183 123.239,167.507 139.938 C 160.359 172.412,159.927 174.321,157.791 182.860 C 157.026 185.917,156.400 188.719,156.400 189.087 L 156.400 189.754 162.150 189.880 C 177.701 190.219,179.044 190.278,179.269 190.636 C 179.617 191.190,173.483 223.249,167.299 253.200 C 164.968 264.489,164.689 266.524,165.589 265.710 C 167.829 263.682,218.098 172.360,218.740 169.152 L 218.850 168.600 208.612 168.600 C 197.734 168.600,197.600 168.588,197.600 167.643 C 197.600 167.344,202.387 154.106,208.238 138.225 C 218.371 110.721,218.859 109.338,218.500 109.075 C 218.063 108.756,175.657 108.681,174.870 108.999 " />
+        </svg>
+      );
+    }
+
+    function SiteNav({ active }) {
+      const [missionOpen, setMissionOpen] = React.useState(false);
+      const [strategyOpen, setStrategyOpen] = React.useState(false);
+      const [feasibilityOpen, setFeasibilityOpen] = React.useState(false);
+      const [reportOpen, setReportOpen] = React.useState(false);
+      const missionTimer = React.useRef(null);
+      const strategyTimer = React.useRef(null);
+      const feasibilityTimer = React.useRef(null);
+      const reportTimer = React.useRef(null);
+
+      const openMission = () => { clearTimeout(missionTimer.current); setMissionOpen(true); };
+      const closeMission = () => { missionTimer.current = setTimeout(() => setMissionOpen(false), 120); };
+      const openStrategy = () => { clearTimeout(strategyTimer.current); setStrategyOpen(true); };
+      const closeStrategy = () => { strategyTimer.current = setTimeout(() => setStrategyOpen(false), 120); };
+      const openFeasibility = () => { clearTimeout(feasibilityTimer.current); setFeasibilityOpen(true); };
+      const closeFeasibility = () => { feasibilityTimer.current = setTimeout(() => setFeasibilityOpen(false), 120); };
+      const openReport = () => { clearTimeout(reportTimer.current); setReportOpen(true); };
+      const closeReport = () => { reportTimer.current = setTimeout(() => setReportOpen(false), 120); };
+
+      const chevron = (open) => (
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.5, transition: "transform 0.25s", transform: open ? "rotate(180deg)" : "rotate(0deg)" }}>
+          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      );
+
+      const dropdownShell = (open) => ({
+        position: "absolute", top: "calc(100% + 10px)", left: "50%",
+        background: "rgba(23,23,23,0.97)", backdropFilter: "blur(16px)",
+        border: "1px solid rgba(255,255,255,0.1)", borderRadius: "16px",
+        padding: "8px", minWidth: "220px",
+        opacity: open ? 1 : 0,
+        pointerEvents: open ? "auto" : "none",
+        transform: open ? "translateX(-50%) translateY(0)" : "translateX(-50%) translateY(-6px)",
+        transition: "opacity 0.2s ease, transform 0.2s ease",
+        zIndex: 100,
+      });
+
+      const arrowTip = {
+        position: "absolute", top: "-5px", left: "50%", transform: "translateX(-50%) rotate(45deg)",
+        width: "10px", height: "10px", background: "rgba(23,23,23,0.97)",
+        border: "1px solid rgba(255,255,255,0.1)", borderBottom: "none", borderRight: "none",
+      };
+
+      const dropItem = (href, icon, title, sub) => (
+        <a href={href} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 14px", borderRadius: "10px", textDecoration: "none", transition: "background 0.15s", color: "#fff" }}
+          onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
+          onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+          <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{icon}</div>
+          <div>
+            <p style={{ fontSize: "13px", fontWeight: 500, margin: 0, letterSpacing: "-0.02em" }}>{title}</p>
+            <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", margin: "2px 0 0" }}>{sub}</p>
+          </div>
+        </a>
+      );
+
+      const navItems = [
+        { label: "strategy", href: "index.html#strategy", strategyDropdown: true },
+        { label: "mission",  href: "index.html#mission",  missionDropdown: true },
+        { label: "feasibility", href: "index.html#feasibility", feasibilityDropdown: true },
+        { label: "report", href: "contents.html", reportDropdown: true },
+        { label: "team",     href: "index.html#team" },
+      ];
+
+      return (
+        <nav style={{ padding: "20px 40px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.06)", position: "sticky", top: 0, background: "rgba(0,0,0,0.92)", backdropFilter: "blur(14px)", zIndex: 50 }}>
+          <a href="index.html" style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none" }}>
+            <LogoSVG />
+            <span style={{ color: "#fff", fontSize: "14px", letterSpacing: "-0.02em" }}>E-Overflow</span>
+          </a>
+          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            {navItems.map(({ label, href, strategyDropdown, missionDropdown, feasibilityDropdown, reportDropdown }) => {
+              if (strategyDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openStrategy} onMouseLeave={closeStrategy}>
+                  <a href={href} style={{ color: active === "strategy" ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(strategyOpen)}
+                  </a>
+                  <div style={dropdownShell(strategyOpen)}>
+                    <div style={arrowTip}></div>
+                    {dropItem("solution-one.html", <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, "Solution One — Timer", "Scheduled load shifting")}
+                    {dropItem("solution-two.html", <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>, "Solution Two — Diverter", "Real-time surplus sensing")}
+                  </div>
+                </div>
+              );
+              if (missionDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openMission} onMouseLeave={closeMission}>
+                  <a href={href} style={{ color: active === "mission" ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(missionOpen)}
+                  </a>
+                  <div style={dropdownShell(missionOpen)}>
+                    <div style={arrowTip}></div>
+                    {dropItem("lama-lama.html", <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><line x1="2" y1="12" x2="22" y2="12"/></svg>, "Lama Lama Community", "Cape York, Queensland")}
+                  </div>
+                </div>
+              );
+              if (feasibilityDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openFeasibility} onMouseLeave={closeFeasibility}>
+                  <a href={href} style={{ color: active === "feasibility" || feasibilityOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(feasibilityOpen)}
+                  </a>
+                  <div style={dropdownShell(feasibilityOpen)}>
+                    <div style={arrowTip}></div>
+                    {dropItem("lama-lama-feasibility.html",
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>,
+                      "Lama Lama — Feasibility Study", "Preliminary draft, 2026"
+                    )}
+                  </div>
+                </div>
+              );
+              if (reportDropdown) return (
+                <div key={label} style={{ position: "relative" }} onMouseEnter={openReport} onMouseLeave={closeReport}>
+                  <a href={href} style={{ color: reportOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                    {label}{chevron(reportOpen)}
+                  </a>
+                  <div style={{ ...dropdownShell(reportOpen), minWidth: "300px" }}>
+                    <div style={arrowTip}></div>
+                    {dropItem("contents.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>00</span>, "Contents", "Table of contents")}
+                    {dropItem("executive-summary.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>01</span>, "Executive Summary", "Project at a glance")}
+                    {dropItem("problem.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>03</span>, "Problem & Brief", "Needs & success criteria")}
+                    {dropItem("design-process.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>04</span>, "Design Process", "Ideation, decision matrix")}
+                    {dropItem("considerations.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>06</span>, "Considerations", "Social, cultural, environmental")}
+                    {dropItem("risks.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>08</span>, "Risks & Concerns", "Register + FAQ")}
+                    {dropItem("implementation.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>09</span>, "Implementation Plan", "Timeline, training, M&E")}
+                    {dropItem("recommendations.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>10</span>, "Recommendations", "What's next")}
+                    {dropItem("references.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>12</span>, "References", "APA 7 bibliography")}
+                  </div>
+                </div>
+              );
+                            return (
+                <a key={label} href={href} style={{ color: active === label ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s" }}
+                  onMouseEnter={e => e.target.style.color = "#fff"}
+                  onMouseLeave={e => e.target.style.color = active === label ? "#fff" : "rgba(212,212,212,1)"}
+                >{label}</a>
+              );
+            })}
+          </div>
+          <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "14px", fontWeight: 400, borderRadius: "999px", padding: "10px 22px", textDecoration: "none", transition: "background 0.2s" }}
+            onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
+            onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+          >learn more</a>
+        </nav>
+      );
+    }
+
+    function Page() {
+      const features = [
+        {
+          num: "01",
+          title: "measures export",
+          body: "A current sensor at the meter watches the live flow of energy to and from the grid. The diverter only acts on power that would otherwise be exported."
+        },
+        {
+          num: "02",
+          title: "modulates supply",
+          body: "Rather than switching the load fully on or off, the diverter varies the power delivered to it, matching the available surplus from second to second."
+        },
+        {
+          num: "03",
+          title: "adapts to the day",
+          body: "If a cloud passes, draw falls. If another appliance starts up, draw falls. If surplus returns, draw returns. The schedule is the weather, not a clock."
+        },
+      ];
+
+      const specs = [
+        { label: "control type", value: "real-time export sensing" },
+        { label: "typical install cost", value: "~ A$1,100 installed" },
+        { label: "surplus sensing", value: "continuous (CT clamp)" },
+        { label: "adjusts to weather", value: "yes" },
+        { label: "compatible loads", value: "resistive loads, batteries" },
+        { label: "complexity", value: "moderate — metering install required" },
+      ];
+
+      return (
+        <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+          <SiteNav active="strategy" />
+
+          {/* Hero — full-bleed video */}
+          <div style={{ position: "relative", height: "100vh", overflow: "hidden", background: "#000", display: "flex", alignItems: "flex-end" }}>
+            <video
+              autoPlay loop muted playsInline
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.85 }}
+              src="uploads/9076581-uhd_3840_2160_30fps.mp4"
+            ></video>
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, transparent 30%, transparent 55%, #000 100%)", pointerEvents: "none" }}></div>
+            <div style={{ position: "relative", padding: "0 40px 64px", zIndex: 2 }}>
+              <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", margin: "0 0 16px" }}>solution two</p>
+              <h1 style={{ fontSize: "clamp(48px, 8vw, 120px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.92, color: "#fff", margin: 0 }}>
+                Solar Diverter
+              </h1>
+            </div>
+          </div>
+
+          {/* Intro + how it works */}
+          <div style={{ background: "#0a0a0a", padding: "100px 40px" }}>
+            <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+
+              {/* Intro copy — text left, hero product right */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", marginBottom: "100px", alignItems: "center" }}>
+                <div>
+                  <h2 style={{ fontSize: "clamp(32px, 4vw, 56px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "0 0 40px" }}>
+                    surplus only,<br />when it's actually there
+                  </h2>
+                  <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.8, margin: "0 0 24px", maxWidth: "460px" }}>
+                    A solar diverter is an active controller that sits alongside the meter. It continuously measures the power being exported to the grid and routes that exact amount — no more, no less — to a chosen load such as a hot water cylinder, thermal store, or battery.
+                  </p>
+                  <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.8, margin: 0, maxWidth: "460px" }}>
+                    Because it varies its output in real time, the diverted load only ever uses energy the household would otherwise have sold back at a low feed-in rate. If the sun isn't producing surplus, the diverter draws nothing.
+                  </p>
+                </div>
+
+                {/* Hero product showcase */}
+                <div style={{ position: "relative", height: "560px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                  {/* Spotlight backdrop */}
+                  <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 55% at 50% 45%, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.02) 40%, transparent 70%)", pointerEvents: "none" }}></div>
+                  {/* Faint grid floor for grounding */}
+                  <div style={{ position: "absolute", left: "50%", bottom: "12%", width: "85%", height: "1px", background: "linear-gradient(to right, transparent, rgba(255,255,255,0.12), transparent)", transform: "translateX(-50%)", pointerEvents: "none" }}></div>
+                  {/* Eyebrow caption */}
+                  <p style={{ position: "absolute", top: "16px", left: "16px", fontSize: "10px", letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", margin: 0 }}>the diverter</p>
+                  <p style={{ position: "absolute", top: "16px", right: "16px", fontSize: "10px", letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", margin: 0 }}>tesla sht-1</p>
+                  {/* Floating shadow */}
+                  <div style={{ position: "absolute", bottom: "11%", left: "50%", width: "44%", height: "20px", background: "radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(14px)", transform: "translateX(-50%)", animation: "switchShadow 4.5s ease-in-out infinite" }}></div>
+                  <img
+                    src="uploads/switch.png"
+                    alt="Solar diverter unit"
+                    style={{ position: "relative", height: "88%", maxWidth: "100%", objectFit: "contain", animation: "switchFloat 4.5s ease-in-out infinite", filter: "drop-shadow(0 28px 48px rgba(0,0,0,0.7)) drop-shadow(0 8px 16px rgba(0,0,0,0.4))", userSelect: "none", pointerEvents: "none", display: "block" }}
+                  />
+                </div>
+              </div>
+
+              {/* How it works — 3 pillars */}
+              <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 48px" }}>how a diverter works</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "2px" }}>
+                {features.map((f, i) => {
+                  const [hov, setHov] = useState(false);
+                  return (
+                    <div key={f.num}
+                      onMouseEnter={() => setHov(true)}
+                      onMouseLeave={() => setHov(false)}
+                      style={{ borderTop: `1px solid ${hov ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.12)"}`, paddingTop: "32px", paddingRight: i < 2 ? "48px" : "0", paddingBottom: "40px", transition: "border-color 0.3s", cursor: "default" }}>
+                      <span style={{ fontSize: "11px", color: hov ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)", letterSpacing: "0.1em", transition: "color 0.3s" }}>{f.num}</span>
+                      <h3 style={{ fontSize: "clamp(28px, 3vw, 52px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "16px 0 24px", transform: hov ? "translateX(8px)" : "translateX(0)", transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)" }}>{f.title}</h3>
+                      <p style={{ fontSize: "15px", color: hov ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.5)", lineHeight: 1.65, maxWidth: "320px", transition: "color 0.3s" }}>{f.body}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Specs + stat strip */}
+          <div style={{ background: "#000", padding: "100px 40px" }}>
+            <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+
+              {/* Stats */}
+              <div style={{ display: "flex", gap: "64px", marginBottom: "100px", borderBottom: "1px solid rgba(255,255,255,0.08)", paddingBottom: "64px" }}>
+                {[
+                  { num: "~$1,100", label: "typical install cost" },
+                  { num: "real-time", label: "surplus tracking" },
+                  { num: "variable", label: "power output" },
+                  { num: "adaptive", label: "responds to weather" },
+                ].map(s => (
+                  <div key={s.label}>
+                    <p style={{ fontSize: "clamp(28px, 3vw, 44px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 6px" }}>{s.num}</p>
+                    <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", margin: 0 }}>{s.label}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Specs table */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start" }}>
+                <div>
+                  <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 40px" }}>at a glance</p>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    {specs.map((s, i) => (
+                      <div key={s.label} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", borderTop: i === 0 ? "1px solid rgba(255,255,255,0.1)" : "none", borderBottom: "1px solid rgba(255,255,255,0.1)", padding: "18px 0" }}>
+                        <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", margin: 0, letterSpacing: "0.02em", textTransform: "uppercase", fontSize: "11px" }}>{s.label}</p>
+                        <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.8)", margin: 0, letterSpacing: "-0.02em" }}>{s.value}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: "32px" }}>
+                  <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: 0 }}>trade-offs</p>
+                  {[
+                    { title: "only ever uses real surplus", note: "strength" },
+                    { title: "responds to clouds and other loads", note: "strength" },
+                    { title: "can superheat to store extra energy", note: "strength" },
+                    { title: "higher up-front cost", note: "limitation" },
+                    { title: "requires metering install", note: "limitation" },
+                    { title: "compare with solution one →", note: "", href: "solution-one.html" },
+                  ].map(item => {
+                    const [hov, setHov] = useState(false);
+                    const isLink = !!item.href;
+                    const Tag = isLink ? "a" : "div";
+                    return (
+                      <Tag key={item.title} href={item.href}
+                        onMouseEnter={() => setHov(true)}
+                        onMouseLeave={() => setHov(false)}
+                        style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "20px", display: "flex", alignItems: "center", justifyContent: "space-between", textDecoration: "none", cursor: isLink ? "pointer" : "default" }}>
+                        <p style={{ fontSize: "18px", fontWeight: 500, letterSpacing: "-0.03em", color: hov ? "#fff" : "rgba(255,255,255,0.5)", margin: 0, transition: "color 0.2s" }}>{item.title}</p>
+                        <span style={{ fontSize: "11px", color: hov ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.2)", letterSpacing: "0.1em", textTransform: "uppercase", transition: "color 0.2s" }}>{item.note}</span>
+                      </Tag>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer CTA */}
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", padding: "48px 40px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <p style={{ fontSize: "clamp(18px, 2vw, 28px)", fontWeight: 400, letterSpacing: "-0.03em", color: "rgba(255,255,255,0.6)", margin: 0 }}>
+              want to compare with a scheduled approach?
+            </p>
+            <a href="solution-one.html" style={{ background: "#fff", color: "#000", fontSize: "14px", borderRadius: "999px", padding: "14px 28px", textDecoration: "none", transition: "background 0.2s" }}
+              onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
+              onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+            >view solution one →</a>
+          </div>
+
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<Page />);
+  </script>
+
+  <!-- Back-to-top button (universal) -->
+  <button id="back-to-top" type="button" aria-label="Back to top"
+    style="position:fixed;right:24px;bottom:24px;z-index:200;width:44px;height:44px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);background:rgba(23,23,23,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;font-family:inherit;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+  </button>
+  <script>
+    (function () {
+      var btn = document.getElementById('back-to-top');
+      if (!btn) return;
+      var threshold = 400;
+      function update() {
+        var y = window.scrollY || document.documentElement.scrollTop || 0;
+        if (y > threshold) {
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+          btn.style.transform = 'translateY(0)';
+        } else {
+          btn.style.opacity = '0';
+          btn.style.pointerEvents = 'none';
+          btn.style.transform = 'translateY(8px)';
+        }
+      }
+      btn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      btn.addEventListener('mouseenter', function () { btn.style.background = 'rgba(255,255,255,0.95)'; btn.style.color = '#000'; btn.style.borderColor = 'rgba(255,255,255,0.95)'; });
+      btn.addEventListener('mouseleave', function () { btn.style.background = 'rgba(23,23,23,0.85)'; btn.style.color = '#fff'; btn.style.borderColor = 'rgba(255,255,255,0.18)'; });
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Executive Summary — E-Overflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body { font-family: 'Readex Pro', system-ui, -apple-system, sans-serif; background: #000; color: #fff; -webkit-font-smoothing: antialiased; }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace; }
+    em { font-style: normal; color: #fff; }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="report-shell.jsx"></script>
+  <script type="text/babel" src="report-primitives.jsx"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+    function Page() {
+      const kpis = [
+        { v: "~70%", l: "potential reduction in wasted PV surplus" },
+        { v: "A$220", l: "indicative cost of Solution One" },
+        { v: "4 wk", l: "anticipated install + handover window" },
+        { v: "5+ yr", l: "expected service life with maintenance" },
+      ];
+      const beats = [
+        { k: "Problem", v: "Surplus solar energy in the Lama Lama community is consistently routed into batteries before being drawn back out by high-load appliances minutes later — wasting both the storage cycle and the surplus itself." },
+        { k: "Solution", v: "A Solar Switch that re-prioritises surplus PV directly to essential, deferrable loads (notably hot water) before any battery charging occurs. Two implementations are presented: a low-cost time-of-day Timer and a higher-fidelity Diverter that senses real-time surplus." },
+        { k: "Why it fits", v: "It is retrofittable, low-cost, low-complexity, and culturally low-impact. It requires no behaviour change from residents and no ongoing software dependency, both of which were flagged as essential by the Yintjingga Aboriginal Corporation during stakeholder consultation." },
+        { k: "Recommendation", v: "Deploy Solution Two (Diverter) at a single pilot dwelling, monitor over a full wet/dry seasonal cycle, then scale community-wide. Solution One remains a fallback option where capital is constrained." },
+      ];
+      return (
+        <div>
+          <ReportNav active="report" />
+          <section style={{ position: "relative", padding: "180px 40px 120px", background: "#000", borderBottom: "1px solid rgba(255,255,255,0.06)", overflow: "hidden", minHeight: "560px" }}>
+            <img src="uploads/pexels-concept-1868728.jpg" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%", opacity: 0.45, filter: "grayscale(0.4) contrast(1.05)" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 35%, rgba(0,0,0,0.85) 100%)", pointerEvents: "none" }}></div>
+            <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 30% 60%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 80%)", pointerEvents: "none" }}></div>
+            <div style={{ position: "relative", maxWidth: "1280px", margin: "0 auto", zIndex: 1 }}>
+              <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", margin: "0 0 24px" }}>01 — executive summary</p>
+              <h1 style={{ fontSize: "clamp(48px, 7vw, 112px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.92, color: "#fff", margin: 0, textShadow: "0 2px 24px rgba(0,0,0,0.4)" }}>the project,<br/>at a glance</h1>
+              <p style={{ fontSize: "clamp(16px, 1.5vw, 20px)", color: "rgba(255,255,255,0.78)", lineHeight: 1.6, maxWidth: "640px", margin: "32px 0 0" }}>A two-minute read of the brief, the proposed solution, and the recommendation we put before Yintjingga Aboriginal Corporation.</p>
+            </div>
+          </section>
+
+          <Section bg="#000" pad="80px 40px 60px">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0", borderTop: "1px solid rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+              {kpis.map((k, i) => (
+                <div key={k.l} style={{ padding: "32px 24px", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
+                  <p style={{ fontSize: "clamp(28px, 3.5vw, 52px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 8px", lineHeight: 1 }}>{k.v}</p>
+                  <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.45)", margin: 0 }}>{k.l}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <Section bg="#0a0a0a" pad="80px 40px 100px">
+            <SectionLabel>the four beats</SectionLabel>
+            <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+              {beats.map((b, i) => (
+                <div key={b.k} style={{ display: "grid", gridTemplateColumns: "200px 1fr", gap: "48px", padding: "36px 0", borderTop: "1px solid rgba(255,255,255,0.1)", borderBottom: i === beats.length - 1 ? "1px solid rgba(255,255,255,0.1)" : "none", alignItems: "start" }}>
+                  <p style={{ fontSize: "18px", fontWeight: 500, letterSpacing: "-0.02em", color: "#fff", margin: 0 }}>{b.k}</p>
+                  <p style={{ fontSize: "17px", color: "rgba(255,255,255,0.65)", lineHeight: 1.7, margin: 0 }}>{b.v}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <Section bg="#000" pad="80px 40px 100px">
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }}>
+              <H2>If the report is read in full,<br/>read these three pages.</H2>
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                <a href="problem.html" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "12px", color: "#fff", textDecoration: "none", transition: "background 0.2s, border-color 0.2s" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; }}>
+                  <span><span className="mono" style={{ color: "rgba(255,255,255,0.35)", marginRight: "12px" }}>03</span>Problem & Brief</span><span style={{ color: "rgba(255,255,255,0.4)" }}>→</span>
+                </a>
+                <a href="design-process.html" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "12px", color: "#fff", textDecoration: "none" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; }}>
+                  <span><span className="mono" style={{ color: "rgba(255,255,255,0.35)", marginRight: "12px" }}>04</span>Design Process</span><span style={{ color: "rgba(255,255,255,0.4)" }}>→</span>
+                </a>
+                <a href="implementation.html" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "12px", color: "#fff", textDecoration: "none" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; }}>
+                  <span><span className="mono" style={{ color: "rgba(255,255,255,0.35)", marginRight: "12px" }}>09</span>Implementation Plan</span><span style={{ color: "rgba(255,255,255,0.4)" }}>→</span>
+                </a>
+              </div>
+            </div>
+          </Section>
+
+          <ReportFooter prev={{ href: "contents.html", label: "Contents" }} next={{ href: "problem.html", label: "Problem & Brief" }} />
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById("root")).render(<Page />);
+  </script>
+  <button id="back-to-top" type="button" aria-label="Back to top"
+    style="position:fixed;right:24px;bottom:24px;z-index:200;width:44px;height:44px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);background:rgba(23,23,23,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity 0.25s ease, transform 0.25s ease;font-family:inherit;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+  </button>
+  <script>
+    (function () {
+      var btn = document.getElementById('back-to-top'); if (!btn) return;
+      function update() { var y = window.scrollY || 0; if (y > 400) { btn.style.opacity='1'; btn.style.pointerEvents='auto'; btn.style.transform='translateY(0)'; } else { btn.style.opacity='0'; btn.style.pointerEvents='none'; btn.style.transform='translateY(8px)'; } }
+      btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      btn.addEventListener('mouseenter', function () { btn.style.background = 'rgba(255,255,255,0.95)'; btn.style.color = '#000'; });
+      btn.addEventListener('mouseleave', function () { btn.style.background = 'rgba(23,23,23,0.85)'; btn.style.color = '#fff'; });
+      window.addEventListener('scroll', update, { passive: true }); update();
+    })();
+  </script>
+</body>
+</html>

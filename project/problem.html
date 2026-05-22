@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Problem & Brief — E-Overflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body { font-family: 'Readex Pro', system-ui, -apple-system, sans-serif; background: #000; color: #fff; -webkit-font-smoothing: antialiased; }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace; }
+    em { font-style: normal; color: #fff; }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="report-shell.jsx"></script>
+  <script type="text/babel" src="report-primitives.jsx"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const needs = [
+      { label: "energy reliability", desc: "Reduce the community's exposure to grid outages and diesel-generator dependency by capturing more of the solar already being generated on-site." },
+      { label: "low-maintenance operation", desc: "Any new technology must function for extended periods without specialist intervention. Remote Cape York logistics make every site visit expensive." },
+      { label: "no behaviour change", desc: "Residents should not have to adopt new routines, monitor screens, or run apps. The system must operate invisibly." },
+      { label: "respect for Country", desc: "All works must minimise ground disturbance, avoid culturally significant sites, and proceed only with Yintjingga oversight." },
+      { label: "demonstrable savings", desc: "The Corporation needs to see measurable reduction in wasted energy and / or operating cost over a 12-month horizon." },
+    ];
+
+    const scope = {
+      "in scope": [
+        "Re-routing of PV surplus from battery-first to load-first for one or more deferrable loads",
+        "Hot-water cylinder as the primary deferrable load (highest single resistive draw)",
+        "Retrofit to existing off-grid hybrid solar + battery installations",
+        "Site-specific feasibility study and pilot deployment for one dwelling",
+      ],
+      "out of scope": [
+        "Replacement of existing PV array, inverter, or battery bank",
+        "Grid-connection works (the community is off-grid)",
+        "Major construction or new building works",
+        "Cultural heritage assessment (handled by Yintjingga Aboriginal Corporation directly)",
+      ],
+    };
+
+    const successCriteria = [
+      { metric: "wasted surplus reduction", target: "≥ 50 % vs. baseline", measure: "Logged PV → battery → load energy flows over 30-day window" },
+      { metric: "additional water heating from PV", target: "≥ 6 kWh / day avg.", measure: "Cylinder element kWh meter during pilot" },
+      { metric: "system uptime", target: "≥ 95 %", measure: "Switch on-time vs. total daylight hours" },
+      { metric: "community acceptance", target: "no complaints / opt-outs", measure: "Yintjingga community liaison sign-off" },
+      { metric: "maintenance interventions", target: "≤ 1 per 12 months", measure: "Issue log over pilot year" },
+      { metric: "capital cost per dwelling", target: "≤ A$1,500 installed", measure: "Quotes + final invoices" },
+    ];
+
+    function Page() {
+      return (
+        <div>
+          <ReportNav active="report" />
+          <PageHero chapter="03 — problem & brief" title={<>what we are<br/>actually solving</>} sub="The Engineers Without Borders Challenge brief, distilled into needs, scope, and the measurable criteria the design must satisfy." />
+
+          <Section bg="#000" pad="100px 40px 60px">
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start" }}>
+              <H2>the needs statement</H2>
+              <div>
+                <Body>
+                  The Yintjingga Aboriginal Corporation, on behalf of the Lama Lama community on Cape York, asked the project team to identify ways to improve the efficiency of the community's existing off-grid solar + battery infrastructure. The standing issue is not a lack of generation — the system has adequate PV capacity — but a mismatch between when energy is generated, when it is stored, and when it is actually consumed.
+                </Body>
+                <div style={{ height: "16px" }}></div>
+                <Body>
+                  In particular: large resistive loads (notably hot water heating) cycle on shortly after surplus has been routed into the battery bank, depleting that storage within minutes. The community wants this gap closed without altering daily routines, introducing fragile technology, or disturbing Country.
+                </Body>
+              </div>
+            </div>
+          </Section>
+
+          <Section bg="#000" pad="60px 40px 60px">
+            <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+              <div style={{ border: "1px solid rgba(255,255,255,0.14)", borderRadius: "16px", padding: "40px 44px 44px", background: "linear-gradient(180deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.01) 100%)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
+                  <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(154,230,110,0.95)", padding: "5px 10px", borderRadius: "999px", background: "rgba(154,230,110,0.1)", border: "1px solid rgba(154,230,110,0.25)" }}>EWB brief</span>
+                  <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.06em" }}>Design Opportunity 3.1 · Reliable Power for Essential Load</span>
+                </div>
+                <p style={{ fontSize: "clamp(20px, 2.2vw, 28px)", fontWeight: 400, letterSpacing: "-0.02em", lineHeight: 1.4, color: "#fff", margin: 0, maxWidth: "920px" }}>
+                  <span style={{ color: "rgba(255,255,255,0.35)", marginRight: "6px" }}>&ldquo;</span>Design energy systems that prioritise refrigeration, communications, lighting, and small tools, with minimal reliance on generators.<span style={{ color: "rgba(255,255,255,0.35)", marginLeft: "6px" }}>&rdquo;</span>
+                </p>
+                <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", marginTop: "32px", paddingTop: "24px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "32px" }}>
+                  {[
+                    { k: "refrigeration", b: "Continuous cooling for food, medical supplies, and ranger / NRM samples — the single least-deferrable load." },
+                    { k: "communications", b: "Reliable power for radios, mobile chargers, satellite gear — safety-critical during wet season isolation." },
+                    { k: "lighting", b: "After-dark lighting in dwellings and common buildings — primary night-time safety and amenity load." },
+                    { k: "small tools", b: "Power tools, pumps, sewing machines — the loads that enable livelihood enterprises (tourism, ranger work, cattle)." },
+                  ].map(c => (
+                    <div key={c.k}>
+                      <p style={{ fontSize: "13px", fontWeight: 500, color: "#fff", margin: "0 0 8px", letterSpacing: "-0.01em" }}>{c.k}</p>
+                      <p style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.5)", margin: 0, lineHeight: 1.55 }}>{c.b}</p>
+                    </div>
+                  ))}
+                </div>
+                <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: "32px 0 0", maxWidth: "920px" }}>
+                  Our brief, from Yintjingga, narrows this to the off-grid solar + battery system already on site at Moojeeba and Theethinji. The Solar Switch addresses Design Opportunity 3.1 by ensuring PV surplus is reallocated to deferrable loads <i style={{ fontStyle: "italic", color: "#fff" }}>first</i>, so the essential loads above retain their share of stored capacity for evening and overcast hours. Generator use is reduced as a downstream effect, not the primary lever.
+                </p>
+              </div>
+            </div>
+          </Section>
+
+          <Section bg="#0a0a0a" pad="80px 40px">
+            <SectionLabel>community needs (ranked)</SectionLabel>
+            <DefinitionList items={needs} />
+          </Section>
+
+          <Section bg="#000" pad="100px 40px">
+            <SectionLabel>scope</SectionLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px" }}>
+              {Object.entries(scope).map(([heading, list]) => (
+                <div key={heading}>
+                  <p style={{ fontSize: "20px", fontWeight: 500, letterSpacing: "-0.02em", color: "#fff", margin: "0 0 24px", textTransform: "capitalize" }}>{heading}</p>
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "16px" }}>
+                    {list.map((item, i) => (
+                      <li key={i} style={{ display: "flex", gap: "12px", paddingTop: "16px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                        <span className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", flexShrink: 0, paddingTop: "3px" }}>0{i+1}</span>
+                        <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.65)", lineHeight: 1.6, margin: 0 }}>{item}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <Section bg="#0a0a0a" pad="100px 40px">
+            <SectionLabel>constraints & assumptions</SectionLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start" }}>
+              <div>
+                <p style={{ fontSize: "20px", fontWeight: 500, color: "#fff", margin: "0 0 24px", letterSpacing: "-0.02em" }}>Hard constraints</p>
+                <DefinitionList items={[
+                  { label: "off-grid", desc: "No utility connection. All energy must be locally generated or stored." },
+                  { label: "remote logistics", desc: "Cape York access by 4WD only in dry season; air freight in wet season. Lead times of 4–8 weeks." },
+                  { label: "tropical climate", desc: "Ambient 24–36 °C. Equipment must rate IP54 or better, ≥ 60 °C operating ceiling." },
+                  { label: "AS/NZS standards", desc: "All electrical work must comply with AS/NZS 3000, 4509.2, and 5033." },
+                  { label: "budget envelope", desc: "Per-dwelling cap of A$1,500 capex including install labour." },
+                ]} />
+              </div>
+              <div>
+                <p style={{ fontSize: "20px", fontWeight: 500, color: "#fff", margin: "0 0 24px", letterSpacing: "-0.02em" }}>Working assumptions</p>
+                <DefinitionList items={[
+                  { label: "existing PV intact", desc: "Current panels, inverter, and battery bank are healthy and remain in place." },
+                  { label: "load profile", desc: "Hot water cylinder is the single largest resistive load (≈ 3.6 kW element, 250 L tank)." },
+                  { label: "solar window", desc: "Useable solar surplus typically 09:30–15:00 in dry season; reduced in wet." },
+                  { label: "installer access", desc: "Licensed electrician available for installation; community technicians available for routine maintenance." },
+                ]} />
+              </div>
+            </div>
+          </Section>
+
+          <Section bg="#000" pad="100px 40px 120px">
+            <SectionLabel>success criteria</SectionLabel>
+            <H2>numbers, not promises.</H2>
+            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "640px", margin: "24px 0 64px" }}>
+              The design is judged against these six measurable targets. Each can be verified independently using the instrumentation already specified in the feasibility study.
+            </p>
+            <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+              {successCriteria.map((c, i) => (
+                <div key={c.metric} style={{ display: "grid", gridTemplateColumns: "60px 1.5fr 1fr 2fr", gap: "32px", padding: "24px 0", borderBottom: "1px solid rgba(255,255,255,0.1)", alignItems: "center" }}>
+                  <span className="mono" style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)" }}>SC-{String(i+1).padStart(2,'0')}</span>
+                  <p style={{ fontSize: "15px", fontWeight: 500, letterSpacing: "-0.02em", color: "#fff", margin: 0 }}>{c.metric}</p>
+                  <p style={{ fontSize: "14px", color: "rgba(154,230,110,0.9)", margin: 0, fontWeight: 500 }}>{c.target}</p>
+                  <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.45)", margin: 0, lineHeight: 1.6 }}>{c.measure}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <ReportFooter prev={{ href: "executive-summary.html", label: "Executive Summary" }} next={{ href: "design-process.html", label: "Design Process" }} />
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById("root")).render(<Page />);
+  </script>
+  <button id="back-to-top" type="button" aria-label="Back to top"
+    style="position:fixed;right:24px;bottom:24px;z-index:200;width:44px;height:44px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);background:rgba(23,23,23,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity 0.25s ease, transform 0.25s ease;font-family:inherit;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+  </button>
+  <script>
+    (function () {
+      var btn = document.getElementById('back-to-top'); if (!btn) return;
+      function update() { var y = window.scrollY || 0; if (y > 400) { btn.style.opacity='1'; btn.style.pointerEvents='auto'; btn.style.transform='translateY(0)'; } else { btn.style.opacity='0'; btn.style.pointerEvents='none'; btn.style.transform='translateY(8px)'; } }
+      btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      btn.addEventListener('mouseenter', function () { btn.style.background = 'rgba(255,255,255,0.95)'; btn.style.color = '#000'; });
+      btn.addEventListener('mouseleave', function () { btn.style.background = 'rgba(23,23,23,0.85)'; btn.style.color = '#fff'; });
+      window.addEventListener('scroll', update, { passive: true }); update();
+    })();
+  </script>
+</body>
+</html>

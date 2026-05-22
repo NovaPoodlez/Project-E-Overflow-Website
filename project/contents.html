@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contents — E-Overflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body {
+      font-family: 'Readex Pro', system-ui, -apple-system, sans-serif;
+      background: #000; color: #fff;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace; }
+    em { font-style: normal; color: #fff; }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="report-shell.jsx"></script>
+  <script type="text/babel" src="report-primitives.jsx"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const sections = [
+      { num: "01", title: "Executive Summary", href: "executive-summary.html", desc: "Project at a glance — problem, solution, outcome, recommendation." },
+      { num: "02", title: "Client & Community", href: "lama-lama.html", desc: "Yintjingga Aboriginal Corporation and the Lama Lama community of Cape York." },
+      { num: "03", title: "Problem & Brief", href: "problem.html", desc: "Needs statement, scope, constraints, assumptions, and success criteria." },
+      { num: "04", title: "Design Process", href: "design-process.html", desc: "Ideation, concept evaluation, decision matrix, and prototyping iterations." },
+      { num: "05", title: "The Solution", href: "index.html#strategy", desc: "Solar Switch — Solution One (Timer) and Solution Two (Diverter)." },
+      { num: "06", title: "Considerations", href: "considerations.html", desc: "Social, cultural, environmental and budgetary analysis." },
+      { num: "07", title: "Feasibility", href: "lama-lama-feasibility.html", desc: "Site-specific feasibility study for the Lama Lama community." },
+      { num: "08", title: "Risks & Concerns", href: "risks.html", desc: "Risk register, mitigations, and frequently asked questions." },
+      { num: "09", title: "Implementation Plan", href: "implementation.html", desc: "Timeline, resourcing, training, handover, monitoring." },
+      { num: "10", title: "Further Recommendations", href: "recommendations.html", desc: "What a successor team should pursue next." },
+      { num: "11", title: "The Team", href: "index.html#team", desc: "Team members, roles, and project management." },
+      { num: "12", title: "References", href: "references.html", desc: "Cited sources, standards, and supporting literature." },
+    ];
+
+    function Row({ s }) {
+      const [hov, setHov] = useState(false);
+      return (
+        <a href={s.href}
+          onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+          style={{ display: "grid", gridTemplateColumns: "80px 1fr 1.4fr 80px", gap: "32px", padding: "32px 0", borderBottom: "1px solid rgba(255,255,255,0.08)", textDecoration: "none", alignItems: "center", color: "#fff", transition: "background 0.2s", background: hov ? "rgba(255,255,255,0.025)" : "transparent" }}>
+          <span className="mono" style={{ fontSize: "13px", color: hov ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)", letterSpacing: "0.05em", transition: "color 0.2s" }}>{s.num}</span>
+          <h3 style={{ fontSize: "clamp(22px, 2.4vw, 32px)", fontWeight: 500, letterSpacing: "-0.03em", margin: 0, transform: hov ? "translateX(8px)" : "translateX(0)", transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)" }}>{s.title}</h3>
+          <p style={{ fontSize: "14px", color: hov ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.55, transition: "color 0.3s" }}>{s.desc}</p>
+          <span style={{ fontSize: "20px", color: hov ? "#fff" : "rgba(255,255,255,0.25)", transition: "color 0.2s, transform 0.2s", textAlign: "right", transform: hov ? "translateX(4px)" : "translateX(0)" }}>→</span>
+        </a>
+      );
+    }
+
+    function Page() {
+      return (
+        <div>
+          <ReportNav active="report" />
+          <PageHero chapter="00 — contents" title={<>table of<br/>contents</>} sub="A complete map of this report. Twelve sections covering the problem, the solution, and the path from prototype to handover for the Lama Lama community." />
+          <Section bg="#000" pad="60px 40px 120px">
+            <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+              {sections.map(s => <Row key={s.num} s={s} />)}
+            </div>
+          </Section>
+          <ReportFooter next={{ href: "executive-summary.html", label: "Executive Summary" }} />
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById("root")).render(<Page />);
+  </script>
+  <button id="back-to-top" type="button" aria-label="Back to top"
+    style="position:fixed;right:24px;bottom:24px;z-index:200;width:44px;height:44px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);background:rgba(23,23,23,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;font-family:inherit;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+  </button>
+  <script>
+    (function () {
+      var btn = document.getElementById('back-to-top');
+      if (!btn) return;
+      function update() {
+        var y = window.scrollY || document.documentElement.scrollTop || 0;
+        if (y > 400) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; btn.style.transform = 'translateY(0)'; }
+        else { btn.style.opacity = '0'; btn.style.pointerEvents = 'none'; btn.style.transform = 'translateY(8px)'; }
+      }
+      btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      btn.addEventListener('mouseenter', function () { btn.style.background = 'rgba(255,255,255,0.95)'; btn.style.color = '#000'; });
+      btn.addEventListener('mouseleave', function () { btn.style.background = 'rgba(23,23,23,0.85)'; btn.style.color = '#fff'; });
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+  </script>
+</body>
+</html>

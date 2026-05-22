@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Further Recommendations — E-Overflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body { font-family: 'Readex Pro', system-ui, -apple-system, sans-serif; background: #000; color: #fff; -webkit-font-smoothing: antialiased; }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace; }
+    em { font-style: normal; color: #fff; }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="report-shell.jsx"></script>
+  <script type="text/babel" src="report-primitives.jsx"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const horizons = [
+      {
+        h: "0–6 months",
+        title: "stabilise the pilot",
+        items: [
+          { t: "Complete pilot dwelling install", b: "Energise one dwelling under engineering supervision; capture daily energy flows through a full month of operation." },
+          { t: "Wet-season validation", b: "Run the pilot through at least one wet-season month before community-wide deployment. Surplus profiles differ markedly from dry-season expectations." },
+          { t: "Fault-mode catalogue", b: "Maintain a living register of every fault observed during the pilot. Update the runbook before the next dwelling is energised." },
+        ],
+      },
+      {
+        h: "6–18 months",
+        title: "scale and harden",
+        items: [
+          { t: "Community-wide roll-out", b: "Subject to pilot data meeting success criteria, expand to remaining dwellings on a one-per-fortnight cadence to keep installer fatigue low." },
+          { t: "Independent post-implementation review", b: "Engage an external reviewer at the 12-month mark to verify performance against the six measurable criteria." },
+          { t: "Spare-parts depot", b: "Pre-stage two SSRs, two CT clamps, and one microcontroller at the Yintjingga office. Costs ≈ A$280; saves a Cape York site visit." },
+        ],
+      },
+      {
+        h: "18+ months",
+        title: "extend and share",
+        items: [
+          { t: "Additional deferrable loads", b: "Where battery utilisation patterns allow, extend diversion to a second load per dwelling — pool pump, water pump, or auxiliary tank." },
+          { t: "Sister community pilot", b: "The architecture is intentionally portable. A second pilot in a comparable Cape York community would validate generalisability." },
+          { t: "Knowledge product", b: "Publish a redacted version of this report as an open-access reference for other Aboriginal Corporations exploring similar retrofits. Subject to Yintjingga consent." },
+        ],
+      },
+    ];
+
+    const open = [
+      { q: "Would a small thermal store (sand or water buffer) further improve diversion utilisation in shoulder seasons?", c: "Modelling only at present. Worth a Year 2 thesis project at a partner university." },
+      { q: "Can the diverter logic be ported to a fully open-source ESP32-based controller without compromising AS/NZS compliance?", c: "Compliance pathway exists but unverified. Removes per-unit licence cost (~A$80) if confirmed." },
+      { q: "Is there a community-led tariff model that pays the dwelling owner for surplus diverted to a shared load?", c: "Outside the original brief but raised in stakeholder consultation. Yintjingga to lead any policy work." },
+    ];
+
+    const decommission = [
+      { l: "Component reuse", d: "SSRs, CT clamps, and microcontrollers from any dwelling that opts out are stored at the Yintjingga office as community spare parts." },
+      { l: "Enclosure recycling", d: "Powder-coated aluminium enclosures returned to Cairns metal recycler. Pre-arranged take-back agreement with the supplier." },
+      { l: "Restoration to baseline", d: "Removal returns the dwelling to its pre-install electrical configuration. Documented procedure in the runbook." },
+      { l: "Data archiving", d: "All operational data archived to Yintjingga storage on opt-out. No external retention." },
+    ];
+
+    function Page() {
+      return (
+        <div>
+          <ReportNav active="report" />
+          <PageHero chapter="10 — further recommendations" title={<>what we'd<br/>do next</>} sub="If this report is the handoff to a successor team — these are the next moves." />
+
+          <Section bg="#000" pad="100px 40px 60px">
+            <SectionLabel>three horizons</SectionLabel>
+            <H2>now, soon, later.</H2>
+            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "640px", margin: "24px 0 0" }}>
+              Recommendations are grouped by horizon. The first horizon is non-negotiable. The second and third should be pursued only after pilot data confirms the foundation is sound.
+            </p>
+          </Section>
+
+          <Section bg="#000" pad="40px 40px 80px">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "32px" }}>
+              {horizons.map((hz, i) => (
+                <div key={hz.h} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: "16px", padding: "32px 28px 36px", display: "flex", flexDirection: "column" }}>
+                  <span className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", marginBottom: "8px" }}>{hz.h}</span>
+                  <h3 style={{ fontSize: "clamp(24px, 2.4vw, 32px)", fontWeight: 500, letterSpacing: "-0.03em", color: "#fff", margin: "0 0 28px", lineHeight: 1 }}>{hz.title}</h3>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "20px", flex: 1 }}>
+                    {hz.items.map((it, j) => (
+                      <div key={j} style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "16px" }}>
+                        <p style={{ fontSize: "15px", fontWeight: 500, color: "#fff", margin: "0 0 6px", letterSpacing: "-0.02em" }}>{it.t}</p>
+                        <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.5)", margin: 0, lineHeight: 1.6 }}>{it.b}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <Section bg="#0a0a0a" pad="100px 40px">
+            <SectionLabel>open research questions</SectionLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start", marginBottom: "56px" }}>
+              <H2>we left these<br/>on the table.</H2>
+              <Body>
+                Questions worth a follow-up study, an honours thesis, or a Year 2 EWB Challenge cohort. None are blockers; all would improve the system if answered well.
+              </Body>
+            </div>
+            <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+              {open.map((q, i) => (
+                <div key={i} style={{ display: "grid", gridTemplateColumns: "60px 1.5fr 1fr", gap: "32px", padding: "28px 0", borderBottom: "1px solid rgba(255,255,255,0.08)", alignItems: "start" }}>
+                  <span className="mono" style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)" }}>Q-{String(i+1).padStart(2,'0')}</span>
+                  <p style={{ fontSize: "17px", color: "#fff", margin: 0, lineHeight: 1.5, letterSpacing: "-0.02em" }}>{q.q}</p>
+                  <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.45)", margin: 0, lineHeight: 1.6 }}>{q.c}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <Section bg="#000" pad="100px 40px 120px">
+            <SectionLabel>scaling pathway</SectionLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }}>
+              <H2>from one community<br/>to many.</H2>
+              <Body>
+                The architecture is deliberately community-portable. Hard-coded values (irradiance assumptions, dwelling count, load priorities) are isolated into a single configuration block. Adapting the design for a comparable Cape York or Top End community is a one-week engineering exercise, not a redesign.
+              </Body>
+            </div>
+            <div style={{ marginTop: "64px", borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+              <DefinitionList items={decommission} />
+            </div>
+          </Section>
+
+          <ReportFooter prev={{ href: "implementation.html", label: "Implementation Plan" }} next={{ href: "references.html", label: "References" }} />
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById("root")).render(<Page />);
+  </script>
+  <button id="back-to-top" type="button" aria-label="Back to top"
+    style="position:fixed;right:24px;bottom:24px;z-index:200;width:44px;height:44px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);background:rgba(23,23,23,0.85);backdrop-filter:blur(12px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity 0.25s ease, transform 0.25s ease;font-family:inherit;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+  </button>
+  <script>
+    (function () { var btn = document.getElementById('back-to-top'); if (!btn) return;
+      function update() { var y = window.scrollY || 0; if (y > 400) { btn.style.opacity='1'; btn.style.pointerEvents='auto'; btn.style.transform='translateY(0)'; } else { btn.style.opacity='0'; btn.style.pointerEvents='none'; btn.style.transform='translateY(8px)'; } }
+      btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      window.addEventListener('scroll', update, { passive: true }); update();
+    })();
+  </script>
+</body>
+</html>

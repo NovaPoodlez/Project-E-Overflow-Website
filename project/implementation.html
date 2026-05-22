@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Implementation Plan — E-Overflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body { font-family: 'Readex Pro', system-ui, -apple-system, sans-serif; background: #000; color: #fff; -webkit-font-smoothing: antialiased; }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace; }
+    em { font-style: normal; color: #fff; }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="report-shell.jsx"></script>
+  <script type="text/babel" src="report-primitives.jsx"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    // 26 week schedule
+    const phases = [
+      { name: "Approvals & funding", start: 0, end: 4, color: "rgba(255,255,255,0.4)" },
+      { name: "Detailed design freeze", start: 2, end: 6, color: "rgba(255,255,255,0.55)" },
+      { name: "Procurement (long-lead items)", start: 4, end: 12, color: "rgba(255,255,255,0.55)" },
+      { name: "Community engagement", start: 4, end: 26, color: "rgba(154,230,110,0.7)" },
+      { name: "Pilot install — dwelling 01", start: 12, end: 14, color: "rgba(154,230,110,0.85)" },
+      { name: "Pilot monitoring (1 dwelling)", start: 14, end: 26, color: "rgba(232,192,98,0.7)" },
+      { name: "Community technician training", start: 13, end: 16, color: "rgba(154,230,110,0.7)" },
+      { name: "Roll-out — dwellings 02–10", start: 17, end: 23, color: "rgba(154,230,110,0.85)" },
+      { name: "Handover & documentation", start: 23, end: 26, color: "rgba(255,255,255,0.55)" },
+    ];
+
+    const weekLabels = [0, 4, 8, 12, 16, 20, 26];
+
+    const resourcing = [
+      { role: "Project lead (team)", hours: "0.4 FTE × 26 wk", note: "Coordination, reporting, stakeholder liaison" },
+      { role: "Lead designer / engineer", hours: "0.6 FTE × 8 wk", note: "Detailed design, BOM, install procedure" },
+      { role: "Licensed electrician (subcontract)", hours: "≈ 60 hours total", note: "Pilot install + roll-out installs + sign-off" },
+      { role: "Community technician (paid)", hours: "16 hours training + ongoing", note: "Local first-response, calibration, routine checks" },
+      { role: "Yintjingga liaison", hours: "≈ 4 hr / fortnight", note: "Community consultation, cultural sign-off, scheduling" },
+      { role: "Independent reviewer", hours: "8 hours", note: "Compliance audit prior to community-wide energisation" },
+    ];
+
+    const training = [
+      { mod: "M1", name: "System overview & purpose", dur: "1 hr", who: "Whole community (open session)" },
+      { mod: "M2", name: "How surplus diversion works", dur: "1 hr", who: "Whole community" },
+      { mod: "M3", name: "Reading the indicator card", dur: "30 min", who: "Each household" },
+      { mod: "M4", name: "Routine inspection checklist", dur: "2 hr practical", who: "Community technicians" },
+      { mod: "M5", name: "Fault diagnosis & SSR replacement", dur: "3 hr practical", who: "Community technicians" },
+      { mod: "M6", name: "Escalation & remote support protocol", dur: "1 hr", who: "Community technicians + Yintjingga" },
+    ];
+
+    const monitoring = [
+      { kpi: "Daily PV energy captured by diverter (kWh)", cadence: "Daily, automated log", review: "Monthly" },
+      { kpi: "Battery cycle depth (%)", cadence: "Daily, from inverter", review: "Monthly" },
+      { kpi: "Hot water availability complaints", cadence: "Continuous, household log", review: "Monthly" },
+      { kpi: "Diverter uptime / fault events", cadence: "Continuous, automated", review: "Quarterly" },
+      { kpi: "Annual energy cost saving vs. baseline", cadence: "Annual", review: "Annual" },
+      { kpi: "Community satisfaction survey", cadence: "Quarterly", review: "Quarterly" },
+    ];
+
+    function Page() {
+      return (
+        <div>
+          <ReportNav active="report" />
+          <section style={{ position: "relative", padding: "180px 40px 140px", background: "#000", borderBottom: "1px solid rgba(255,255,255,0.06)", overflow: "hidden", minHeight: "620px" }}>
+            <img src="uploads/CapeYorkLandscape1.png" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 55%", opacity: 0.7 }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 40%, rgba(0,0,0,0.85) 100%)", pointerEvents: "none" }}></div>
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0) 80%)", pointerEvents: "none" }}></div>
+            <div style={{ position: "relative", maxWidth: "1280px", margin: "0 auto", zIndex: 1 }}>
+              <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.65)", margin: "0 0 24px" }}>09 — implementation plan</p>
+              <h1 style={{ fontSize: "clamp(48px, 7vw, 112px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.92, color: "#fff", margin: 0, textShadow: "0 2px 28px rgba(0,0,0,0.5)" }}>26 weeks,<br/>plus the rest of it</h1>
+              <p style={{ fontSize: "clamp(16px, 1.5vw, 20px)", color: "rgba(255,255,255,0.82)", lineHeight: 1.6, maxWidth: "640px", margin: "32px 0 0", textShadow: "0 1px 12px rgba(0,0,0,0.6)" }}>The plan that takes the design from accepted to operating — install, train, monitor, hand over.</p>
+            </div>
+          </section>
+
+          <Section bg="#000" pad="100px 40px 60px">
+            <SectionLabel>schedule</SectionLabel>
+            <H2>phased deployment.</H2>
+            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "720px", margin: "24px 0 56px" }}>
+              The plan resists the temptation to roll out community-wide immediately. A single-dwelling pilot of at least 8 weeks precedes wider deployment, deliberately overlapping the wet → dry seasonal transition.
+            </p>
+
+            {/* Gantt strip */}
+            <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+              {/* Header row */}
+              <div style={{ display: "grid", gridTemplateColumns: "minmax(220px, 1fr) 3fr", gap: "24px", padding: "16px 0", borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
+                <span className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", textTransform: "uppercase" }}>phase</span>
+                <div style={{ position: "relative", height: "16px" }}>
+                  {weekLabels.map(w => (
+                    <span key={w} className="mono" style={{ position: "absolute", left: `${(w/26)*100}%`, transform: "translateX(-50%)", fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>w{w}</span>
+                  ))}
+                </div>
+              </div>
+
+              {phases.map((p, i) => (
+                <div key={p.name} style={{ display: "grid", gridTemplateColumns: "minmax(220px, 1fr) 3fr", gap: "24px", padding: "14px 0", borderBottom: "1px solid rgba(255,255,255,0.06)", alignItems: "center" }}>
+                  <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.8)", margin: 0, letterSpacing: "-0.01em" }}>{p.name}</p>
+                  <div style={{ position: "relative", height: "22px" }}>
+                    <div style={{ position: "absolute", top: 0, bottom: 0, left: `${(p.start/26)*100}%`, width: `${((p.end - p.start)/26)*100}%`, background: p.color, borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "flex-start", paddingLeft: "10px" }}>
+                      <span className="mono" style={{ fontSize: "10px", color: "#000", fontWeight: 500, letterSpacing: "0.04em" }}>w{p.start}–w{p.end}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: "flex", gap: "24px", marginTop: "32px", flexWrap: "wrap" }}>
+              <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ width: "12px", height: "12px", borderRadius: "3px", background: "rgba(154,230,110,0.85)" }}></span>install / build
+              </span>
+              <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ width: "12px", height: "12px", borderRadius: "3px", background: "rgba(232,192,98,0.7)" }}></span>observe
+              </span>
+              <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ width: "12px", height: "12px", borderRadius: "3px", background: "rgba(255,255,255,0.4)" }}></span>plan / admin
+              </span>
+            </div>
+          </Section>
+
+          <Section bg="#0a0a0a" pad="100px 40px">
+            <SectionLabel>resourcing</SectionLabel>
+            <H2>who does what.</H2>
+            <div style={{ marginTop: "56px", borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 2fr", gap: "32px", padding: "16px 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}>
+                {["role", "commitment", "responsibility"].map(h => (
+                  <span key={h} className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{h}</span>
+                ))}
+              </div>
+              {resourcing.map(r => (
+                <div key={r.role} style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 2fr", gap: "32px", padding: "22px 0", borderBottom: "1px solid rgba(255,255,255,0.08)", alignItems: "start" }}>
+                  <p style={{ fontSize: "15px", fontWeight: 500, color: "#fff", margin: 0, letterSpacing: "-0.02em" }}>{r.role}</p>
+                  <p className="mono" style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", margin: 0 }}>{r.hours}</p>
+                  <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.55)", margin: 0, lineHeight: 1.6 }}>{r.note}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <Section bg="#000" pad="100px 40px">
+            <SectionLabel>training & handover</SectionLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start", marginBottom: "56px" }}>
+              <H2>community owns<br/>the system.</H2>
+              <Body>
+                Handover is not a single event but a six-module training programme delivered across the install window. The system is signed over to the Yintjingga Aboriginal Corporation at the completion of Module 6, accompanied by a printed runbook, BOM, supplier contacts, and 12 months of remote-support availability.
+              </Body>
+            </div>
+            <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "60px 1.6fr 120px 1.4fr", gap: "24px", padding: "16px 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}>
+                {["module", "topic", "duration", "audience"].map(h => (
+                  <span key={h} className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{h}</span>
+                ))}
+              </div>
+              {training.map(t => (
+                <div key={t.mod} style={{ display: "grid", gridTemplateColumns: "60px 1.6fr 120px 1.4fr", gap: "24px", padding: "20px 0", borderBottom: "1px solid rgba(255,255,255,0.08)", alignItems: "center" }}>
+                  <span className="mono" style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)" }}>{t.mod}</span>
+                  <p style={{ fontSize: "15px", color: "#fff", margin: 0, fontWeight: 500, letterSpacing: "-0.02em" }}>{t.name}</p>
+                  <p className="mono" style={{ fontSize: "13px", color: "rgba(255,255,255,0.65)", margin: 0 }}>{t.dur}</p>
+                  <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.5)", margin: 0, lineHeight: 1.55 }}>{t.who}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <Section bg="#0a0a0a" pad="100px 40px 120px">
+            <SectionLabel>monitoring & evaluation</SectionLabel>
+            <H2>what we watch,<br/>and how often.</H2>
+            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "640px", margin: "24px 0 56px" }}>
+              Every KPI maps back to one of the success criteria in <a href="problem.html" style={{ color: "#fff", textDecoration: "underline", textUnderlineOffset: "3px", textDecorationColor: "rgba(255,255,255,0.4)" }}>section 03</a>. Data ownership stays with Yintjingga; the project team has read access by written agreement only.
+            </p>
+            <DefinitionList items={monitoring.map(m => ({ label: m.kpi, desc: `${m.cadence} · reviewed ${m.review.toLowerCase()}` }))} />
+          </Section>
+
+          <ReportFooter prev={{ href: "risks.html", label: "Risks & Concerns" }} next={{ href: "recommendations.html", label: "Further Recommendations" }} />
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById("root")).render(<Page />);
+  </script>
+  <button id="back-to-top" type="button" aria-label="Back to top"
+    style="position:fixed;right:24px;bottom:24px;z-index:200;width:44px;height:44px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);background:rgba(23,23,23,0.85);backdrop-filter:blur(12px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity 0.25s ease, transform 0.25s ease;font-family:inherit;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+  </button>
+  <script>
+    (function () { var btn = document.getElementById('back-to-top'); if (!btn) return;
+      function update() { var y = window.scrollY || 0; if (y > 400) { btn.style.opacity='1'; btn.style.pointerEvents='auto'; btn.style.transform='translateY(0)'; } else { btn.style.opacity='0'; btn.style.pointerEvents='none'; btn.style.transform='translateY(8px)'; } }
+      btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      window.addEventListener('scroll', update, { passive: true }); update();
+    })();
+  </script>
+</body>
+</html>

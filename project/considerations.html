@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Considerations — E-Overflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body { font-family: 'Readex Pro', system-ui, -apple-system, sans-serif; background: #000; color: #fff; -webkit-font-smoothing: antialiased; }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace; }
+    em { font-style: normal; color: #fff; }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="report-shell.jsx"></script>
+  <script type="text/babel" src="report-primitives.jsx"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const pillars = [
+      {
+        key: "social",
+        title: "social",
+        intro: "Energy isn't neutral. Who benefits, who maintains, and who is consulted all shape whether a design lasts.",
+        points: [
+          { h: "Consultation cadence", b: "Fortnightly check-ins with the Yintjingga Aboriginal Corporation liaison during design; weekly during pilot; quarterly during operation. Community-led pace, not project-led." },
+          { h: "Local employment", b: "Installation and ongoing maintenance favour Indigenous-owned electrical contractors where available. The project actively avoids fly-in fly-out workflows for routine work." },
+          { h: "Skills transfer", b: "A two-day workshop introduces community technicians to the diverter logic, fault codes, and replacement procedure for the SSR and CT clamp — the only field-serviceable parts." },
+          { h: "Equity of benefit", b: "The Solar Switch is installed at every dwelling that elects to participate, not just one demonstration home. No-one is asked to be the experiment." },
+        ],
+      },
+      {
+        key: "cultural",
+        title: "cultural",
+        intro: "Lama Lama is Country before it is a site. Every decision is filtered through that order of precedence.",
+        points: [
+          { h: "Acknowledgement of Country", b: "The Lama Lama people are the Traditional Owners of the land on which this project is delivered. The team acknowledges their continuing connection to land, waters and culture, and pays respect to Elders past and present." },
+          { h: "Cultural heritage", b: "All ground-disturbance works are mapped against Yintjingga's cultural heritage register prior to scheduling. Any work within 50 m of recorded sites is paused for separate clearance." },
+          { h: "Decision protocol", b: "Major design decisions (site, equipment, install dates) require Yintjingga sign-off, not just notification. Project timelines build in space for this." },
+          { h: "Visual and audible footprint", b: "Equipment is enclosed and located to minimise visual intrusion on dwellings. The diverter is silent in operation; no fan, no flashing indicators visible from inside the home." },
+          { h: "Data sovereignty", b: "Energy data logged from the pilot remains the property of the Yintjingga Aboriginal Corporation. No data leaves Country without explicit, time-bounded consent." },
+        ],
+      },
+      {
+        key: "environmental",
+        title: "environmental",
+        intro: "The whole point is to use cleaner energy more completely. We hold ourselves to a full-lifecycle standard, not just point-of-use.",
+        points: [
+          { h: "Embodied carbon", b: "Per-dwelling embodied CO₂ for the Solution Two BOM is estimated at ≈ 38 kg CO₂e — recovered through avoided diesel generation within ~9 weeks of operation." },
+          { h: "Operational carbon", b: "Approximate avoidance of 1.8 t CO₂e per dwelling per year, assuming displacement of generator-backed hot water heating during low-PV periods (preliminary estimate; to be validated in pilot)." },
+          { h: "End-of-life", b: "Major components (SSR, CT clamp, microcontroller) are individually replaceable. Whole-unit replacement is not required for any single point of failure. Recyclable enclosure (powder-coated aluminium)." },
+          { h: "E-waste minimisation", b: "By retrofitting rather than replacing the existing inverter and battery, the design avoids the ~80 kg per dwelling of electronic waste a full hybrid-inverter swap would generate." },
+          { h: "Land impact", b: "Zero new ground disturbance. All installations are mounted on existing dwelling switchboards or adjacent walls." },
+        ],
+      },
+      {
+        key: "budgetary",
+        title: "budgetary",
+        intro: "Indicative figures, in Australian dollars, for the recommended Solution Two deployment per dwelling. Final costs subject to procurement in 2026.",
+        points: [],
+        budget: [
+          { item: "Solar diverter unit (Catch Power Green Catch or equivalent)", capex: 580, opex: 0 },
+          { item: "CT clamp + cabling kit", capex: 95, opex: 0 },
+          { item: "Enclosure + DIN rail + isolators", capex: 140, opex: 0 },
+          { item: "Licensed electrician install (4 hr)", capex: 480, opex: 0 },
+          { item: "Commissioning + tagging + documentation", capex: 120, opex: 0 },
+          { item: "Annual inspection (per dwelling)", capex: 0, opex: 95 },
+          { item: "Replacement SSR (5-year cadence, amortised)", capex: 0, opex: 18 },
+        ],
+      },
+    ];
+
+    function PillarBlock({ p }) {
+      const total = p.budget && p.budget.reduce((a,x) => a + x.capex, 0);
+      const opex = p.budget && p.budget.reduce((a,x) => a + x.opex, 0);
+      return (
+        <section id={p.key} style={{ background: p.key === "cultural" || p.key === "budgetary" ? "#0a0a0a" : "#000", padding: "100px 40px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start", marginBottom: "56px" }}>
+              <div>
+                <p className="mono" style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", margin: "0 0 24px" }}>pillar — {p.title}</p>
+                <h2 style={{ fontSize: "clamp(36px, 5vw, 64px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0, textTransform: "lowercase" }}>{p.title}</h2>
+              </div>
+              <p style={{ fontSize: "17px", color: "rgba(255,255,255,0.65)", lineHeight: 1.75, margin: 0, paddingTop: "12px" }}>{p.intro}</p>
+            </div>
+
+            {p.points && p.points.length > 0 && (
+              <DefinitionList items={p.points.map(pt => ({ label: pt.h, desc: pt.b }))} />
+            )}
+
+            {p.budget && (
+              <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 140px 140px", gap: "24px", padding: "16px 0", borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
+                  <span className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase" }}>line item</span>
+                  <span className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", textAlign: "right" }}>capex (A$)</span>
+                  <span className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", textAlign: "right" }}>opex / yr (A$)</span>
+                </div>
+                {p.budget.map((b, i) => (
+                  <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 140px 140px", gap: "24px", padding: "16px 0", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                    <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.7)", margin: 0 }}>{b.item}</p>
+                    <p className="mono" style={{ fontSize: "14px", color: b.capex ? "#fff" : "rgba(255,255,255,0.25)", margin: 0, textAlign: "right" }}>{b.capex || "—"}</p>
+                    <p className="mono" style={{ fontSize: "14px", color: b.opex ? "#fff" : "rgba(255,255,255,0.25)", margin: 0, textAlign: "right" }}>{b.opex || "—"}</p>
+                  </div>
+                ))}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 140px 140px", gap: "24px", padding: "24px 0", borderTop: "1px solid rgba(255,255,255,0.2)" }}>
+                  <p style={{ fontSize: "16px", color: "#fff", fontWeight: 500, margin: 0, letterSpacing: "-0.01em" }}>Total — per dwelling</p>
+                  <p className="mono" style={{ fontSize: "18px", color: "rgba(154,230,110,1)", fontWeight: 500, margin: 0, textAlign: "right" }}>{total}</p>
+                  <p className="mono" style={{ fontSize: "18px", color: "rgba(154,230,110,1)", fontWeight: 500, margin: 0, textAlign: "right" }}>{opex}</p>
+                </div>
+                <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", lineHeight: 1.7, marginTop: "32px", maxWidth: "640px" }}>
+                  Funding pathway: a community-led grant application through ARENA's Regional Australia Microgrids Pilot Program is the recommended route. Allowance for contingency at 15 % brings the indicative per-dwelling total to ≈ A$1,510 — within the project budget envelope.
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+      );
+    }
+
+    function Page() {
+      return (
+        <div>
+          <ReportNav active="report" />
+          <PageHero chapter="06 — considerations" title={<>four pillars,<br/>not one</>} sub="The EWB Challenge brief requires social, cultural, environmental and budgetary considerations to be treated as first-class design inputs. They are." />
+
+          <Section bg="#0a0a0a" pad="60px 40px 60px">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "2px" }}>
+              {pillars.map(p => (
+                <a key={p.key} href={"#" + p.key} style={{ borderTop: "1px solid rgba(255,255,255,0.12)", paddingTop: "24px", paddingBottom: "28px", textDecoration: "none", color: "#fff", transition: "background 0.2s", paddingLeft: "16px", paddingRight: "16px" }}
+                  onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.03)"}
+                  onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                  <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", margin: 0 }}>0{pillars.indexOf(p) + 1}</p>
+                  <p style={{ fontSize: "22px", fontWeight: 500, letterSpacing: "-0.03em", color: "#fff", margin: "12px 0 0" }}>{p.title}</p>
+                </a>
+              ))}
+            </div>
+          </Section>
+
+          {pillars.map(p => <PillarBlock key={p.key} p={p} />)}
+
+          <ReportFooter prev={{ href: "design-process.html", label: "Design Process" }} next={{ href: "risks.html", label: "Risks & Concerns" }} />
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById("root")).render(<Page />);
+  </script>
+  <button id="back-to-top" type="button" aria-label="Back to top"
+    style="position:fixed;right:24px;bottom:24px;z-index:200;width:44px;height:44px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);background:rgba(23,23,23,0.85);backdrop-filter:blur(12px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity 0.25s ease, transform 0.25s ease;font-family:inherit;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+  </button>
+  <script>
+    (function () { var btn = document.getElementById('back-to-top'); if (!btn) return;
+      function update() { var y = window.scrollY || 0; if (y > 400) { btn.style.opacity='1'; btn.style.pointerEvents='auto'; btn.style.transform='translateY(0)'; } else { btn.style.opacity='0'; btn.style.pointerEvents='none'; btn.style.transform='translateY(8px)'; } }
+      btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      window.addEventListener('scroll', update, { passive: true }); update();
+    })();
+  </script>
+</body>
+</html>
