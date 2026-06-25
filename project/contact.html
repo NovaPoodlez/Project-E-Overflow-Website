@@ -131,7 +131,7 @@
       ];
 
       return (
-        <nav style={{ padding: "20px 40px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.06)", position: "sticky", top: 0, background: "rgba(0,0,0,0.92)", backdropFilter: "blur(14px)", zIndex: 50 }}>
+        <nav style={{ padding: "clamp(12px, 3vw, 20px) clamp(16px, 5vw, 40px)", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.06)", position: "sticky", top: 0, background: "rgba(0,0,0,0.92)", backdropFilter: "blur(14px)", zIndex: 50 }}>
           <a href="index.html" style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none" }}>
             <LogoSVG />
             <span style={{ color: "#fff", fontSize: "14px", letterSpacing: "-0.02em" }}>E-Overflow</span>
@@ -226,34 +226,34 @@
           <SiteNav active="contact" />
 
           {/* Main */}
-          <main style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: "calc(100vh - 73px)" }}>
+          <main style={{ flex: 1, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", minHeight: "calc(100vh - 73px)" }}>
 
             {/* Left — heading */}
-            <div style={{ padding: "100px 80px 80px 40px", display: "flex", flexDirection: "column", justifyContent: "space-between", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
+            <div style={{ padding: "clamp(40px, 8vw, 100px) clamp(20px, 6vw, 80px) clamp(40px, 8vw, 80px) clamp(16px, 5vw, 40px)", display: "flex", flexDirection: "column", justifyContent: "space-between", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
               <div>
-                <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "40px" }}>contact</p>
-                <h1 style={{ fontSize: "clamp(48px, 6vw, 96px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.92, color: "#fff", margin: "0 0 40px" }}>
+                <p style={{ fontSize: "clamp(10px, 2vw, 12px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "clamp(24px, 5vw, 40px)" }}>contact</p>
+                <h1 style={{ fontSize: "clamp(32px, 8vw, 96px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.92, color: "#fff", margin: "0 0 clamp(24px, 5vw, 40px)" }}>
                   let's start<br />the conversation
                 </h1>
-                <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.45)", lineHeight: 1.7, maxWidth: "360px" }}>
+                <p style={{ fontSize: "clamp(14px, 3vw, 16px)", color: "rgba(255,255,255,0.45)", lineHeight: 1.7, maxWidth: "360px" }}>
                   Whether you're exploring a new project, want a feasibility study, or just want to talk energy — we're here.
                 </p>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "clamp(12px, 3vw, 20px)" }}>
                 <div>
-                  <p style={{ fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)", margin: "0 0 6px" }}>email</p>
-                  <a href="mailto:hello@e-overflow.com" style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>hello@e-overflow.com</a>
+                  <p style={{ fontSize: "clamp(9px, 2vw, 11px)", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)", margin: "0 0 clamp(4px, 1vw, 6px)" }}>email</p>
+                  <a href="mailto:hello@e-overflow.com" style={{ fontSize: "clamp(14px, 3vw, 16px)", color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>hello@e-overflow.com</a>
                 </div>
                 <div>
-                  <p style={{ fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)", margin: "0 0 6px" }}>CAPSTONE PROJECT PARTNERS</p>
-                  <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.5)", margin: 0, lineHeight: 1.7 }}>EWB · UTS </p>
+                  <p style={{ fontSize: "clamp(9px, 2vw, 11px)", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)", margin: "0 0 clamp(4px, 1vw, 6px)" }}>CAPSTONE PROJECT PARTNERS</p>
+                  <p style={{ fontSize: "clamp(13px, 3vw, 15px)", color: "rgba(255,255,255,0.5)", margin: 0, lineHeight: 1.7 }}>EWB · UTS </p>
                 </div>
               </div>
             </div>
 
             {/* Right — form */}
-            <div style={{ padding: "100px 40px 80px 80px", display: "flex", alignItems: "flex-start" }}>
+            <div style={{ padding: "clamp(40px, 8vw, 100px) clamp(16px, 5vw, 40px) clamp(40px, 8vw, 80px) clamp(20px, 6vw, 80px)", display: "flex", alignItems: "flex-start" }}>
               {submitted ? (
                 <div style={{ paddingTop: "40px" }}>
                   <p style={{ fontSize: "48px", margin: "0 0 24px" }}>✓</p>
