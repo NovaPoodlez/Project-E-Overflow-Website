@@ -86,8 +86,8 @@
           onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
           <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{icon}</div>
           <div>
-            <p style={{ fontSize: "13px", fontWeight: 500, margin: 0, letterSpacing: "-0.02em" }}>{title}</p>
-            <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", margin: "2px 0 0" }}>{sub}</p>
+            <p style={{ fontSize: "clamp(11px, 2.5vw, 13px)", fontWeight: 500, margin: 0, letterSpacing: "-0.02em" }}>{title}</p>
+            <p style={{ fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.4)", margin: "2px 0 0" }}>{sub}</p>
           </div>
         </a>
       );
@@ -104,13 +104,13 @@
         <nav style={{ padding: "20px 40px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.06)", position: "sticky", top: 0, background: "rgba(0,0,0,0.92)", backdropFilter: "blur(14px)", zIndex: 50 }}>
           <a href="index.html" style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none" }}>
             <LogoSVG />
-            <span style={{ color: "#fff", fontSize: "14px", letterSpacing: "-0.02em" }}>E-Overflow</span>
+            <span style={{ color: "#fff", fontSize: "clamp(12px, 3vw, 14px)", letterSpacing: "-0.02em" }}>E-Overflow</span>
           </a>
           <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
             {navItems.map(({ label, href, strategyDropdown, missionDropdown, feasibilityDropdown, reportDropdown }) => {
               if (strategyDropdown) return (
                 <div key={label} style={{ position: "relative" }} onMouseEnter={openStrategy} onMouseLeave={closeStrategy}>
-                  <a href={href} style={{ color: active === "strategy" ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                  <a href={href} style={{ color: active === "strategy" ? "#fff" : "rgba(212,212,212,1)", fontSize: "clamp(12px, 3vw, 14px)", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
                     {label}{chevron(strategyOpen)}
                   </a>
                   <div style={dropdownShell(strategyOpen)}>
@@ -122,7 +122,7 @@
               );
               if (missionDropdown) return (
                 <div key={label} style={{ position: "relative" }} onMouseEnter={openMission} onMouseLeave={closeMission}>
-                  <a href={href} style={{ color: active === "mission" ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                  <a href={href} style={{ color: active === "mission" ? "#fff" : "rgba(212,212,212,1)", fontSize: "clamp(12px, 3vw, 14px)", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
                     {label}{chevron(missionOpen)}
                   </a>
                   <div style={dropdownShell(missionOpen)}>
@@ -133,7 +133,7 @@
               );
               if (feasibilityDropdown) return (
                 <div key={label} style={{ position: "relative" }} onMouseEnter={openFeasibility} onMouseLeave={closeFeasibility}>
-                  <a href={href} style={{ color: active === "feasibility" || feasibilityOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                  <a href={href} style={{ color: active === "feasibility" || feasibilityOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "clamp(12px, 3vw, 14px)", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
                     {label}{chevron(feasibilityOpen)}
                   </a>
                   <div style={dropdownShell(feasibilityOpen)}>
@@ -147,32 +147,32 @@
               );
               if (reportDropdown) return (
                 <div key={label} style={{ position: "relative" }} onMouseEnter={openReport} onMouseLeave={closeReport}>
-                  <a href={href} style={{ color: reportOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                  <a href={href} style={{ color: reportOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "clamp(12px, 3vw, 14px)", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
                     {label}{chevron(reportOpen)}
                   </a>
                   <div style={{ ...dropdownShell(reportOpen), minWidth: "300px" }}>
                     <div style={arrowTip}></div>
-                    {dropItem("contents.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>00</span>, "Contents", "Table of contents")}
-                    {dropItem("executive-summary.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>01</span>, "Executive Summary", "Project at a glance")}
-                    {dropItem("problem.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>03</span>, "Problem & Brief", "Needs & success criteria")}
-                    {dropItem("design-process.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>04</span>, "Design Process", "Ideation, decision matrix")}
-                    {dropItem("considerations.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>06</span>, "Considerations", "Social, cultural, environmental")}
-                    {dropItem("risks.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>08</span>, "Risks & Concerns", "Register + FAQ")}
-                    {dropItem("implementation.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>09</span>, "Implementation Plan", "Timeline, training, M&E")}
-                    {dropItem("recommendations.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>10</span>, "Recommendations", "What's next")}
-                    {dropItem("references.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>12</span>, "References", "APA 7 bibliography")}
+                    {dropItem("contents.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>00</span>, "Contents", "Table of contents")}
+                    {dropItem("executive-summary.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>01</span>, "Executive Summary", "Project at a glance")}
+                    {dropItem("problem.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>03</span>, "Problem & Brief", "Needs & success criteria")}
+                    {dropItem("design-process.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>04</span>, "Design Process", "Ideation, decision matrix")}
+                    {dropItem("considerations.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>06</span>, "Considerations", "Social, cultural, environmental")}
+                    {dropItem("risks.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>08</span>, "Risks & Concerns", "Register + FAQ")}
+                    {dropItem("implementation.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>09</span>, "Implementation Plan", "Timeline, training, M&E")}
+                    {dropItem("recommendations.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>10</span>, "Recommendations", "What's next")}
+                    {dropItem("references.html", <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em" }}>12</span>, "References", "APA 7 bibliography")}
                   </div>
                 </div>
               );
                             return (
-                <a key={label} href={href} style={{ color: active === label ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s" }}
+                <a key={label} href={href} style={{ color: active === label ? "#fff" : "rgba(212,212,212,1)", fontSize: "clamp(12px, 3vw, 14px)", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s" }}
                   onMouseEnter={e => e.target.style.color = "#fff"}
                   onMouseLeave={e => e.target.style.color = active === label ? "#fff" : "rgba(212,212,212,1)"}
                 >{label}</a>
               );
             })}
           </div>
-          <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "14px", fontWeight: 400, borderRadius: "999px", padding: "10px 22px", textDecoration: "none", transition: "background 0.2s" }}
+          <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "clamp(12px, 3vw, 14px)", fontWeight: 400, borderRadius: "999px", padding: "10px 22px", textDecoration: "none", transition: "background 0.2s" }}
             onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
             onMouseLeave={e => e.currentTarget.style.background = "#fff"}
           >learn more</a>
@@ -221,7 +221,7 @@
             ></video>
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, transparent 30%, transparent 55%, #000 100%)", pointerEvents: "none" }}></div>
             <div style={{ position: "relative", padding: "0 40px 64px", zIndex: 2 }}>
-              <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", margin: "0 0 16px" }}>solution one</p>
+              <p style={{ fontSize: "clamp(10px, 2.5vw, 12px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", margin: "0 0 clamp(8px, 1.5vw, 16px)" }}>solution one</p>
               <h1 style={{ fontSize: "clamp(48px, 8vw, 120px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.92, color: "#fff", margin: 0 }}>
                 Solar Timer
               </h1>
@@ -238,7 +238,7 @@
                   shift the load<br />to the sunny hours
                 </h2>
                 <div>
-                  <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.8, margin: "0 0 24px" }}>
+                  <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.8, margin: "0 0 clamp(12px, 2.5vw, 24px)" }}>
                     A load-shift timer is the most common — and lowest-cost — way to push a hot water cylinder onto solar. It is wired into the heating circuit and switched on during a fixed daily window that broadly aligns with the middle of the day, when a typical PV system is producing the most power.
                   </p>
                   <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.8, margin: 0 }}>

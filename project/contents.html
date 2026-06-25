@@ -51,9 +51,9 @@
         <a href={s.href}
           onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
           style={{ display: "grid", gridTemplateColumns: "80px 1fr 1.4fr 80px", gap: "32px", padding: "32px 0", borderBottom: "1px solid rgba(255,255,255,0.08)", textDecoration: "none", alignItems: "center", color: "#fff", transition: "background 0.2s", background: hov ? "rgba(255,255,255,0.025)" : "transparent" }}>
-          <span className="mono" style={{ fontSize: "13px", color: hov ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)", letterSpacing: "0.05em", transition: "color 0.2s" }}>{s.num}</span>
+          <span className="mono" style={{ fontSize: "clamp(11px, 2.5vw, 13px)", color: hov ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)", letterSpacing: "0.05em", transition: "color 0.2s" }}>{s.num}</span>
           <h3 style={{ fontSize: "clamp(22px, 2.4vw, 32px)", fontWeight: 500, letterSpacing: "-0.03em", margin: 0, transform: hov ? "translateX(8px)" : "translateX(0)", transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)" }}>{s.title}</h3>
-          <p style={{ fontSize: "14px", color: hov ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.55, transition: "color 0.3s" }}>{s.desc}</p>
+          <p style={{ fontSize: "clamp(12px, 3vw, 14px)", color: hov ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.55, transition: "color 0.3s" }}>{s.desc}</p>
           <span style={{ fontSize: "20px", color: hov ? "#fff" : "rgba(255,255,255,0.25)", transition: "color 0.2s, transform 0.2s", textAlign: "right", transform: hov ? "translateX(4px)" : "translateX(0)" }}>→</span>
         </a>
       );

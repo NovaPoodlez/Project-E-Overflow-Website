@@ -67,7 +67,7 @@
           <Section bg="#000" pad="60px 40px 120px">
             <div style={{ display: "flex", flexDirection: "column", gap: "20px", borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "32px" }}>
               {refs.map((html, i) => (
-                <p key={i} className="apa-entry" style={{ fontSize: "15px", color: "rgba(255,255,255,0.78)", margin: 0, lineHeight: 1.7, maxWidth: "920px" }}
+                <p key={i} className="apa-entry" style={{ fontSize: "clamp(13px, 3vw, 15px)", color: "rgba(255,255,255,0.78)", margin: 0, lineHeight: 1.7, maxWidth: "920px" }}
                   dangerouslySetInnerHTML={{ __html: html }} />
               ))}
             </div>

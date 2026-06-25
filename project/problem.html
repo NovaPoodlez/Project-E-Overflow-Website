@@ -82,8 +82,8 @@
             <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
               <div style={{ border: "1px solid rgba(255,255,255,0.14)", borderRadius: "16px", padding: "40px 44px 44px", background: "linear-gradient(180deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.01) 100%)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
-                  <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(154,230,110,0.95)", padding: "5px 10px", borderRadius: "999px", background: "rgba(154,230,110,0.1)", border: "1px solid rgba(154,230,110,0.25)" }}>EWB brief</span>
-                  <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.06em" }}>Design Opportunity 3.1 · Reliable Power for Essential Load</span>
+                  <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "clamp(9px, 2vw, 11px)", letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(154,230,110,0.95)", padding: "5px 10px", borderRadius: "999px", background: "rgba(154,230,110,0.1)", border: "1px solid rgba(154,230,110,0.25)" }}>EWB brief</span>
+                  <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.4)", letterSpacing: "0.06em" }}>Design Opportunity 3.1 · Reliable Power for Essential Load</span>
                 </div>
                 <p style={{ fontSize: "clamp(20px, 2.2vw, 28px)", fontWeight: 400, letterSpacing: "-0.02em", lineHeight: 1.4, color: "#fff", margin: 0, maxWidth: "920px" }}>
                   <span style={{ color: "rgba(255,255,255,0.35)", marginRight: "6px" }}>&ldquo;</span>Design energy systems that prioritise refrigeration, communications, lighting, and small tools, with minimal reliance on generators.<span style={{ color: "rgba(255,255,255,0.35)", marginLeft: "6px" }}>&rdquo;</span>
@@ -96,12 +96,12 @@
                     { k: "small tools", b: "Power tools, pumps, sewing machines — the loads that enable livelihood enterprises (tourism, ranger work, cattle)." },
                   ].map(c => (
                     <div key={c.k}>
-                      <p style={{ fontSize: "13px", fontWeight: 500, color: "#fff", margin: "0 0 8px", letterSpacing: "-0.01em" }}>{c.k}</p>
+                      <p style={{ fontSize: "clamp(11px, 2.5vw, 13px)", fontWeight: 500, color: "#fff", margin: "0 0 8px", letterSpacing: "-0.01em" }}>{c.k}</p>
                       <p style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.5)", margin: 0, lineHeight: 1.55 }}>{c.b}</p>
                     </div>
                   ))}
                 </div>
-                <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: "32px 0 0", maxWidth: "920px" }}>
+                <p style={{ fontSize: "clamp(12px, 3vw, 14px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: "clamp(16px, 3vw, 32px) 0 0", maxWidth: "920px" }}>
                   Our brief, from Yintjingga, narrows this to the off-grid solar + battery system already on site at Moojeeba and Theethinji. The Solar Switch addresses Design Opportunity 3.1 by ensuring PV surplus is reallocated to deferrable loads <i style={{ fontStyle: "italic", color: "#fff" }}>first</i>, so the essential loads above retain their share of stored capacity for evening and overcast hours. Generator use is reduced as a downstream effect, not the primary lever.
                 </p>
               </div>
@@ -118,12 +118,12 @@
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px" }}>
               {Object.entries(scope).map(([heading, list]) => (
                 <div key={heading}>
-                  <p style={{ fontSize: "20px", fontWeight: 500, letterSpacing: "-0.02em", color: "#fff", margin: "0 0 24px", textTransform: "capitalize" }}>{heading}</p>
+                  <p style={{ fontSize: "clamp(18px, 4vw, 20px)", fontWeight: 500, letterSpacing: "-0.02em", color: "#fff", margin: "0 0 clamp(12px, 2.5vw, 24px)", textTransform: "capitalize" }}>{heading}</p>
                   <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "16px" }}>
                     {list.map((item, i) => (
                       <li key={i} style={{ display: "flex", gap: "12px", paddingTop: "16px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-                        <span className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", flexShrink: 0, paddingTop: "3px" }}>0{i+1}</span>
-                        <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.65)", lineHeight: 1.6, margin: 0 }}>{item}</p>
+                        <span className="mono" style={{ fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.3)", flexShrink: 0, paddingTop: "3px" }}>0{i+1}</span>
+                        <p style={{ fontSize: "clamp(13px, 3vw, 15px)", color: "rgba(255,255,255,0.65)", lineHeight: 1.6, margin: 0 }}>{item}</p>
                       </li>
                     ))}
                   </ul>
@@ -136,7 +136,7 @@
             <SectionLabel>constraints & assumptions</SectionLabel>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start" }}>
               <div>
-                <p style={{ fontSize: "20px", fontWeight: 500, color: "#fff", margin: "0 0 24px", letterSpacing: "-0.02em" }}>Hard constraints</p>
+                <p style={{ fontSize: "clamp(18px, 4vw, 20px)", fontWeight: 500, color: "#fff", margin: "0 0 clamp(12px, 2.5vw, 24px)", letterSpacing: "-0.02em" }}>Hard constraints</p>
                 <DefinitionList items={[
                   { label: "off-grid", desc: "No utility connection. All energy must be locally generated or stored." },
                   { label: "remote logistics", desc: "Cape York access by 4WD only in dry season; air freight in wet season. Lead times of 4–8 weeks." },
@@ -146,7 +146,7 @@
                 ]} />
               </div>
               <div>
-                <p style={{ fontSize: "20px", fontWeight: 500, color: "#fff", margin: "0 0 24px", letterSpacing: "-0.02em" }}>Working assumptions</p>
+                <p style={{ fontSize: "clamp(18px, 4vw, 20px)", fontWeight: 500, color: "#fff", margin: "0 0 clamp(12px, 2.5vw, 24px)", letterSpacing: "-0.02em" }}>Working assumptions</p>
                 <DefinitionList items={[
                   { label: "existing PV intact", desc: "Current panels, inverter, and battery bank are healthy and remain in place." },
                   { label: "load profile", desc: "Hot water cylinder is the single largest resistive load (≈ 3.6 kW element, 250 L tank)." },
@@ -160,7 +160,7 @@
           <Section bg="#000" pad="100px 40px 120px">
             <SectionLabel>success criteria</SectionLabel>
             <H2>numbers, not promises.</H2>
-            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "640px", margin: "24px 0 64px" }}>
+            <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "640px", margin: "clamp(12px, 2.5vw, 24px) 0 clamp(32px, 8vw, 64px)" }}>
               The design is judged against these six measurable targets. Each can be verified independently using the instrumentation already specified in the feasibility study.
             </p>
             <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>

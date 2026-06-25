@@ -90,24 +90,24 @@
           onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
           <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{icon}</div>
           <div>
-            <p style={{ fontSize: "13px", fontWeight: 500, margin: 0, letterSpacing: "-0.02em" }}>{title}</p>
-            <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", margin: "2px 0 0" }}>{sub}</p>
+            <p style={{ fontSize: "clamp(11px, 2.5vw, 13px)", fontWeight: 500, margin: 0, letterSpacing: "-0.02em" }}>{title}</p>
+            <p style={{ fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.4)", margin: "2px 0 0" }}>{sub}</p>
           </div>
         </a>
       );
 
       return (
-        <nav style={{ padding: "20px 40px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.06)", position: "sticky", top: 0, background: "rgba(0,0,0,0.92)", backdropFilter: "blur(14px)", zIndex: 50 }}>
+        <nav style={{ padding: "20px clamp(16px, 5vw, 40px)", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.06)", position: "sticky", top: 0, background: "rgba(0,0,0,0.92)", backdropFilter: "blur(14px)", zIndex: 50 }}>
           <a href="index.html" style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none" }}>
             <LogoSVG />
-            <span style={{ color: "#fff", fontSize: "14px", letterSpacing: "-0.02em" }}>E-Overflow</span>
+            <span style={{ color: "#fff", fontSize: "clamp(12px, 3vw, 14px)", letterSpacing: "-0.02em" }}>E-Overflow</span>
           </a>
 
           <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
             {navItems.map(({ label, href, strategyDropdown, missionDropdown, feasibilityDropdown, reportDropdown }) => {
               if (strategyDropdown) return (
                 <div key={label} style={{ position: "relative" }} onMouseEnter={openStrategy} onMouseLeave={closeStrategy}>
-                  <a href={href} style={{ color: active === "strategy" ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                  <a href={href} style={{ color: active === "strategy" ? "#fff" : "rgba(212,212,212,1)", fontSize: "clamp(12px, 3vw, 14px)", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
                     {label}{chevron(strategyOpen)}
                   </a>
                   <div style={dropdownShell(strategyOpen)}>
@@ -119,7 +119,7 @@
               );
               if (missionDropdown) return (
                 <div key={label} style={{ position: "relative" }} onMouseEnter={openMission} onMouseLeave={closeMission}>
-                  <a href={href} style={{ color: active === "mission" ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                  <a href={href} style={{ color: active === "mission" ? "#fff" : "rgba(212,212,212,1)", fontSize: "clamp(12px, 3vw, 14px)", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
                     {label}{chevron(missionOpen)}
                   </a>
                   <div style={dropdownShell(missionOpen)}>
@@ -133,7 +133,7 @@
               );
               if (feasibilityDropdown) return (
                 <div key={label} style={{ position: "relative" }} onMouseEnter={openFeasibility} onMouseLeave={closeFeasibility}>
-                  <a href={href} style={{ color: active === "feasibility" || feasibilityOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                  <a href={href} style={{ color: active === "feasibility" || feasibilityOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "clamp(12px, 3vw, 14px)", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
                     {label}{chevron(feasibilityOpen)}
                   </a>
                   <div style={dropdownShell(feasibilityOpen)}>
@@ -147,7 +147,7 @@
               );
               if (reportDropdown) return (
                 <div key={label} style={{ position: "relative" }} onMouseEnter={openReport} onMouseLeave={closeReport}>
-                  <a href={href} style={{ color: reportOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
+                  <a href={href} style={{ color: reportOpen ? "#fff" : "rgba(212,212,212,1)", fontSize: "clamp(12px, 3vw, 14px)", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: "5px" }}>
                     {label}{chevron(reportOpen)}
                   </a>
                   <div style={{ ...dropdownShell(reportOpen), minWidth: "300px" }}>
@@ -165,7 +165,7 @@
                 </div>
               );
                             return (
-                <a key={label} href={href} style={{ color: active === label ? "#fff" : "rgba(212,212,212,1)", fontSize: "14px", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s" }}
+                <a key={label} href={href} style={{ color: active === label ? "#fff" : "rgba(212,212,212,1)", fontSize: "clamp(12px, 3vw, 14px)", padding: "8px 20px", borderRadius: "999px", textDecoration: "none", transition: "color 0.2s" }}
                   onMouseEnter={e => e.target.style.color = "#fff"}
                   onMouseLeave={e => e.target.style.color = active === label ? "#fff" : "rgba(212,212,212,1)"}
                 >{label}</a>
@@ -173,7 +173,7 @@
             })}
           </div>
 
-          <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "14px", fontWeight: 400, borderRadius: "999px", padding: "10px 22px", textDecoration: "none", transition: "background 0.2s" }}
+          <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "clamp(12px, 3vw, 14px)", fontWeight: 400, borderRadius: "999px", padding: "10px 22px", textDecoration: "none", transition: "background 0.2s" }}
             onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
             onMouseLeave={e => e.currentTarget.style.background = "#fff"}
           >learn more</a>
@@ -195,7 +195,7 @@
             />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 40%, #000 100%)", pointerEvents: "none" }}></div>
             <div style={{ position: "absolute", bottom: "48px", left: "40px" }}>
-              <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)", margin: "0 0 12px" }}>case study</p>
+              <p style={{ fontSize: "clamp(10px, 2.5vw, 12px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)", margin: "0 0 12px" }}>case study</p>
               <h1 style={{ fontSize: "clamp(40px, 6vw, 80px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.92, color: "#fff", margin: 0 }}>
                 Lama Lama<br />Community
               </h1>
@@ -203,19 +203,19 @@
           </div>
 
           {/* Content */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "80px", padding: "80px 40px 120px", maxWidth: "1200px", margin: "0 auto", width: "100%" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "clamp(32px, 8vw, 80px)", padding: "clamp(32px, 8vw, 80px) clamp(16px, 5vw, 40px) clamp(48px, 12vw, 120px)", maxWidth: "1200px", margin: "0 auto", width: "100%" }}>
 
             {/* Left — meta */}
             <div>
-              <div style={{ marginBottom: "40px" }}>
-                <p style={{ fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 8px" }}>location</p>
-                <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.7)", margin: 0 }}>Cape York, Queensland<br />Australia</p>
+              <div style={{ marginBottom: "clamp(20px, 4vw, 40px)" }}>
+                <p style={{ fontSize: "clamp(9px, 2vw, 11px)", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 8px" }}>location</p>
+                <p style={{ fontSize: "clamp(13px, 3vw, 15px)", color: "rgba(255,255,255,0.7)", margin: 0 }}>Cape York, Queensland<br />Australia</p>
               </div>
-              <div style={{ marginBottom: "40px" }}>
+              <div style={{ marginBottom: "clamp(20px, 4vw, 40px)" }}>
                 <p style={{ fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 8px" }}>scope</p>
                 <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.7)", margin: 0 }}>Off-grid energy system<br />design &amp; feasibility</p>
               </div>
-              <div style={{ marginBottom: "40px" }}>
+              <div style={{ marginBottom: "clamp(20px, 4vw, 40px)" }}>
                 <p style={{ fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 8px" }}>status</p>
                 <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.7)", margin: 0 }}>In progress — 2026</p>
               </div>
@@ -231,11 +231,11 @@
                 reliable power for a community that can't afford for the lights to go out
               </h2>
 
-              <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.8, margin: "0 0 24px" }}>
+              <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.8, margin: "0 0 24px" }}>
                 The Lama Lama people are the Traditional Owners of land around the McIlwraith Range and Bathurst Bay area of Cape York Peninsula in Far North Queensland. Like many remote communities across Australia, their access to reliable, affordable energy has been limited by geography and infrastructure.
               </p>
 
-              <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.8, margin: "0 0 24px" }}>
+              <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.8, margin: "0 0 24px" }}>
                 E-Overflow's engagement with the Lama Lama Community is our first project in Australia, and our most important. We're conducting a full feasibility study to design an energy system that prioritises essential loads — refrigeration for medicines and food, communications, lighting, and small tools — with minimal reliance on diesel generation.
               </p>
 
@@ -252,7 +252,7 @@
                 ].map(s => (
                   <div key={s.label}>
                     <p style={{ fontSize: "clamp(28px, 3vw, 44px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 6px" }}>{s.num}</p>
-                    <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.4 }}>{s.label}</p>
+                    <p style={{ fontSize: "clamp(11px, 2.5vw, 13px)", color: "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.4 }}>{s.label}</p>
                   </div>
                 ))}
               </div>
@@ -260,15 +260,15 @@
           </div>
 
           {/* What we learned — case study insight + upgrade pitch */}
-          <section style={{ borderTop: "1px solid rgba(255,255,255,0.08)", padding: "120px 40px 40px", background: "#000", position: "relative", overflow: "hidden" }}>
+          <section style={{ borderTop: "1px solid rgba(255,255,255,0.08)", padding: "clamp(48px, 12vw, 120px) clamp(16px, 5vw, 40px) clamp(16px, 4vw, 40px)", background: "#000", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: "-15%", right: "-10%", width: "55%", height: "55%", background: "radial-gradient(circle, rgba(232,192,98,0.06) 0%, transparent 60%)", pointerEvents: "none" }}></div>
 
             <div style={{ position: "relative", maxWidth: "1200px", margin: "0 auto" }}>
-              <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", margin: "0 0 56px" }}>
+              <p style={{ fontSize: "clamp(10px, 2.5vw, 12px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", margin: "0 0 clamp(22px, 5vw, 56px)" }}>
                 what we learned from port stewart
               </p>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "80px", alignItems: "start", marginBottom: "100px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "clamp(32px, 8vw, 80px)", alignItems: "start", marginBottom: "clamp(40px, 10vw, 100px)" }}>
                 <h2 style={{ fontSize: "clamp(36px, 4.5vw, 64px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0 }}>
                   the system worked.<br />
                   <span style={{ color: "rgba(255,255,255,0.4)" }}>it can work harder.</span>
@@ -287,14 +287,14 @@
               </div>
 
               {/* Three findings */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, borderTop: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)", marginBottom: "100px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, borderTop: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)", marginBottom: "clamp(40px, 10vw, 100px)" }}>
                 {[
                   { num: "01", label: "what works",   body: "Each dwelling has an Energy Management Unit (EMU) that allocates a daily energy budget at noon. Essential circuits — fridges, lighting, medical — are protected first. Reliable, equitable, community-owned.", tone: "good" },
                   { num: "02", label: "what's lost",  body: "If a household doesn't spend its discretionary budget before the next noon reset, that energy is gone. Surplus solar that could be doing useful work disappears back into the system, day after day.", tone: "warn" },
                   { num: "03", label: "what still costs", body: "Generators still kick in for heavier appliances and extended cloud cover. Every generator hour is diesel that has to be hauled in by hand — a recurring cost the community absorbs from its own budget.", tone: "bad" },
                 ].map((f, i) => (
-                  <div key={f.num} style={{ padding: "40px 36px 44px", borderRight: i < 2 ? "1px solid rgba(255,255,255,0.08)" : "none" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "28px" }}>
+                  <div key={f.num} style={{ padding: "clamp(20px, 4vw, 40px) clamp(18px, 3.5vw, 36px) clamp(22px, 4.5vw, 44px)", borderRight: i < 2 ? "1px solid rgba(255,255,255,0.08)" : "none" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "clamp(14px, 2.5vw, 28px)" }}>
                       <div style={{
                         width: "10px", height: "10px", borderRadius: "50%",
                         background: f.tone === "good" ? "#9ae66e" : f.tone === "warn" ? "#e8c062" : "#e87b6e",
@@ -302,40 +302,40 @@
                       }}></div>
                       <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.35)", letterSpacing: "0.12em" }}>{f.num}</span>
                     </div>
-                    <p style={{ fontSize: "20px", fontWeight: 500, color: "#fff", margin: "0 0 14px", letterSpacing: "-0.025em" }}>{f.label}</p>
-                    <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0 }}>{f.body}</p>
+                    <p style={{ fontSize: "clamp(18px, 4vw, 20px)", fontWeight: 500, color: "#fff", margin: "0 0 14px", letterSpacing: "-0.025em" }}>{f.label}</p>
+                    <p style={{ fontSize: "clamp(12px, 3vw, 14px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0 }}>{f.body}</p>
                   </div>
                 ))}
               </div>
 
               {/* The upgrade pitch */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start", marginBottom: "80px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(32px, 8vw, 80px)", alignItems: "start", marginBottom: "clamp(32px, 8vw, 80px)" }}>
                 <div>
-                  <p style={{ fontSize: "11px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", margin: "0 0 18px" }}>the upgrade</p>
+                  <p style={{ fontSize: "clamp(9px, 2vw, 11px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", margin: "0 0 clamp(9px, 2vw, 18px)" }}>the upgrade</p>
                   <h3 style={{ fontSize: "clamp(30px, 3.4vw, 50px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 1.0, color: "#fff", margin: 0 }}>
                     don't budget the surplus.<br />divert it.
                   </h3>
                 </div>
                 <div>
-                  <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.75)", lineHeight: 1.75, margin: "0 0 20px" }}>
+                  <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.75)", lineHeight: 1.75, margin: "0 0 clamp(10px, 2vw, 20px)" }}>
                     A solar diverter sits between the array and the loads. When the panels are generating more than the household is using, it sends the excess to the next most useful place — hot water, water pumps, tool batteries, freezer pulldown — instead of letting it expire at noon.
                   </p>
-                  <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.75, margin: 0 }}>
+                  <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.75, margin: 0 }}>
                     The original Bushlight system stays exactly as it is. The EMUs still protect the essentials. We're adding a layer that captures the value the current system can't reach.
                   </p>
                 </div>
               </div>
 
               {/* Outcome / emotional close */}
-              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "24px", padding: "56px 48px", display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "60px", alignItems: "center" }}>
-                <p style={{ fontSize: "clamp(22px, 2.4vw, 32px)", fontWeight: 400, letterSpacing: "-0.03em", lineHeight: 1.3, color: "rgba(255,255,255,0.92)", margin: 0 }}>
+              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "clamp(12px, 2vw, 24px)", padding: "clamp(28px, 5.5vw, 56px) clamp(24px, 4.5vw, 48px)", display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "clamp(24px, 6vw, 60px)", alignItems: "center" }}>
+                <p style={{ fontSize: "clamp(18px, 2.5vw, 32px)", fontWeight: 400, letterSpacing: "-0.03em", lineHeight: 1.3, color: "rgba(255,255,255,0.92)", margin: 0 }}>
                   Fewer generator hours. More hot water. Longer freezer life. A wider margin between the community and the next fuel run.
                 </p>
                 <div>
-                  <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: "0 0 28px" }}>
+                  <p style={{ fontSize: "clamp(13px, 3vw, 15px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: "0 0 clamp(14px, 2.5vw, 28px)" }}>
                     Every kilowatt-hour we recover is one less hour of diesel — and one more increment of self-determination. This isn't a replacement system. It's an investment in the one Lama Lama already owns.
                   </p>
-                  <a href="lama-lama-feasibility.html" style={{ display: "inline-flex", alignItems: "center", gap: "10px", background: "#fff", color: "#000", fontSize: "14px", borderRadius: "999px", padding: "14px 26px", textDecoration: "none", transition: "background 0.2s" }}
+                  <a href="lama-lama-feasibility.html" style={{ display: "inline-flex", alignItems: "center", gap: "10px", background: "#fff", color: "#000", fontSize: "clamp(12px, 3vw, 14px)", borderRadius: "999px", padding: "clamp(7px, 1.5vw, 14px) clamp(13px, 2.5vw, 26px)", textDecoration: "none", transition: "background 0.2s" }}
                     onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
                     onMouseLeave={e => e.currentTarget.style.background = "#fff"}
                   >read the feasibility study →</a>
@@ -345,11 +345,11 @@
           </section>
 
           {/* Footer CTA */}
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", padding: "48px 40px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <p style={{ fontSize: "clamp(18px, 2vw, 28px)", fontWeight: 400, letterSpacing: "-0.03em", color: "rgba(255,255,255,0.6)", margin: 0 }}>
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", padding: "clamp(24px, 4vw, 48px) clamp(16px, 5vw, 40px)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <p style={{ fontSize: "clamp(16px, 2vw, 28px)", fontWeight: 400, letterSpacing: "-0.03em", color: "rgba(255,255,255,0.6)", margin: 0 }}>
               interested in a similar project?
             </p>
-            <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "14px", borderRadius: "999px", padding: "14px 28px", textDecoration: "none", transition: "background 0.2s" }}
+            <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "clamp(12px, 3vw, 14px)", borderRadius: "999px", padding: "clamp(7px, 1.5vw, 14px) clamp(14px, 2.5vw, 28px)", textDecoration: "none", transition: "background 0.2s" }}
               onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
               onMouseLeave={e => e.currentTarget.style.background = "#fff"}
             >start the conversation</a>

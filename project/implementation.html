@@ -71,109 +71,109 @@
       return (
         <div>
           <ReportNav active="report" />
-          <section style={{ position: "relative", padding: "180px 40px 140px", background: "#000", borderBottom: "1px solid rgba(255,255,255,0.06)", overflow: "hidden", minHeight: "620px" }}>
+          <section style={{ position: "relative", padding: "clamp(90px, 12vw, 180px) clamp(16px, 5vw, 40px) clamp(70px, 10vw, 140px)", background: "#000", borderBottom: "1px solid rgba(255,255,255,0.06)", overflow: "hidden", minHeight: "620px" }}>
             <img src="uploads/CapeYorkLandscape1.png" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 55%", opacity: 0.7 }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 40%, rgba(0,0,0,0.85) 100%)", pointerEvents: "none" }}></div>
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0) 80%)", pointerEvents: "none" }}></div>
             <div style={{ position: "relative", maxWidth: "1280px", margin: "0 auto", zIndex: 1 }}>
-              <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.65)", margin: "0 0 24px" }}>09 — implementation plan</p>
+              <p style={{ fontSize: "clamp(9px, 2vw, 12px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.65)", margin: "0 0 clamp(12px, 2vw, 24px)" }}>09 — implementation plan</p>
               <h1 style={{ fontSize: "clamp(48px, 7vw, 112px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.92, color: "#fff", margin: 0, textShadow: "0 2px 28px rgba(0,0,0,0.5)" }}>26 weeks,<br/>plus the rest of it</h1>
-              <p style={{ fontSize: "clamp(16px, 1.5vw, 20px)", color: "rgba(255,255,255,0.82)", lineHeight: 1.6, maxWidth: "640px", margin: "32px 0 0", textShadow: "0 1px 12px rgba(0,0,0,0.6)" }}>The plan that takes the design from accepted to operating — install, train, monitor, hand over.</p>
+              <p style={{ fontSize: "clamp(14px, 3.5vw, 20px)", color: "rgba(255,255,255,0.82)", lineHeight: 1.6, maxWidth: "640px", margin: "clamp(16px, 3vw, 32px) 0 0", textShadow: "0 1px 12px rgba(0,0,0,0.6)" }}>The plan that takes the design from accepted to operating — install, train, monitor, hand over.</p>
             </div>
           </section>
 
-          <Section bg="#000" pad="100px 40px 60px">
+          <Section bg="#000" pad="clamp(16px, 5vw, 100px) clamp(16px, 5vw, 40px) clamp(16px, 5vw, 60px)">
             <SectionLabel>schedule</SectionLabel>
             <H2>phased deployment.</H2>
-            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "720px", margin: "24px 0 56px" }}>
+            <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "720px", margin: "clamp(12px, 2vw, 24px) 0 clamp(28px, 4vw, 56px)" }}>
               The plan resists the temptation to roll out community-wide immediately. A single-dwelling pilot of at least 8 weeks precedes wider deployment, deliberately overlapping the wet → dry seasonal transition.
             </p>
 
             {/* Gantt strip */}
             <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
               {/* Header row */}
-              <div style={{ display: "grid", gridTemplateColumns: "minmax(220px, 1fr) 3fr", gap: "24px", padding: "16px 0", borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
-                <span className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", textTransform: "uppercase" }}>phase</span>
+              <div style={{ display: "grid", gridTemplateColumns: "minmax(220px, 1fr) 3fr", gap: "clamp(12px, 3vw, 24px)", padding: "clamp(8px, 1.5vw, 16px) 0", borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
+                <span className="mono" style={{ fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", textTransform: "uppercase" }}>phase</span>
                 <div style={{ position: "relative", height: "16px" }}>
                   {weekLabels.map(w => (
-                    <span key={w} className="mono" style={{ position: "absolute", left: `${(w/26)*100}%`, transform: "translateX(-50%)", fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>w{w}</span>
+                    <span key={w} className="mono" style={{ position: "absolute", left: `${(w/26)*100}%`, transform: "translateX(-50%)", fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.4)" }}>w{w}</span>
                   ))}
                 </div>
               </div>
 
               {phases.map((p, i) => (
-                <div key={p.name} style={{ display: "grid", gridTemplateColumns: "minmax(220px, 1fr) 3fr", gap: "24px", padding: "14px 0", borderBottom: "1px solid rgba(255,255,255,0.06)", alignItems: "center" }}>
-                  <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.8)", margin: 0, letterSpacing: "-0.01em" }}>{p.name}</p>
+                <div key={p.name} style={{ display: "grid", gridTemplateColumns: "minmax(220px, 1fr) 3fr", gap: "clamp(12px, 3vw, 24px)", padding: "clamp(7px, 1.5vw, 14px) 0", borderBottom: "1px solid rgba(255,255,255,0.06)", alignItems: "center" }}>
+                  <p style={{ fontSize: "clamp(12px, 3vw, 14px)", color: "rgba(255,255,255,0.8)", margin: 0, letterSpacing: "-0.01em" }}>{p.name}</p>
                   <div style={{ position: "relative", height: "22px" }}>
-                    <div style={{ position: "absolute", top: 0, bottom: 0, left: `${(p.start/26)*100}%`, width: `${((p.end - p.start)/26)*100}%`, background: p.color, borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "flex-start", paddingLeft: "10px" }}>
-                      <span className="mono" style={{ fontSize: "10px", color: "#000", fontWeight: 500, letterSpacing: "0.04em" }}>w{p.start}–w{p.end}</span>
+                    <div style={{ position: "absolute", top: 0, bottom: 0, left: `${(p.start/26)*100}%`, width: `${((p.end - p.start)/26)*100}%`, background: p.color, borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "flex-start", paddingLeft: "clamp(6px, 1vw, 10px)" }}>
+                      <span className="mono" style={{ fontSize: "clamp(8px, 2vw, 10px)", color: "#000", fontWeight: 500, letterSpacing: "0.04em" }}>w{p.start}–w{p.end}</span>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div style={{ display: "flex", gap: "24px", marginTop: "32px", flexWrap: "wrap" }}>
-              <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", gap: "8px" }}>
+            <div style={{ display: "flex", gap: "clamp(12px, 3vw, 24px)", marginTop: "clamp(16px, 3vw, 32px)", flexWrap: "wrap" }}>
+              <span style={{ fontSize: "clamp(10px, 2.5vw, 12px)", color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", gap: "clamp(4px, 1vw, 8px)" }}>
                 <span style={{ width: "12px", height: "12px", borderRadius: "3px", background: "rgba(154,230,110,0.85)" }}></span>install / build
               </span>
-              <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ fontSize: "clamp(10px, 2.5vw, 12px)", color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", gap: "clamp(4px, 1vw, 8px)" }}>
                 <span style={{ width: "12px", height: "12px", borderRadius: "3px", background: "rgba(232,192,98,0.7)" }}></span>observe
               </span>
-              <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ fontSize: "clamp(10px, 2.5vw, 12px)", color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", gap: "clamp(4px, 1vw, 8px)" }}>
                 <span style={{ width: "12px", height: "12px", borderRadius: "3px", background: "rgba(255,255,255,0.4)" }}></span>plan / admin
               </span>
             </div>
           </Section>
 
-          <Section bg="#0a0a0a" pad="100px 40px">
+          <Section bg="#0a0a0a" pad="clamp(16px, 5vw, 100px) clamp(16px, 5vw, 40px)">
             <SectionLabel>resourcing</SectionLabel>
             <H2>who does what.</H2>
-            <div style={{ marginTop: "56px", borderTop: "1px solid rgba(255,255,255,0.12)" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 2fr", gap: "32px", padding: "16px 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}>
+            <div style={{ marginTop: "clamp(28px, 4vw, 56px)", borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 2fr", gap: "clamp(16px, 3vw, 32px)", padding: "clamp(8px, 1.5vw, 16px) 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}>
                 {["role", "commitment", "responsibility"].map(h => (
-                  <span key={h} className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{h}</span>
+                  <span key={h} className="mono" style={{ fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{h}</span>
                 ))}
               </div>
               {resourcing.map(r => (
-                <div key={r.role} style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 2fr", gap: "32px", padding: "22px 0", borderBottom: "1px solid rgba(255,255,255,0.08)", alignItems: "start" }}>
-                  <p style={{ fontSize: "15px", fontWeight: 500, color: "#fff", margin: 0, letterSpacing: "-0.02em" }}>{r.role}</p>
-                  <p className="mono" style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", margin: 0 }}>{r.hours}</p>
-                  <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.55)", margin: 0, lineHeight: 1.6 }}>{r.note}</p>
+                <div key={r.role} style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 2fr", gap: "clamp(16px, 3vw, 32px)", padding: "clamp(11px, 2vw, 22px) 0", borderBottom: "1px solid rgba(255,255,255,0.08)", alignItems: "start" }}>
+                  <p style={{ fontSize: "clamp(13px, 3vw, 15px)", fontWeight: 500, color: "#fff", margin: 0, letterSpacing: "-0.02em" }}>{r.role}</p>
+                  <p className="mono" style={{ fontSize: "clamp(11px, 2.5vw, 13px)", color: "rgba(255,255,255,0.7)", margin: 0 }}>{r.hours}</p>
+                  <p style={{ fontSize: "clamp(12px, 3vw, 14px)", color: "rgba(255,255,255,0.55)", margin: 0, lineHeight: 1.6 }}>{r.note}</p>
                 </div>
               ))}
             </div>
           </Section>
 
-          <Section bg="#000" pad="100px 40px">
+          <Section bg="#000" pad="clamp(16px, 5vw, 100px) clamp(16px, 5vw, 40px)">
             <SectionLabel>training & handover</SectionLabel>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start", marginBottom: "56px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(32px, 8vw, 80px)", alignItems: "start", marginBottom: "clamp(28px, 4vw, 56px)" }}>
               <H2>community owns<br/>the system.</H2>
               <Body>
                 Handover is not a single event but a six-module training programme delivered across the install window. The system is signed over to the Yintjingga Aboriginal Corporation at the completion of Module 6, accompanied by a printed runbook, BOM, supplier contacts, and 12 months of remote-support availability.
               </Body>
             </div>
             <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "60px 1.6fr 120px 1.4fr", gap: "24px", padding: "16px 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "60px 1.6fr 120px 1.4fr", gap: "clamp(12px, 3vw, 24px)", padding: "clamp(8px, 1.5vw, 16px) 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}>
                 {["module", "topic", "duration", "audience"].map(h => (
-                  <span key={h} className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{h}</span>
+                  <span key={h} className="mono" style={{ fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{h}</span>
                 ))}
               </div>
               {training.map(t => (
-                <div key={t.mod} style={{ display: "grid", gridTemplateColumns: "60px 1.6fr 120px 1.4fr", gap: "24px", padding: "20px 0", borderBottom: "1px solid rgba(255,255,255,0.08)", alignItems: "center" }}>
-                  <span className="mono" style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)" }}>{t.mod}</span>
-                  <p style={{ fontSize: "15px", color: "#fff", margin: 0, fontWeight: 500, letterSpacing: "-0.02em" }}>{t.name}</p>
-                  <p className="mono" style={{ fontSize: "13px", color: "rgba(255,255,255,0.65)", margin: 0 }}>{t.dur}</p>
-                  <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.5)", margin: 0, lineHeight: 1.55 }}>{t.who}</p>
+                <div key={t.mod} style={{ display: "grid", gridTemplateColumns: "60px 1.6fr 120px 1.4fr", gap: "clamp(12px, 3vw, 24px)", padding: "clamp(10px, 2vw, 20px) 0", borderBottom: "1px solid rgba(255,255,255,0.08)", alignItems: "center" }}>
+                  <span className="mono" style={{ fontSize: "clamp(10px, 2.5vw, 12px)", color: "rgba(255,255,255,0.5)" }}>{t.mod}</span>
+                  <p style={{ fontSize: "clamp(13px, 3vw, 15px)", color: "#fff", margin: 0, fontWeight: 500, letterSpacing: "-0.02em" }}>{t.name}</p>
+                  <p className="mono" style={{ fontSize: "clamp(11px, 2.5vw, 13px)", color: "rgba(255,255,255,0.65)", margin: 0 }}>{t.dur}</p>
+                  <p style={{ fontSize: "clamp(11px, 2.5vw, 13px)", color: "rgba(255,255,255,0.5)", margin: 0, lineHeight: 1.55 }}>{t.who}</p>
                 </div>
               ))}
             </div>
           </Section>
 
-          <Section bg="#0a0a0a" pad="100px 40px 120px">
+          <Section bg="#0a0a0a" pad="clamp(16px, 5vw, 100px) clamp(16px, 5vw, 40px) clamp(16px, 5vw, 120px)">
             <SectionLabel>monitoring & evaluation</SectionLabel>
             <H2>what we watch,<br/>and how often.</H2>
-            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "640px", margin: "24px 0 56px" }}>
+            <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "640px", margin: "clamp(12px, 2vw, 24px) 0 clamp(28px, 4vw, 56px)" }}>
               Every KPI maps back to one of the success criteria in <a href="problem.html" style={{ color: "#fff", textDecoration: "underline", textUnderlineOffset: "3px", textDecorationColor: "rgba(255,255,255,0.4)" }}>section 03</a>. Data ownership stays with Yintjingga; the project team has read access by written agreement only.
             </p>
             <DefinitionList items={monitoring.map(m => ({ label: m.kpi, desc: `${m.cadence} · reviewed ${m.review.toLowerCase()}` }))} />

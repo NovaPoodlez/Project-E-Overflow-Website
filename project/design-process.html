@@ -86,122 +86,122 @@
           <ReportNav active="report" />
           <PageHero chapter="04 — design process" title={<>how we<br/>got here</>} sub="Eleven ideas, four shortlisted, two prototyped, one recommended. The audit trail behind the Solar Switch." />
 
-          <Section bg="#000" pad="100px 40px 60px">
+          <Section bg="#000" pad="clamp(16px, 5vw, 100px) clamp(16px, 5vw, 40px) clamp(16px, 5vw, 60px)">
             <SectionLabel>process</SectionLabel>
             <H2>a structured loop —<br/>diverge then converge.</H2>
-            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "720px", margin: "24px 0 0" }}>
+            <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "720px", margin: "clamp(12px, 2vw, 24px) 0 0" }}>
               We deliberately separated idea generation from idea filtering. Concept generation prioritised breadth and absurdity; filtering then applied hard constraints and weighted criteria derived from stakeholder needs.
             </p>
           </Section>
 
-          <Section bg="#000" pad="40px 40px 100px">
+          <Section bg="#000" pad="clamp(16px, 5vw, 40px) clamp(16px, 5vw, 40px) clamp(16px, 5vw, 100px)">
             <NumberRow rows={phases.slice(0,3)} />
             <div style={{ height: "2px" }}></div>
             <NumberRow rows={phases.slice(3,6)} />
           </Section>
 
-          <Section bg="#0a0a0a" pad="100px 40px">
+          <Section bg="#0a0a0a" pad="clamp(16px, 5vw, 100px) clamp(16px, 5vw, 40px)">
             <SectionLabel>concept generation</SectionLabel>
             <H2>eleven candidates,<br/>four survived.</H2>
-            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "640px", margin: "24px 0 56px" }}>
+            <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "640px", margin: "clamp(12px, 2vw, 24px) 0 clamp(28px, 4vw, 56px)" }}>
               A subset of the candidates is shown below. The full ideation map is in the Appendix.
             </p>
             <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
               {concepts.map(c => {
                 const isShortlist = c.verdict.includes("shortlist");
                 return (
-                  <div key={c.id} style={{ display: "grid", gridTemplateColumns: "60px 1.4fr 1fr 2fr", gap: "32px", padding: "20px 0", borderBottom: "1px solid rgba(255,255,255,0.08)", alignItems: "center" }}>
-                    <span className="mono" style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)" }}>{c.id}</span>
-                    <p style={{ fontSize: "16px", fontWeight: 500, letterSpacing: "-0.02em", color: "#fff", margin: 0 }}>{c.name}</p>
-                    <p style={{ fontSize: "12px", color: isShortlist ? "rgba(154,230,110,0.9)" : "rgba(232,123,110,0.7)", margin: 0, letterSpacing: "0.04em", textTransform: "uppercase", fontWeight: 500 }}>{c.verdict}</p>
-                    <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.45)", margin: 0, lineHeight: 1.55 }}>{c.note}</p>
+                  <div key={c.id} style={{ display: "grid", gridTemplateColumns: "60px 1.4fr 1fr 2fr", gap: "clamp(16px, 3vw, 32px)", padding: "clamp(10px, 2vw, 20px) 0", borderBottom: "1px solid rgba(255,255,255,0.08)", alignItems: "center" }}>
+                    <span className="mono" style={{ fontSize: "clamp(10px, 2.5vw, 12px)", color: "rgba(255,255,255,0.35)" }}>{c.id}</span>
+                    <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", fontWeight: 500, letterSpacing: "-0.02em", color: "#fff", margin: 0 }}>{c.name}</p>
+                    <p style={{ fontSize: "clamp(10px, 2.5vw, 12px)", color: isShortlist ? "rgba(154,230,110,0.9)" : "rgba(232,123,110,0.7)", margin: 0, letterSpacing: "0.04em", textTransform: "uppercase", fontWeight: 500 }}>{c.verdict}</p>
+                    <p style={{ fontSize: "clamp(12px, 3vw, 13px)", color: "rgba(255,255,255,0.45)", margin: 0, lineHeight: 1.55 }}>{c.note}</p>
                   </div>
                 );
               })}
             </div>
           </Section>
 
-          <Section bg="#000" pad="100px 40px">
+          <Section bg="#000" pad="clamp(16px, 5vw, 100px) clamp(16px, 5vw, 40px)">
             <SectionLabel>decision matrix</SectionLabel>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "end", marginBottom: "56px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(32px, 8vw, 80px)", alignItems: "end", marginBottom: "clamp(28px, 4vw, 56px)" }}>
               <H2>weighted<br/>scoring.</H2>
-              <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0 }}>
+              <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0 }}>
                 Each shortlisted concept was scored 1–5 against the seven community-derived criteria, each weighted by stakeholder priority. The two highest-scoring concepts proceeded to prototyping.
               </p>
             </div>
 
             <div style={{ overflowX: "auto" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "minmax(220px, 2fr) 60px repeat(4, minmax(110px, 1fr))", gap: "8px", minWidth: "780px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "minmax(220px, 2fr) 60px repeat(4, minmax(110px, 1fr))", gap: "clamp(4px, 1vw, 8px)", minWidth: "780px" }}>
                 {/* Header */}
-                <div style={{ padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}><span className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase" }}>criterion</span></div>
-                <div style={{ padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.15)", textAlign: "center" }}><span className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>w</span></div>
+                <div style={{ padding: "clamp(8px, 1.5vw, 12px) 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}><span className="mono" style={{ fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase" }}>criterion</span></div>
+                <div style={{ padding: "clamp(8px, 1.5vw, 12px) 0", borderBottom: "1px solid rgba(255,255,255,0.15)", textAlign: "center" }}><span className="mono" style={{ fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.4)" }}>w</span></div>
                 {["Timer", "Diverter", "Hybrid Inv.", "Pre-heat"].map(h => (
-                  <div key={h} style={{ padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.15)", textAlign: "center" }}>
-                    <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.7)", fontWeight: 500 }}>{h}</span>
+                  <div key={h} style={{ padding: "clamp(8px, 1.5vw, 12px) 0", borderBottom: "1px solid rgba(255,255,255,0.15)", textAlign: "center" }}>
+                    <span style={{ fontSize: "clamp(10px, 2.5vw, 12px)", color: "rgba(255,255,255,0.7)", fontWeight: 500 }}>{h}</span>
                   </div>
                 ))}
 
                 {matrix.map(row => (
                   <React.Fragment key={row.criterion}>
-                    <div style={{ padding: "10px 0", display: "flex", alignItems: "center" }}>
-                      <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", margin: 0 }}>{criteria[row.criterion].name}</p>
+                    <div style={{ padding: "clamp(6px, 1.5vw, 10px) 0", display: "flex", alignItems: "center" }}>
+                      <p style={{ fontSize: "clamp(12px, 3vw, 13px)", color: "rgba(255,255,255,0.7)", margin: 0 }}>{criteria[row.criterion].name}</p>
                     </div>
-                    <div style={{ padding: "10px 0", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <span className="mono" style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)" }}>{criteria[row.criterion].weight}</span>
+                    <div style={{ padding: "clamp(6px, 1.5vw, 10px) 0", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <span className="mono" style={{ fontSize: "clamp(10px, 2.5vw, 12px)", color: "rgba(255,255,255,0.4)" }}>{criteria[row.criterion].weight}</span>
                     </div>
                     {[row.timer, row.diverter, row.hybrid, row.preheat].map((s, i) => (
-                      <div key={i} style={{ padding: "6px 4px" }}>{cellScore(s)}</div>
+                      <div key={i} style={{ padding: "clamp(3px, 1vw, 6px) clamp(2px, 0.5vw, 4px)" }}>{cellScore(s)}</div>
                     ))}
                   </React.Fragment>
                 ))}
 
                 {/* Totals row */}
-                <div style={{ padding: "20px 0 12px", borderTop: "1px solid rgba(255,255,255,0.15)" }}>
-                  <p style={{ fontSize: "13px", color: "#fff", fontWeight: 500, margin: 0, letterSpacing: "-0.01em" }}>weighted total</p>
+                <div style={{ padding: "clamp(12px, 2vw, 20px) 0 clamp(8px, 1.5vw, 12px)", borderTop: "1px solid rgba(255,255,255,0.15)" }}>
+                  <p style={{ fontSize: "clamp(12px, 3vw, 13px)", color: "#fff", fontWeight: 500, margin: 0, letterSpacing: "-0.01em" }}>weighted total</p>
                 </div>
-                <div style={{ padding: "20px 0 12px", borderTop: "1px solid rgba(255,255,255,0.15)" }}></div>
+                <div style={{ padding: "clamp(12px, 2vw, 20px) 0 clamp(8px, 1.5vw, 12px)", borderTop: "1px solid rgba(255,255,255,0.15)" }}></div>
                 {[
                   { v: totals.timer, win: false },
                   { v: totals.diverter, win: true },
                   { v: totals.hybrid, win: false },
                   { v: totals.preheat, win: false },
                 ].map((t, i) => (
-                  <div key={i} style={{ padding: "20px 0 12px", borderTop: "1px solid rgba(255,255,255,0.15)", textAlign: "center" }}>
-                    <p style={{ fontSize: "20px", fontWeight: 500, letterSpacing: "-0.02em", color: t.win ? "rgba(154,230,110,1)" : "#fff", margin: 0 }}>{t.v}</p>
+                  <div key={i} style={{ padding: "clamp(12px, 2vw, 20px) 0 clamp(8px, 1.5vw, 12px)", borderTop: "1px solid rgba(255,255,255,0.15)", textAlign: "center" }}>
+                    <p style={{ fontSize: "clamp(16px, 4vw, 20px)", fontWeight: 500, letterSpacing: "-0.02em", color: t.win ? "rgba(154,230,110,1)" : "#fff", margin: 0 }}>{t.v}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", lineHeight: 1.7, marginTop: "40px", maxWidth: "640px" }}>
+            <p style={{ fontSize: "clamp(12px, 3vw, 14px)", color: "rgba(255,255,255,0.5)", lineHeight: 1.7, marginTop: "clamp(20px, 4vw, 40px)", maxWidth: "640px" }}>
               <em>Diverter</em> scored highest, with <em>Timer</em> as second best and a substantially lower capex. Both were carried into prototyping; both are recommended for deployment in different contexts.
             </p>
           </Section>
 
-          <Section bg="#0a0a0a" pad="100px 40px">
+          <Section bg="#0a0a0a" pad="clamp(16px, 5vw, 100px) clamp(16px, 5vw, 40px)">
             <SectionLabel>evidence base · proven, not prototyped</SectionLabel>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "end", marginBottom: "56px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(32px, 8vw, 80px)", alignItems: "end", marginBottom: "clamp(28px, 4vw, 56px)" }}>
               <H2>we didn't invent this.<br/>we adapted it.</H2>
-              <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.6)", lineHeight: 1.75, margin: 0 }}>
+              <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.6)", lineHeight: 1.75, margin: 0 }}>
                 Solar surplus diversion is a mature technology in Australia. The same hardware pattern we recommend for Lama Lama has been operating in Sydney homes for more than a decade — long enough to fail in known ways, be refined, and standardise around a few proven vendors. We are taking a tested grid-connected pattern and adapting it to an off-grid Cape York context, not asking the community to be a first deployment.
               </p>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0", borderTop: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)", marginBottom: "64px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0", borderTop: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)", marginBottom: "clamp(32px, 6vw, 64px)" }}>
               {[
                 { v: "1 in 3", l: "Greater Sydney homes with rooftop PV (indicative; NSW DPE / Solar Analytics, 2024)" },
                 { v: "~1.1 M", l: "NSW homes generating their own solar (Clean Energy Regulator, 2024)" },
                 { v: "10+ yrs", l: "solar diverters in the Australian market (Catch Power, MyEnergi, Paladin)" },
                 { v: "60–80%", l: "typical reduction in hot-water grid draw reported by diverter users" },
               ].map((s, i) => (
-                <div key={s.l} style={{ padding: "32px 24px 36px", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
-                  <p style={{ fontSize: "clamp(28px, 3.5vw, 52px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 12px", lineHeight: 1 }}>{s.v}</p>
-                  <p style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.5)", margin: 0, lineHeight: 1.55 }}>{s.l}</p>
+                <div key={s.l} style={{ padding: "clamp(16px, 3vw, 32px) clamp(12px, 2vw, 24px) clamp(18px, 3.5vw, 36px)", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
+                  <p style={{ fontSize: "clamp(28px, 3.5vw, 52px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 clamp(8px, 1.5vw, 12px)", lineHeight: 1 }}>{s.v}</p>
+                  <p style={{ fontSize: "clamp(11px, 2.5vw, 12.5px)", color: "rgba(255,255,255,0.5)", margin: 0, lineHeight: 1.55 }}>{s.l}</p>
                 </div>
               ))}
             </div>
 
-            <p style={{ fontSize: "11px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 28px" }}>products & deployments referenced in our design</p>
+            <p style={{ fontSize: "clamp(9px, 2vw, 11px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 clamp(14px, 3vw, 28px)" }}>products & deployments referenced in our design</p>
             <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
               {[
                 {
@@ -229,28 +229,28 @@
                 return (
                   <div key={p.prod}
                     onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-                    style={{ display: "grid", gridTemplateColumns: "1.2fr 1.3fr 2fr", gap: "32px", padding: "24px 0", borderBottom: "1px solid rgba(255,255,255,0.08)", alignItems: "start", transition: "background 0.2s" }}>
-                    <p style={{ fontSize: "15px", fontWeight: 500, color: "#fff", margin: 0, letterSpacing: "-0.02em" }}>{p.prod}</p>
-                    <p style={{ fontSize: "13px", color: hov ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.55, transition: "color 0.3s" }}>{p.base}</p>
-                    <p style={{ fontSize: "13px", color: hov ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.55)", margin: 0, lineHeight: 1.6, transition: "color 0.3s" }}>{p.note}</p>
+                    style={{ display: "grid", gridTemplateColumns: "1.2fr 1.3fr 2fr", gap: "clamp(16px, 3vw, 32px)", padding: "clamp(12px, 2vw, 24px) 0", borderBottom: "1px solid rgba(255,255,255,0.08)", alignItems: "start", transition: "background 0.2s" }}>
+                    <p style={{ fontSize: "clamp(13px, 3vw, 15px)", fontWeight: 500, color: "#fff", margin: 0, letterSpacing: "-0.02em" }}>{p.prod}</p>
+                    <p style={{ fontSize: "clamp(12px, 3vw, 13px)", color: hov ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.55, transition: "color 0.3s" }}>{p.base}</p>
+                    <p style={{ fontSize: "clamp(12px, 3vw, 13px)", color: hov ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.55)", margin: 0, lineHeight: 1.6, transition: "color 0.3s" }}>{p.note}</p>
                   </div>
                 );
               })}
             </div>
 
-            <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.55)", lineHeight: 1.75, margin: "48px 0 0", maxWidth: "880px" }}>
+            <p style={{ fontSize: "clamp(13px, 3vw, 15px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.75, margin: "clamp(24px, 4vw, 48px) 0 0", maxWidth: "880px" }}>
               The implication for Yintjingga is concrete: the failure modes, warranties, install procedures and electrician familiarity for this class of hardware are <i style={{ fontStyle: "italic", color: "#fff" }}>already understood</i> in the Australian market. Our prototyping work focuses on the off-grid integration and the Cape York environmental conditions — not on whether the core control principle works. That question was settled a decade ago.
             </p>
           </Section>
 
-          <Section bg="#000" pad="100px 40px">
+          <Section bg="#000" pad="clamp(16px, 5vw, 100px) clamp(16px, 5vw, 40px)">
             <SectionLabel>prototyping & iteration</SectionLabel>
             <H2>two passes per concept.</H2>
-            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "640px", margin: "24px 0 64px" }}>
+            <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "640px", margin: "clamp(12px, 2vw, 24px) 0 clamp(32px, 6vw, 64px)" }}>
               Both shortlisted concepts were prototyped on a representative resistive load (3.6 kW element, 250 L cylinder) connected to a bench PV emulator simulating Lama Lama irradiance profiles.
             </p>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(16px, 3vw, 32px)" }}>
               {[
                 {
                   v: "v1",
@@ -277,16 +277,16 @@
                   changes: ["Documented as Solution Two — Diverter", "Ready for in-situ pilot at Lama Lama"],
                 },
               ].map((p, i) => (
-                <div key={i} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", padding: "28px 28px 32px" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-                    <p style={{ fontSize: "18px", fontWeight: 500, letterSpacing: "-0.02em", color: "#fff", margin: 0 }}>{p.title}</p>
-                    <span className="mono" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", padding: "4px 10px", borderRadius: "999px", background: "rgba(255,255,255,0.06)" }}>{p.v}</span>
+                <div key={i} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: "clamp(8px, 2vw, 12px)", padding: "clamp(16px, 3vw, 28px) clamp(16px, 3vw, 28px) clamp(18px, 3.5vw, 32px)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "clamp(8px, 2vw, 16px)" }}>
+                    <p style={{ fontSize: "clamp(16px, 4vw, 18px)", fontWeight: 500, letterSpacing: "-0.02em", color: "#fff", margin: 0 }}>{p.title}</p>
+                    <span className="mono" style={{ fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.4)", padding: "clamp(3px, 0.5vw, 4px) clamp(6px, 1.5vw, 10px)", borderRadius: "999px", background: "rgba(255,255,255,0.06)" }}>{p.v}</span>
                   </div>
-                  <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)", lineHeight: 1.65, margin: "0 0 16px" }}>{p.body}</p>
-                  <p style={{ fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "16px 0 8px" }}>changes</p>
-                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "6px" }}>
+                  <p style={{ fontSize: "clamp(12px, 3vw, 14px)", color: "rgba(255,255,255,0.6)", lineHeight: 1.65, margin: "0 0 clamp(8px, 1.5vw, 16px)" }}>{p.body}</p>
+                  <p style={{ fontSize: "clamp(9px, 2vw, 11px)", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "clamp(8px, 1.5vw, 16px) 0 clamp(4px, 1vw, 8px)" }}>changes</p>
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "clamp(3px, 1vw, 6px)" }}>
                     {p.changes.map((c, j) => (
-                      <li key={j} style={{ fontSize: "13px", color: "rgba(255,255,255,0.55)", lineHeight: 1.55, paddingLeft: "16px", position: "relative" }}>
+                      <li key={j} style={{ fontSize: "clamp(12px, 3vw, 13px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.55, paddingLeft: "clamp(10px, 2vw, 16px)", position: "relative" }}>
                         <span style={{ position: "absolute", left: 0, color: "rgba(255,255,255,0.3)" }}>›</span>{c}
                       </li>
                     ))}
