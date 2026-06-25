@@ -29,6 +29,10 @@
     @keyframes switchShadow { 0%,100%{transform:translateX(-50%) scale(1);opacity:.45} 50%{transform:translateX(-50%) scale(.7);opacity:.2} }
     @keyframes scrollDot { 0%{transform:translateY(0);opacity:0} 30%{opacity:1} 80%{opacity:1} 100%{transform:translateY(10px);opacity:0} }
     @keyframes scrollBob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+    @media (max-width: 768px) {
+      body { font-size: 16px; }
+    }
   </style>
   <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
@@ -52,15 +56,23 @@
 
     function Navbar() {
       const [opacity, setOpacity] = useState(1);
+      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
       const [missionOpen, setMissionOpen] = useState(false);
       const [strategyOpen, setStrategyOpen] = useState(false);
       const [feasibilityOpen, setFeasibilityOpen] = useState(false);
       const [reportOpen, setReportOpen] = useState(false);
+      const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
       const lastY = useRef(0);
       const closeTimer = useRef(null);
       const strategyCloseTimer = useRef(null);
       const feasibilityCloseTimer = useRef(null);
       const reportCloseTimer = useRef(null);
+
+      useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+      }, []);
 
       useEffect(() => {
         const scroller = document.getElementById("root").firstChild;
@@ -69,12 +81,12 @@
           const goingDown = y > lastY.current;
           lastY.current = y;
           if (y < 10) setOpacity(1);
-          else if (goingDown) setOpacity(0);
+          else if (goingDown && !isMobile) setOpacity(0);
           else setOpacity(1);
         };
         scroller.addEventListener("scroll", onScroll, { passive: true });
         return () => scroller.removeEventListener("scroll", onScroll);
-      }, []);
+      }, [isMobile]);
 
       const openMission = () => { clearTimeout(closeTimer.current); setMissionOpen(true); };
       const schedulClose = () => { closeTimer.current = setTimeout(() => setMissionOpen(false), 120); };
@@ -127,6 +139,120 @@
           </div>
         </a>
       );
+
+      if (isMobile) {
+        return (
+          <nav style={{ position: "fixed", zIndex: 50, top: 0, left: 0, right: 0, padding: "clamp(12px, 4vw, 20px)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", opacity, transition: "opacity 0.5s ease", pointerEvents: opacity < 0.5 ? "none" : "auto", background: "rgba(0,0,0,0.95)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <LogoSVG />
+              <span style={{ color: "#fff", fontSize: "clamp(12px, 3.5vw, 14px)", fontWeight: 400, letterSpacing: "-0.02em" }}>E-Overflow</span>
+            </div>
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} style={{ background: "none", border: "none", color: "#fff", cursor: "pointer", padding: "8px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                {mobileMenuOpen ? (
+                  <>
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                  </>
+                ) : (
+                  <>
+                    <line x1="4" y1="6" x2="20" y2="6"/>
+                    <line x1="4" y1="12" x2="20" y2="12"/>
+                    <line x1="4" y1="18" x2="20" y2="18"/>
+                  </>
+                )}
+              </svg>
+            </button>
+
+            {mobileMenuOpen && (
+              <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "rgba(0,0,0,0.98)", borderTop: "1px solid rgba(255,255,255,0.1)", padding: "clamp(12px, 3vw, 16px)", maxHeight: "calc(100vh - 60px)", overflowY: "auto", zIndex: 40 }}>
+                {navItems.map(({ label, href, dropdown, strategyDropdown, feasibilityDropdown, reportDropdown }) => {
+                  const handleMobileNavClick = () => setMobileMenuOpen(false);
+                  if (strategyDropdown) return (
+                    <div key={label} style={{ paddingBottom: "clamp(8px, 2vw, 12px)" }}>
+                      <button onClick={() => setStrategyOpen(!strategyOpen)} style={{ background: "none", border: "none", color: "#fff", fontSize: "clamp(14px, 4vw, 16px)", padding: "clamp(8px, 2vw, 12px) 0", width: "100%", textAlign: "left", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        {label}
+                        <svg width="12" height="12" viewBox="0 0 10 10" fill="none" style={{ transform: strategyOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>
+                          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                      {strategyOpen && (
+                        <div style={{ paddingLeft: "clamp(12px, 3vw, 16px)", borderLeft: "1px solid rgba(255,255,255,0.1)", marginLeft: "clamp(4px, 1.5vw, 8px)", paddingTop: "clamp(6px, 1.5vw, 8px)" }}>
+                          <a href="solution-one.html" onClick={handleMobileNavClick} style={{ display: "block", color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: "clamp(13px, 3.5vw, 14px)", paddingBottom: "clamp(8px, 2vw, 10px)" }}>Solution One — Timer</a>
+                          <a href="solution-two.html" onClick={handleMobileNavClick} style={{ display: "block", color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: "clamp(13px, 3.5vw, 14px)" }}>Solution Two — Diverter</a>
+                        </div>
+                      )}
+                    </div>
+                  );
+                  if (dropdown) return (
+                    <div key={label} style={{ paddingBottom: "clamp(8px, 2vw, 12px)" }}>
+                      <button onClick={() => setMissionOpen(!missionOpen)} style={{ background: "none", border: "none", color: "#fff", fontSize: "clamp(14px, 4vw, 16px)", padding: "clamp(8px, 2vw, 12px) 0", width: "100%", textAlign: "left", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        {label}
+                        <svg width="12" height="12" viewBox="0 0 10 10" fill="none" style={{ transform: missionOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>
+                          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                      {missionOpen && (
+                        <div style={{ paddingLeft: "clamp(12px, 3vw, 16px)", borderLeft: "1px solid rgba(255,255,255,0.1)", marginLeft: "clamp(4px, 1.5vw, 8px)", paddingTop: "clamp(6px, 1.5vw, 8px)" }}>
+                          <a href="lama-lama.html" onClick={handleMobileNavClick} style={{ display: "block", color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: "clamp(13px, 3.5vw, 14px)" }}>Lama Lama Community</a>
+                        </div>
+                      )}
+                    </div>
+                  );
+                  if (feasibilityDropdown) return (
+                    <div key={label} style={{ paddingBottom: "clamp(8px, 2vw, 12px)" }}>
+                      <button onClick={() => setFeasibilityOpen(!feasibilityOpen)} style={{ background: "none", border: "none", color: "#fff", fontSize: "clamp(14px, 4vw, 16px)", padding: "clamp(8px, 2vw, 12px) 0", width: "100%", textAlign: "left", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        {label}
+                        <svg width="12" height="12" viewBox="0 0 10 10" fill="none" style={{ transform: feasibilityOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>
+                          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                      {feasibilityOpen && (
+                        <div style={{ paddingLeft: "clamp(12px, 3vw, 16px)", borderLeft: "1px solid rgba(255,255,255,0.1)", marginLeft: "clamp(4px, 1.5vw, 8px)", paddingTop: "clamp(6px, 1.5vw, 8px)" }}>
+                          <a href="lama-lama-feasibility.html" onClick={handleMobileNavClick} style={{ display: "block", color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: "clamp(13px, 3.5vw, 14px)" }}>Lama Lama — Feasibility Study</a>
+                        </div>
+                      )}
+                    </div>
+                  );
+                  if (reportDropdown) return (
+                    <div key={label} style={{ paddingBottom: "clamp(8px, 2vw, 12px)" }}>
+                      <button onClick={() => setReportOpen(!reportOpen)} style={{ background: "none", border: "none", color: "#fff", fontSize: "clamp(14px, 4vw, 16px)", padding: "clamp(8px, 2vw, 12px) 0", width: "100%", textAlign: "left", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        {label}
+                        <svg width="12" height="12" viewBox="0 0 10 10" fill="none" style={{ transform: reportOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>
+                          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                      {reportOpen && (
+                        <div style={{ paddingLeft: "clamp(12px, 3vw, 16px)", borderLeft: "1px solid rgba(255,255,255,0.1)", marginLeft: "clamp(4px, 1.5vw, 8px)", paddingTop: "clamp(6px, 1.5vw, 8px)", display: "grid", gridTemplateColumns: "1fr", gap: "clamp(6px, 1.5vw, 8px)" }}>
+                          <a href="contents.html" onClick={handleMobileNavClick} style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: "clamp(13px, 3.5vw, 14px)" }}>Contents</a>
+                          <a href="executive-summary.html" onClick={handleMobileNavClick} style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: "clamp(13px, 3.5vw, 14px)" }}>Executive Summary</a>
+                          <a href="problem.html" onClick={handleMobileNavClick} style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: "clamp(13px, 3.5vw, 14px)" }}>Problem & Brief</a>
+                          <a href="design-process.html" onClick={handleMobileNavClick} style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: "clamp(13px, 3.5vw, 14px)" }}>Design Process</a>
+                          <a href="considerations.html" onClick={handleMobileNavClick} style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: "clamp(13px, 3.5vw, 14px)" }}>Considerations</a>
+                          <a href="risks.html" onClick={handleMobileNavClick} style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: "clamp(13px, 3.5vw, 14px)" }}>Risks & Concerns</a>
+                          <a href="implementation.html" onClick={handleMobileNavClick} style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: "clamp(13px, 3.5vw, 14px)" }}>Implementation Plan</a>
+                          <a href="recommendations.html" onClick={handleMobileNavClick} style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: "clamp(13px, 3.5vw, 14px)" }}>Recommendations</a>
+                          <a href="references.html" onClick={handleMobileNavClick} style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: "clamp(13px, 3.5vw, 14px)" }}>References</a>
+                        </div>
+                      )}
+                    </div>
+                  );
+                  return (
+                    <a key={label} href={href} onClick={handleMobileNavClick} style={{ display: "block", color: "#fff", fontSize: "clamp(14px, 4vw, 16px)", padding: "clamp(8px, 2vw, 12px) 0", textDecoration: "none" }}>
+                      {label}
+                    </a>
+                  );
+                })}
+                <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", marginTop: "clamp(8px, 2vw, 12px)", paddingTop: "clamp(8px, 2vw, 12px)" }}>
+                  <a href="contact.html" onClick={handleMobileNavClick} style={{ display: "block", background: "#fff", color: "#000", fontSize: "clamp(13px, 3.5vw, 14px)", fontWeight: 500, borderRadius: "999px", padding: "clamp(10px, 2.5vw, 12px) clamp(16px, 4vw, 20px)", textDecoration: "none", textAlign: "center" }}>
+                    learn more
+                  </a>
+                </div>
+              </div>
+            )}
+          </nav>
+        );
+      }
 
       return (
         <nav style={{ position: "fixed", zIndex: 50, top: 0, left: 0, right: 0, padding: "24px 40px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", opacity, transition: "opacity 0.5s ease", pointerEvents: opacity < 0.5 ? "none" : "auto" }}>
@@ -229,23 +355,37 @@
     }
 
     function Hero() {
+      const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
       return (
         <section className="relative h-screen w-full overflow-hidden bg-black">
           <video className="absolute inset-0 w-full h-full object-cover" autoPlay loop muted playsInline src="uploads/8295518-hd_1920_1080_30fps.mp4"></video>
           <Navbar />
           <div className="relative h-full w-full">
-            <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(60px, 14vw, 14vw)", left: "1rem", top: "18%", lineHeight: 0.95, letterSpacing: "-0.04em", textAlign: "left" }}>Don't</h1>
-            <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(60px, 13vw, 13vw)", right: "1rem", top: "38%", lineHeight: 0.95, letterSpacing: "-0.04em" }}>Waste</h1>
-            <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(60px, 13vw, 13vw)", left: "18%", top: "58%", lineHeight: 0.95, letterSpacing: "-0.04em" }}>Energy</h1>
-            <p className="absolute text-white/90 leading-snug" style={{ left: "1.5rem", top: "46%", maxWidth: "240px", fontSize: "15px" }}>divert to essentials</p>
-            <StatBlock position="right-6 md:right-24 top-[14%]" number="70% energy reduction" label="up to" labelAbove={true} dividerRotate={20} dividerSide="left" alignRight={true} />
+            {isMobileView ? (
+              <>
+                <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(28px, 12vw, 60px)", left: "clamp(1rem, 3vw, 2rem)", top: "25%", lineHeight: 0.95, letterSpacing: "-0.04em", textAlign: "left", maxWidth: "85%" }}>Don't Waste Energy</h1>
+                <p className="absolute text-white/90 leading-snug" style={{ left: "clamp(1rem, 3vw, 2rem)", top: "50%", maxWidth: "200px", fontSize: "clamp(13px, 3vw, 15px)" }}>divert to essentials</p>
+              </>
+            ) : (
+              <>
+                <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(60px, 14vw, 14vw)", left: "1rem", top: "18%", lineHeight: 0.95, letterSpacing: "-0.04em", textAlign: "left" }}>Don't</h1>
+                <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(60px, 13vw, 13vw)", right: "1rem", top: "38%", lineHeight: 0.95, letterSpacing: "-0.04em" }}>Waste</h1>
+                <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(60px, 13vw, 13vw)", left: "18%", top: "58%", lineHeight: 0.95, letterSpacing: "-0.04em" }}>Energy</h1>
+                <p className="absolute text-white/90 leading-snug" style={{ left: "1.5rem", top: "46%", maxWidth: "240px", fontSize: "15px" }}>divert to essentials</p>
+              </>
+            )}
+            {!isMobileView && (
+              <>
+                <StatBlock position="right-6 md:right-24 top-[14%]" number="70% energy reduction" label="up to" labelAbove={true} dividerRotate={20} dividerSide="left" alignRight={true} />
+                <StatBlock position="left-6 md:left-20 bottom-32 md:bottom-40" number="+reallocate" label="" dividerRotate={-20} dividerSide="right" alignRight={false} />
+                <StatBlock position="right-6 md:right-20 bottom-32 md:bottom-36" number="+decarbonise" label="reuse > redo" dividerRotate={-20} dividerSide="left" alignRight={true} />
+              </>
+            )}
             <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent to-black"></div>
-            <StatBlock position="left-6 md:left-20 bottom-32 md:bottom-40" number="+reallocate" label="" dividerRotate={-20} dividerSide="right" alignRight={false} />
-            <StatBlock position="right-6 md:right-20 bottom-32 md:bottom-36" number="+decarbonise" label="reuse > redo" dividerRotate={-20} dividerSide="left" alignRight={true} />
 
             {/* Scroll indicator */}
-            <div style={{ position: "absolute", bottom: "32px", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", animation: "scrollBob 2.4s ease-in-out infinite", pointerEvents: "none" }}>
-              <span style={{ fontSize: "10px", letterSpacing: "0.3em", color: "rgba(255,255,255,0.55)", textTransform: "uppercase" }}>scroll</span>
+            <div style={{ position: "absolute", bottom: "clamp(16px, 3vw, 32px)", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", animation: "scrollBob 2.4s ease-in-out infinite", pointerEvents: "none" }}>
+              <span style={{ fontSize: "clamp(8px, 2vw, 10px)", letterSpacing: "0.3em", color: "rgba(255,255,255,0.55)", textTransform: "uppercase" }}>scroll</span>
               <div style={{ width: "20px", height: "32px", border: "1.5px solid rgba(255,255,255,0.5)", borderRadius: "10px", position: "relative" }}>
                 <div style={{ position: "absolute", left: "50%", top: "6px", width: "2px", height: "6px", borderRadius: "1px", background: "rgba(255,255,255,0.8)", transform: "translateX(-50%)", animation: "scrollDot 1.6s ease-in-out infinite" }}></div>
               </div>
@@ -269,48 +409,48 @@
       });
 
       return (
-        <section id="common-problem" style={{ background: "#000", minHeight: "100vh", padding: "120px 40px 120px", display: "flex", flexDirection: "column", justifyContent: "center", position: "relative", overflow: "hidden" }}>
+        <section id="common-problem" style={{ background: "#000", minHeight: "100vh", padding: "clamp(60px, 10vw, 120px) clamp(16px, 5vw, 40px)", display: "flex", flexDirection: "column", justifyContent: "center", position: "relative", overflow: "hidden" }}>
           {/* Ambient backdrop */}
           <div style={{ position: "absolute", top: "-20%", right: "-10%", width: "60%", height: "60%", background: "radial-gradient(circle, rgba(232,123,110,0.08) 0%, transparent 60%)", pointerEvents: "none" }}></div>
 
           <div style={{ position: "relative", maxWidth: "1280px", margin: "0 auto", width: "100%" }}>
-            <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "64px" }}>THE COMMON PROBLEM</p>
+            <p style={{ fontSize: "clamp(10px, 2.5vw, 12px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "clamp(32px, 5vw, 64px)" }}>THE COMMON PROBLEM</p>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "100px", alignItems: "start", marginBottom: "100px" }}>
-              <h2 style={{ fontSize: "clamp(40px, 5.5vw, 5.5vw)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "clamp(40px, 8vw, 100px)", alignItems: "start", marginBottom: "clamp(60px, 10vw, 100px)" }}>
+              <h2 style={{ fontSize: "clamp(32px, 7vw, 60px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0 }}>
                 solar is solved.<br />
                 <span style={{ color: "rgba(255,255,255,0.4)" }}>allocation isn't.</span>
               </h2>
               <div style={{ paddingTop: "12px" }}>
-                <p style={{ fontSize: "17px", color: "rgba(255,255,255,0.7)", lineHeight: 1.7, margin: "0 0 20px" }}>
+                <p style={{ fontSize: "clamp(14px, 4vw, 17px)", color: "rgba(255,255,255,0.7)", lineHeight: 1.7, margin: "0 0 20px" }}>
                   Standard solar setups treat the battery as the default destination for any surplus energy. It sounds smart — store first, use later — until you look at when the loads actually arrive.
                 </p>
-                <p style={{ fontSize: "17px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0 }}>
+                <p style={{ fontSize: "clamp(14px, 4vw, 17px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: 0 }}>
                   Hot water systems, pumps, and other major in-house appliances draw the moment they cycle on. The battery you just filled is depleted within minutes, and the surplus you could have used <em style={{ fontStyle: "normal", color: "#fff" }}>directly</em> is gone.
                 </p>
               </div>
             </div>
 
             {/* Timeline of where it goes wrong */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0", borderTop: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "clamp(0px, 1vw, 2px)", borderTop: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
               {flow.map((f, i) => (
-                <div key={f.num} style={{ padding: "32px 28px 36px", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.08)" : "none", position: "relative" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "24px" }}>
+                <div key={f.num} style={{ padding: "clamp(20px, 4vw, 32px) clamp(16px, 3vw, 28px)", borderRight: i < 3 && flow.length > 2 ? "1px solid rgba(255,255,255,0.08)" : "none", position: "relative" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "clamp(16px, 3vw, 24px)" }}>
                     <div style={dot(f.tone)}></div>
-                    <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.35)", letterSpacing: "0.12em" }}>{f.num}</span>
+                    <span style={{ fontSize: "clamp(9px, 2.5vw, 11px)", color: "rgba(255,255,255,0.35)", letterSpacing: "0.12em" }}>{f.num}</span>
                   </div>
-                  <p style={{ fontSize: "20px", fontWeight: 500, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.025em" }}>{f.label}</p>
-                  <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", lineHeight: 1.6, margin: 0 }}>{f.body}</p>
+                  <p style={{ fontSize: "clamp(16px, 4vw, 20px)", fontWeight: 500, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.025em" }}>{f.label}</p>
+                  <p style={{ fontSize: "clamp(12px, 3.5vw, 14px)", color: "rgba(255,255,255,0.5)", lineHeight: 1.6, margin: 0 }}>{f.body}</p>
                 </div>
               ))}
             </div>
 
             {/* Result + bridge to solution */}
-            <div style={{ marginTop: "80px", display: "grid", gridTemplateColumns: "1fr auto", gap: "48px", alignItems: "center" }}>
-              <p style={{ fontSize: "clamp(22px, 2.6vw, 38px)", fontWeight: 400, letterSpacing: "-0.03em", lineHeight: 1.25, color: "rgba(255,255,255,0.85)", margin: 0, maxWidth: "760px" }}>
+            <div style={{ marginTop: "clamp(40px, 8vw, 80px)", display: "grid", gridTemplateColumns: "1fr", gap: "clamp(20px, 4vw, 48px)", alignItems: "center" }}>
+              <p style={{ fontSize: "clamp(18px, 5vw, 38px)", fontWeight: 400, letterSpacing: "-0.03em", lineHeight: 1.25, color: "rgba(255,255,255,0.85)", margin: 0, maxWidth: "760px" }}>
                 The energy was generated. The energy was stored. The energy was wasted on the wrong load, in the wrong order. <span style={{ color: "#fff" }}>That's the gap our Solar Switch closes.</span>
               </p>
-              <a href="solution-one.html" style={{ display: "inline-flex", alignItems: "center", gap: "10px", background: "#fff", color: "#000", fontSize: "14px", borderRadius: "999px", padding: "14px 26px", textDecoration: "none", flexShrink: 0, transition: "background 0.2s" }}
+              <a href="solution-one.html" style={{ display: "inline-flex", alignItems: "center", gap: "10px", background: "#fff", color: "#000", fontSize: "clamp(12px, 3vw, 14px)", borderRadius: "999px", padding: "clamp(10px, 2.5vw, 14px) clamp(16px, 4vw, 26px)", textDecoration: "none", flexShrink: 0, transition: "background 0.2s", width: "fit-content" }}
                 onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
                 onMouseLeave={e => e.currentTarget.style.background = "#fff"}
               >see our solutions →</a>
@@ -327,36 +467,36 @@
         { num: "03", title: "operate", body: "Ongoing monitoring and optimisation. Systems that learn, adapt, and keep performing as conditions change." },
       ];
       return (
-        <section id="strategy" style={{ background: "#0a0a0a", padding: "120px 40px 80px" }}>
-          <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "64px" }}>THE STRATEGY</p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", alignItems: "center", margin: "0 0 100px" }}>
-            <h2 style={{ fontSize: "clamp(40px, 6vw, 6vw)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0 }}>
+        <section id="strategy" style={{ background: "#0a0a0a", padding: "clamp(60px, 10vw, 120px) clamp(16px, 5vw, 40px) clamp(40px, 8vw, 80px)" }}>
+          <p style={{ fontSize: "clamp(10px, 2.5vw, 12px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "clamp(32px, 5vw, 64px)" }}>THE STRATEGY</p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "clamp(40px, 8vw, 100px)", alignItems: "center", margin: "0 0 clamp(60px, 10vw, 100px)" }}>
+            <h2 style={{ fontSize: "clamp(32px, 7vw, 60px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0 }}>
               time to switch<br />to net zero
             </h2>
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-              <div style={{ position: "relative", width: "500px", height: "500px", flexShrink: 0 }}>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
+              <div style={{ position: "relative", width: "clamp(200px, 80vw, 500px)", height: "clamp(200px, 80vw, 500px)", flexShrink: 0 }}>
                 <div style={{ position: "absolute", bottom: "8%", left: "50%", width: "55%", height: "7%", background: "radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(4px)", transform: "translateX(-50%)", animation: "switchShadow 4.5s ease-in-out infinite" }}></div>
                 <a href="solution-two.html"><img src="uploads/switch.png" alt="Tesla SHT-1" style={{ width: "100%", height: "100%", objectFit: "contain", animation: "switchFloat 4.5s ease-in-out infinite", filter: "drop-shadow(0 14px 28px rgba(0,0,0,0.55)) drop-shadow(0 4px 8px rgba(0,0,0,0.3))", userSelect: "none", cursor: "pointer" }} /></a>
               </div>
             </div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "2px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "clamp(1px, 2vw, 2px)" }}>
             {pillars.map((p, i) => {
               const [hov, setHov] = useState(false);
               return (
                 <div key={p.num}
                   onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-                  style={{ borderTop: `1px solid ${hov ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.12)"}`, paddingTop: "32px", paddingRight: i < 2 ? "48px" : "0", paddingBottom: "40px", transition: "border-color 0.3s", cursor: "default" }}>
-                  <span style={{ fontSize: "11px", color: hov ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)", letterSpacing: "0.1em", transition: "color 0.3s" }}>{p.num}</span>
-                  <h3 style={{ fontSize: "clamp(36px, 4vw, 72px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "16px 0 24px", transform: hov ? "translateX(8px)" : "translateX(0)", transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)" }}>{p.title}</h3>
-                  <p style={{ fontSize: "15px", color: hov ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.55)", lineHeight: 1.6, maxWidth: "320px", transition: "color 0.3s" }}>{p.body}</p>
+                  style={{ borderTop: `1px solid ${hov ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.12)"}`, paddingTop: "clamp(20px, 3vw, 32px)", paddingRight: "clamp(16px, 3vw, 48px)", paddingBottom: "clamp(24px, 4vw, 40px)", transition: "border-color 0.3s", cursor: "default" }}>
+                  <span style={{ fontSize: "clamp(9px, 2.5vw, 11px)", color: hov ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)", letterSpacing: "0.1em", transition: "color 0.3s" }}>{p.num}</span>
+                  <h3 style={{ fontSize: "clamp(28px, 6vw, 72px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "16px 0 24px", transform: hov ? "translateX(8px)" : "translateX(0)", transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)" }}>{p.title}</h3>
+                  <p style={{ fontSize: "clamp(13px, 3.5vw, 15px)", color: hov ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.55)", lineHeight: 1.6, maxWidth: "320px", transition: "color 0.3s" }}>{p.body}</p>
                 </div>
               );
             })}
           </div>
-          <div style={{ marginTop: "100px", display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "40px" }}>
-            <p style={{ fontSize: "clamp(20px, 2.5vw, 36px)", fontWeight: 400, letterSpacing: "-0.03em", color: "rgba(255,255,255,0.7)", margin: 0 }}>ready to stop wasting energy?</p>
-            <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "14px", fontWeight: 400, borderRadius: "999px", padding: "16px 32px", textDecoration: "none", display: "inline-block", flexShrink: 0, transition: "background 0.2s" }}
+          <div style={{ marginTop: "clamp(40px, 8vw, 100px)", display: "grid", gridTemplateColumns: "1fr", gap: "clamp(20px, 4vw, 48px)", alignItems: "center", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "clamp(24px, 4vw, 40px)" }}>
+            <p style={{ fontSize: "clamp(18px, 5vw, 36px)", fontWeight: 400, letterSpacing: "-0.03em", color: "rgba(255,255,255,0.7)", margin: 0 }}>ready to stop wasting energy?</p>
+            <a href="contact.html" style={{ background: "#fff", color: "#000", fontSize: "clamp(12px, 3vw, 14px)", fontWeight: 400, borderRadius: "999px", padding: "clamp(10px, 2.5vw, 16px) clamp(16px, 4vw, 32px)", textDecoration: "none", display: "inline-block", flexShrink: 0, transition: "background 0.2s", width: "fit-content" }}
               onMouseEnter={e => e.currentTarget.style.background = "#e5e5e5"}
               onMouseLeave={e => e.currentTarget.style.background = "#fff"}
             >start the conversation</a>
@@ -366,37 +506,38 @@
     }
 
     function MissionPage() {
+      const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
       return (
-        <section id="mission" style={{ background: "#000", minHeight: "100vh", display: "grid", gridTemplateColumns: "1fr 1fr", overflow: "hidden" }}>
-          <div style={{ position: "relative", overflow: "hidden", minHeight: "100vh" }}>
+        <section id="mission" style={{ background: "#000", minHeight: isMobileView ? "auto" : "100vh", display: "grid", gridTemplateColumns: isMobileView ? "1fr" : "1fr 1fr", overflow: "hidden" }}>
+          <div style={{ position: "relative", overflow: "hidden", minHeight: isMobileView ? "250px" : "100vh", display: isMobileView ? "block" : "block" }}>
             <img src="https://i.guim.co.uk/img/media/3f9e844d58b7fc9e19c5a65986e50144e248c157/0_236_3543_2126/master/3543.jpg?width=1200&height=900&quality=85&auto=format&fit=crop&s=74b3e85233066ff1ec31c451e38db7c4"
               alt="mission" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-            <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: "180px", background: "linear-gradient(to right, transparent, #000)", pointerEvents: "none" }}></div>
-            <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: "160px", background: "linear-gradient(to bottom, transparent, #000)", pointerEvents: "none" }}></div>
+            <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: isMobileView ? "80px" : "180px", background: "linear-gradient(to right, transparent, #000)", pointerEvents: "none" }}></div>
+            <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: isMobileView ? "100px" : "160px", background: "linear-gradient(to bottom, transparent, #000)", pointerEvents: "none" }}></div>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "100px 64px 100px 48px" }}>
-            <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "48px" }}>our mission</p>
-            <h2 style={{ fontSize: "clamp(36px, 4.5vw, 4.5vw)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "0 0 40px" }}>
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "clamp(40px, 8vw, 100px) clamp(16px, 5vw, 64px)" }}>
+            <p style={{ fontSize: "clamp(10px, 2.5vw, 12px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "clamp(24px, 4vw, 48px)" }}>our mission</p>
+            <h2 style={{ fontSize: "clamp(28px, 6vw, 60px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "0 0 clamp(24px, 4vw, 40px)" }}>
               we are burning<br />through more than<br />just energy.
             </h2>
-            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "420px", margin: "0 0 32px" }}>
+            <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "420px", margin: "0 0 clamp(16px, 3vw, 32px)" }}>
               We believe that the longest journey begins with a single step. Our first step is with the <a href="lama-lama.html" style={{color:"#fff",textDecoration:"underline",textUnderlineOffset:"3px",textDecorationColor:"rgba(255,255,255,0.45)"}}>Lama Lama Community</a> in Cape York, Queensland Australia.
             </p>
-            <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "420px", margin: "0 0 64px" }}>
+            <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: "420px", margin: "0 0 clamp(32px, 5vw, 64px)" }}>
               For remote communities across Australia, we review and build systems that do more with less — cleaner, quieter, and built to last.
             </p>
-            <div style={{ display: "flex", gap: "48px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "clamp(24px, 5vw, 48px)" }}>
               <div>
-                <p style={{ fontSize: "clamp(28px, 3vw, 48px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 4px" }}>2026</p>
-                <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>founded</p>
+                <p style={{ fontSize: "clamp(24px, 5vw, 48px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 4px" }}>2026</p>
+                <p style={{ fontSize: "clamp(11px, 2.5vw, 13px)", color: "rgba(255,255,255,0.4)" }}>founded</p>
               </div>
               <div>
-                <p style={{ fontSize: "clamp(28px, 3vw, 48px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 4px" }}>1</p>
-                <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>countries active</p>
+                <p style={{ fontSize: "clamp(24px, 5vw, 48px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 4px" }}>1</p>
+                <p style={{ fontSize: "clamp(11px, 2.5vw, 13px)", color: "rgba(255,255,255,0.4)" }}>countries active</p>
               </div>
               <div>
-                <p style={{ fontSize: "clamp(28px, 3vw, 48px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 4px" }}>zero</p>
-                <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>compromise on quality</p>
+                <p style={{ fontSize: "clamp(24px, 5vw, 48px)", fontWeight: 500, letterSpacing: "-0.04em", color: "#fff", margin: "0 0 4px" }}>zero</p>
+                <p style={{ fontSize: "clamp(11px, 2.5vw, 13px)", color: "rgba(255,255,255,0.4)" }}>compromise on quality</p>
               </div>
             </div>
           </div>
@@ -412,21 +553,21 @@
         { label: "roadmap", desc: "A phased implementation plan you can take to funders, boards, or government stakeholders." },
       ];
       return (
-        <section id="feasibility" style={{ background: "#0a0a0a", padding: "100px 40px 100px" }}>
-          <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "64px" }}>feasibility</p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start" }}>
+        <section id="feasibility" style={{ background: "#0a0a0a", padding: "clamp(60px, 10vw, 100px) clamp(16px, 5vw, 40px)" }}>
+          <p style={{ fontSize: "clamp(10px, 2.5vw, 12px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "clamp(32px, 5vw, 64px)" }}>feasibility</p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "clamp(40px, 8vw, 80px)", alignItems: "start" }}>
             <div>
-              <h2 style={{ fontSize: "clamp(40px, 5.5vw, 5.5vw)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "0 0 32px" }}>
+              <h2 style={{ fontSize: "clamp(32px, 7vw, 60px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "0 0 clamp(20px, 4vw, 32px)" }}>
                 know before<br />you build
               </h2>
-              <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.5)", lineHeight: 1.7, maxWidth: "380px", margin: "0 0 40px" }}>
+              <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", color: "rgba(255,255,255,0.5)", lineHeight: 1.7, maxWidth: "380px", margin: "0 0 clamp(24px, 4vw, 40px)" }}>
                 Every project we undertake starts with a rigorous feasibility study. No guesswork, no optimistic projections — just the numbers you need to make a confident decision.
               </p>
               <a href="lama-lama-feasibility.html" style={{
                 display: "inline-flex", alignItems: "center", gap: "10px",
                 background: "transparent", border: "1px solid rgba(255,255,255,0.25)",
-                color: "#fff", fontSize: "13px", borderRadius: "999px",
-                padding: "12px 24px", textDecoration: "none", transition: "all 0.2s",
+                color: "#fff", fontSize: "clamp(11px, 2.5vw, 13px)", borderRadius: "999px",
+                padding: "clamp(8px, 2vw, 12px) clamp(16px, 3vw, 24px)", textDecoration: "none", transition: "all 0.2s", flexWrap: "wrap", justifyContent: "center"
               }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
@@ -434,15 +575,15 @@
                 view lama lama feasibility study
               </a>
             </div>
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
               {items.map((item, i) => {
                 const [hov, setHov] = useState(false);
                 return (
                   <div key={item.label}
                     onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-                    style={{ borderTop: i === 0 ? "1px solid rgba(255,255,255,0.12)" : "none", borderBottom: "1px solid rgba(255,255,255,0.12)", padding: "28px 0", display: "grid", gridTemplateColumns: "1fr 2fr", gap: "32px", alignItems: "start", cursor: "default" }}>
-                    <p style={{ fontSize: "15px", fontWeight: 500, color: hov ? "#fff" : "rgba(255,255,255,0.7)", margin: 0, transition: "color 0.2s", letterSpacing: "-0.02em" }}>{item.label}</p>
-                    <p style={{ fontSize: "14px", color: hov ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.35)", margin: 0, lineHeight: 1.6, transition: "color 0.3s" }}>{item.desc}</p>
+                    style={{ borderTop: i === 0 ? "1px solid rgba(255,255,255,0.12)" : "none", borderBottom: "1px solid rgba(255,255,255,0.12)", padding: "clamp(18px, 3vw, 28px) 0", display: "grid", gridTemplateColumns: "1fr", gap: "clamp(12px, 2vw, 32px)", alignItems: "start", cursor: "default" }}>
+                    <p style={{ fontSize: "clamp(13px, 3.5vw, 15px)", fontWeight: 500, color: hov ? "#fff" : "rgba(255,255,255,0.7)", margin: 0, transition: "color 0.2s", letterSpacing: "-0.02em" }}>{item.label}</p>
+                    <p style={{ fontSize: "clamp(12px, 3vw, 14px)", color: hov ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.35)", margin: 0, lineHeight: 1.6, transition: "color 0.3s" }}>{item.desc}</p>
                   </div>
                 );
               })}
@@ -462,31 +603,31 @@
         { name: "Jaywon Lee", role: "STU ID: 14732768", bio: "Internationally-minded engineer who brings a fresh perspective and an infectious energy to the team. With a natural curiosity and an easy-going presence that keeps the mood light, he knows how to balance the moment." },
       ];
       return (
-        <section id="team" style={{ background: "#000", padding: "100px 40px 100px" }}>
-          <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "64px" }}>the team</p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start" }}>
-            <h2 style={{ fontSize: "clamp(40px, 5.5vw, 5.5vw)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0 }}>
+        <section id="team" style={{ background: "#000", padding: "clamp(60px, 10vw, 100px) clamp(16px, 5vw, 40px)" }}>
+          <p style={{ fontSize: "clamp(10px, 2.5vw, 12px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: "clamp(32px, 5vw, 64px)" }}>the team</p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "clamp(40px, 8vw, 80px)", alignItems: "start" }}>
+            <h2 style={{ fontSize: "clamp(32px, 7vw, 60px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0 }}>
               built by people<br />who've done it
             </h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "2px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "clamp(1px, 2vw, 2px)", width: "100%" }}>
               {members.map((m, i) => {
                 const [hov, setHov] = useState(false);
                 return (
                   <div key={m.name}
                     onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-                    style={{ borderTop: `1px solid ${hov ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.1)"}`, paddingTop: "28px", paddingRight: i % 2 === 0 ? "28px" : "0", paddingBottom: "32px", transition: "border-color 0.3s" }}>
+                    style={{ borderTop: `1px solid ${hov ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.1)"}`, paddingTop: "clamp(16px, 3vw, 28px)", paddingRight: "clamp(12px, 3vw, 28px)", paddingBottom: "clamp(20px, 3vw, 32px)", transition: "border-color 0.3s" }}>
                     {m.photo ? (
-                      <div style={{ width: "48px", height: "48px", borderRadius: "50%", marginBottom: "20px", overflow: "hidden", background: "#222" }}>
+                      <div style={{ width: "clamp(40px, 8vw, 48px)", height: "clamp(40px, 8vw, 48px)", borderRadius: "50%", marginBottom: "clamp(12px, 2vw, 20px)", overflow: "hidden", background: "#222" }}>
                         <img src={m.photo} alt={m.name} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: m.photoPos || "center top" }} />
                       </div>
                     ) : (
-                      <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: `oklch(${0.35 + i * 0.05} 0.04 ${200 + i * 40})`, marginBottom: "20px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", fontWeight: 500, color: "rgba(255,255,255,0.7)", letterSpacing: "-0.02em" }}>
+                      <div style={{ width: "clamp(40px, 8vw, 48px)", height: "clamp(40px, 8vw, 48px)", borderRadius: "50%", background: `oklch(${0.35 + i * 0.05} 0.04 ${200 + i * 40})`, marginBottom: "clamp(12px, 2vw, 20px)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "clamp(12px, 2.5vw, 16px)", fontWeight: 500, color: "rgba(255,255,255,0.7)", letterSpacing: "-0.02em" }}>
                         {m.name.split(" ").map(n => n[0]).join("")}
                       </div>
                     )}
-                    <p style={{ fontSize: "16px", fontWeight: 500, color: "#fff", margin: "0 0 4px", letterSpacing: "-0.03em" }}>{m.name}</p>
-                    <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", margin: "0 0 16px", letterSpacing: "0.05em", textTransform: "uppercase" }}>{m.role}</p>
-                    <p style={{ fontSize: "13px", color: hov ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.35)", lineHeight: 1.6, transition: "color 0.3s" }}>{m.bio}</p>
+                    <p style={{ fontSize: "clamp(14px, 3.5vw, 16px)", fontWeight: 500, color: "#fff", margin: "0 0 4px", letterSpacing: "-0.03em" }}>{m.name}</p>
+                    <p style={{ fontSize: "clamp(9px, 2vw, 11px)", color: "rgba(255,255,255,0.4)", margin: "0 0 clamp(8px, 2vw, 16px)", letterSpacing: "0.05em", textTransform: "uppercase" }}>{m.role}</p>
+                    <p style={{ fontSize: "clamp(12px, 3vw, 13px)", color: hov ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.35)", lineHeight: 1.6, transition: "color 0.3s" }}>{m.bio}</p>
                   </div>
                 );
               })}
@@ -498,17 +639,17 @@
 
     function Footer() {
       return (
-        <footer style={{ background: "#0a0a0a", borderTop: "1px solid rgba(255,255,255,0.08)", padding: "64px 40px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: "48px", marginBottom: "64px" }}>
+        <footer style={{ background: "#0a0a0a", borderTop: "1px solid rgba(255,255,255,0.08)", padding: "clamp(32px, 6vw, 64px) clamp(16px, 5vw, 40px)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "clamp(24px, 5vw, 48px)", marginBottom: "clamp(32px, 5vw, 64px)" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
                 <LogoSVG />
-                <span style={{ color: "#fff", fontSize: "14px", fontWeight: 400, letterSpacing: "-0.02em" }}>E-Overflow</span>
+                <span style={{ color: "#fff", fontSize: "clamp(12px, 3vw, 14px)", fontWeight: 400, letterSpacing: "-0.02em" }}>E-Overflow</span>
               </div>
-              <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.4)", lineHeight: 1.7, maxWidth: "280px", margin: "0 0 28px" }}>
+              <p style={{ fontSize: "clamp(12px, 2.5vw, 14px)", color: "rgba(255,255,255,0.4)", lineHeight: 1.7, maxWidth: "280px", margin: "0 0 clamp(16px, 3vw, 28px)" }}>
                 Smarter energy systems implementations for a world that can't afford to waste.
               </p>
-              <a href="contact.html" style={{ display: "inline-block", background: "#fff", color: "#000", fontSize: "13px", borderRadius: "999px", padding: "10px 20px", textDecoration: "none" }}>get in touch →</a>
+              <a href="contact.html" style={{ display: "inline-block", background: "#fff", color: "#000", fontSize: "clamp(11px, 2.5vw, 13px)", borderRadius: "999px", padding: "clamp(8px, 1.5vw, 10px) clamp(12px, 3vw, 20px)", textDecoration: "none" }}>get in touch →</a>
             </div>
             {[
               { heading: "company", links: [{l:"strategy",h:"#strategy"},{l:"mission",h:"#mission"},{l:"feasibility",h:"#feasibility"},{l:"team",h:"#team"}] },
@@ -516,19 +657,19 @@
               { heading: "location", links: [{l:"Sydney, AU",h:null}] },
             ].map(col => (
               <div key={col.heading}>
-                <p style={{ fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 20px" }}>{col.heading}</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <p style={{ fontSize: "clamp(9px, 2vw, 11px)", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 clamp(12px, 2vw, 20px)" }}>{col.heading}</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "clamp(8px, 1.5vw, 12px)" }}>
                   {col.links.map(({l,h}) => h
-                    ? <a key={l} href={h} style={{ fontSize: "14px", color: "rgba(255,255,255,0.55)", textDecoration: "none" }}>{l}</a>
-                    : <span key={l} style={{ fontSize: "14px", color: "rgba(255,255,255,0.3)" }}>{l}</span>
+                    ? <a key={l} href={h} style={{ fontSize: "clamp(12px, 2.5vw, 14px)", color: "rgba(255,255,255,0.55)", textDecoration: "none" }}>{l}</a>
+                    : <span key={l} style={{ fontSize: "clamp(12px, 2.5vw, 14px)", color: "rgba(255,255,255,0.3)" }}>{l}</span>
                   )}
                 </div>
               </div>
             ))}
           </div>
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "32px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.25)", margin: 0 }}>© 2026 E-Overflow Ltd. All rights reserved.</p>
-            <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.25)", margin: 0 }}>designed to last</p>
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "clamp(16px, 3vw, 32px)", display: "grid", gridTemplateColumns: "1fr", gap: "clamp(8px, 2vw, 16px)", alignItems: "center" }}>
+            <p style={{ fontSize: "clamp(10px, 2vw, 12px)", color: "rgba(255,255,255,0.25)", margin: 0, textAlign: "center" }}>© 2026 E-Overflow Ltd. All rights reserved.</p>
+            <p style={{ fontSize: "clamp(10px, 2vw, 12px)", color: "rgba(255,255,255,0.25)", margin: 0, textAlign: "center" }}>designed to last</p>
           </div>
         </footer>
       );
@@ -593,24 +734,24 @@
         { k: "04", h: "next", b: "Single-dwelling Diverter pilot at Lama Lama, full seasonal monitoring, then community-wide deployment with Yintjingga oversight." },
       ];
       return (
-        <section id="summary" style={{ background: "#000", padding: "120px 40px 100px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        <section id="summary" style={{ background: "#000", padding: "clamp(60px, 10vw, 120px) clamp(16px, 5vw, 40px) clamp(50px, 8vw, 100px)", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
           <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "56px", flexWrap: "wrap", gap: "24px" }}>
-              <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", margin: 0 }}>EXECUTIVE SUMMARY · for Yintjingga Aboriginal Corporation</p>
-              <a href="executive-summary.html" style={{ fontSize: "13px", color: "rgba(255,255,255,0.65)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.25)", paddingBottom: "2px" }}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "clamp(16px, 3vw, 24px)", marginBottom: "clamp(32px, 5vw, 56px)", flexWrap: "wrap" }}>
+              <p style={{ fontSize: "clamp(10px, 2.5vw, 12px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", margin: 0 }}>EXECUTIVE SUMMARY · for Yintjingga Aboriginal Corporation</p>
+              <a href="executive-summary.html" style={{ fontSize: "clamp(11px, 2.5vw, 13px)", color: "rgba(255,255,255,0.65)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.25)", paddingBottom: "2px", width: "fit-content" }}
                 onMouseEnter={e => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderBottomColor = "#fff"; }}
                 onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.65)"; e.currentTarget.style.borderBottomColor = "rgba(255,255,255,0.25)"; }}
               >read the full executive summary →</a>
             </div>
-            <h2 style={{ fontSize: "clamp(40px, 5.5vw, 5.5vw)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "0 0 64px", maxWidth: "1080px" }}>
+            <h2 style={{ fontSize: "clamp(32px, 7vw, 60px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: "0 0 clamp(32px, 5vw, 64px)", maxWidth: "1080px" }}>
               the project,<br /><span style={{ color: "rgba(255,255,255,0.4)" }}>at a glance.</span>
             </h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0", borderTop: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "clamp(0px, 1vw, 2px)", borderTop: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
               {beats.map((b, i) => (
-                <div key={b.k} style={{ padding: "32px 24px 36px", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.08)" : "none" }}>
-                  <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.35)", letterSpacing: "0.12em" }}>{b.k}</span>
-                  <p style={{ fontSize: "20px", fontWeight: 500, color: "#fff", margin: "20px 0 12px", letterSpacing: "-0.025em" }}>{b.h}</p>
-                  <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", lineHeight: 1.7, margin: 0 }}>{b.b}</p>
+                <div key={b.k} style={{ padding: "clamp(20px, 4vw, 32px) clamp(12px, 3vw, 24px)", borderRight: i < 3 && beats.length > 2 ? "1px solid rgba(255,255,255,0.08)" : "none" }}>
+                  <span style={{ fontSize: "clamp(9px, 2.5vw, 11px)", color: "rgba(255,255,255,0.35)", letterSpacing: "0.12em" }}>{b.k}</span>
+                  <p style={{ fontSize: "clamp(16px, 4vw, 20px)", fontWeight: 500, color: "#fff", margin: "clamp(12px, 2.5vw, 20px) 0 8px", letterSpacing: "-0.025em" }}>{b.h}</p>
+                  <p style={{ fontSize: "clamp(12px, 3vw, 14px)", color: "rgba(255,255,255,0.5)", lineHeight: 1.6, margin: 0 }}>{b.b}</p>
                 </div>
               ))}
             </div>
@@ -632,30 +773,30 @@
         { num: "12", title: "References", href: "references.html", note: "Bibliography" },
       ];
       return (
-        <section id="report" style={{ background: "#0a0a0a", padding: "120px 40px 80px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        <section id="report" style={{ background: "#0a0a0a", padding: "clamp(60px, 10vw, 120px) clamp(16px, 5vw, 40px) clamp(40px, 8vw, 80px)", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
           <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-            <p style={{ fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", margin: "0 0 56px" }}>the full report</p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start", marginBottom: "72px" }}>
-              <h2 style={{ fontSize: "clamp(40px, 5.5vw, 5.5vw)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0 }}>
+            <p style={{ fontSize: "clamp(10px, 2.5vw, 12px)", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", margin: "0 0 clamp(32px, 5vw, 56px)" }}>the full report</p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "clamp(40px, 8vw, 80px)", alignItems: "start", marginBottom: "clamp(40px, 8vw, 72px)" }}>
+              <h2 style={{ fontSize: "clamp(32px, 7vw, 60px)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.95, color: "#fff", margin: 0 }}>
                 everything we<br />wrote down.
               </h2>
-              <p style={{ fontSize: "17px", color: "rgba(255,255,255,0.65)", lineHeight: 1.7, margin: 0, paddingTop: "12px" }}>
+              <p style={{ fontSize: "clamp(14px, 3.5vw, 17px)", color: "rgba(255,255,255,0.65)", lineHeight: 1.7, margin: 0, paddingTop: "12px" }}>
                 The technology report that accompanies this design. Twelve sections covering the problem, the solution, our process, the trade-offs, and the path to deployment for the Lama Lama community.
               </p>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0", borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "clamp(0px, 1vw, 2px)", borderTop: "1px solid rgba(255,255,255,0.12)" }}>
               {reportLinks.map((r, i) => {
                 const [hov, setHov] = useState(false);
                 return (
                   <a key={r.num} href={r.href}
                     onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-                    style={{ borderRight: (i + 1) % 3 !== 0 ? "1px solid rgba(255,255,255,0.06)" : "none", borderBottom: "1px solid rgba(255,255,255,0.08)", padding: "28px 28px 32px", textDecoration: "none", color: "#fff", transition: "background 0.2s", background: hov ? "rgba(255,255,255,0.025)" : "transparent", display: "block" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "16px" }}>
-                      <span style={{ fontSize: "11px", color: hov ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)", letterSpacing: "0.12em", transition: "color 0.3s" }}>{r.num}</span>
-                      <span style={{ fontSize: "16px", color: hov ? "#fff" : "rgba(255,255,255,0.3)", transition: "color 0.2s, transform 0.2s", transform: hov ? "translateX(4px)" : "translateX(0)" }}>→</span>
+                    style={{ borderRight: (i + 1) % 3 !== 0 ? "1px solid rgba(255,255,255,0.06)" : "none", borderBottom: "1px solid rgba(255,255,255,0.08)", padding: "clamp(16px, 3vw, 28px)", textDecoration: "none", color: "#fff", transition: "background 0.2s", background: hov ? "rgba(255,255,255,0.025)" : "transparent", display: "block" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "clamp(8px, 2vw, 16px)" }}>
+                      <span style={{ fontSize: "clamp(9px, 2.5vw, 11px)", color: hov ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)", letterSpacing: "0.12em", transition: "color 0.3s" }}>{r.num}</span>
+                      <span style={{ fontSize: "clamp(12px, 3vw, 16px)", color: hov ? "#fff" : "rgba(255,255,255,0.3)", transition: "color 0.2s, transform 0.2s", transform: hov ? "translateX(4px)" : "translateX(0)" }}>→</span>
                     </div>
-                    <p style={{ fontSize: "22px", fontWeight: 500, letterSpacing: "-0.03em", color: "#fff", margin: "0 0 12px", lineHeight: 1.05, transform: hov ? "translateX(6px)" : "translateX(0)", transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)" }}>{r.title}</p>
-                    <p style={{ fontSize: "13px", color: hov ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.55, transition: "color 0.3s" }}>{r.note}</p>
+                    <p style={{ fontSize: "clamp(18px, 4.5vw, 22px)", fontWeight: 500, letterSpacing: "-0.03em", color: "#fff", margin: "0 0 clamp(6px, 1.5vw, 12px)", lineHeight: 1.05, transform: hov ? "translateX(6px)" : "translateX(0)", transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)" }}>{r.title}</p>
+                    <p style={{ fontSize: "clamp(11px, 2.5vw, 13px)", color: hov ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.55, transition: "color 0.3s" }}>{r.note}</p>
                   </a>
                 );
               })}
