@@ -25,6 +25,19 @@
     }
     .hero-title { letter-spacing: -0.04em; line-height: 0.95; }
     ::placeholder { color: rgba(255,255,255,0.25); }
+
+    img {
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    video {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
     @keyframes switchFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
     @keyframes switchShadow { 0%,100%{transform:translateX(-50%) scale(1);opacity:.45} 50%{transform:translateX(-50%) scale(.7);opacity:.2} }
     @keyframes scrollDot { 0%{transform:translateY(0);opacity:0} 30%{opacity:1} 80%{opacity:1} 100%{transform:translateY(10px);opacity:0} }
@@ -355,33 +368,19 @@
     }
 
     function Hero() {
-      const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
       return (
         <section className="relative h-screen w-full overflow-hidden bg-black">
           <video className="absolute inset-0 w-full h-full object-cover" autoPlay loop muted playsInline src="uploads/8295518-hd_1920_1080_30fps.mp4"></video>
           <Navbar />
           <div className="relative h-full w-full">
-            {isMobileView ? (
-              <>
-                <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(28px, 12vw, 60px)", left: "clamp(1rem, 3vw, 2rem)", top: "25%", lineHeight: 0.95, letterSpacing: "-0.04em", textAlign: "left", maxWidth: "85%" }}>Don't Waste Energy</h1>
-                <p className="absolute text-white/90 leading-snug" style={{ left: "clamp(1rem, 3vw, 2rem)", top: "50%", maxWidth: "200px", fontSize: "clamp(13px, 3vw, 15px)" }}>divert to essentials</p>
-              </>
-            ) : (
-              <>
-                <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(60px, 14vw, 14vw)", left: "1rem", top: "18%", lineHeight: 0.95, letterSpacing: "-0.04em", textAlign: "left" }}>Don't</h1>
-                <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(60px, 13vw, 13vw)", right: "1rem", top: "38%", lineHeight: 0.95, letterSpacing: "-0.04em" }}>Waste</h1>
-                <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(60px, 13vw, 13vw)", left: "18%", top: "58%", lineHeight: 0.95, letterSpacing: "-0.04em" }}>Energy</h1>
-                <p className="absolute text-white/90 leading-snug" style={{ left: "1.5rem", top: "46%", maxWidth: "240px", fontSize: "15px" }}>divert to essentials</p>
-              </>
-            )}
-            {!isMobileView && (
-              <>
-                <StatBlock position="right-6 md:right-24 top-[14%]" number="70% energy reduction" label="up to" labelAbove={true} dividerRotate={20} dividerSide="left" alignRight={true} />
-                <StatBlock position="left-6 md:left-20 bottom-32 md:bottom-40" number="+reallocate" label="" dividerRotate={-20} dividerSide="right" alignRight={false} />
-                <StatBlock position="right-6 md:right-20 bottom-32 md:bottom-36" number="+decarbonise" label="reuse > redo" dividerRotate={-20} dividerSide="left" alignRight={true} />
-              </>
-            )}
+            <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(40px, 14vw, 18vw)", left: "clamp(1rem, 4vw, 1.5rem)", top: "clamp(12%, 18%, 22%)", lineHeight: 0.95, letterSpacing: "-0.04em", textAlign: "left", maxWidth: "90%" }}>Don't</h1>
+            <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(40px, 13vw, 18vw)", right: "clamp(1rem, 3vw, 1.5rem)", top: "clamp(28%, 38%, 44%)", lineHeight: 0.95, letterSpacing: "-0.04em", textAlign: "right", maxWidth: "90%" }}>Waste</h1>
+            <h1 className="hero-title absolute text-white font-medium" style={{ fontSize: "clamp(40px, 13vw, 18vw)", left: "clamp(8%, 18%, 20%)", top: "clamp(48%, 58%, 66%)", lineHeight: 0.95, letterSpacing: "-0.04em", textAlign: "left", maxWidth: "90%" }}>Energy</h1>
+            <p className="absolute text-white/90 leading-snug" style={{ left: "clamp(1rem, 4vw, 1.5rem)", top: "clamp(40%, 46%, 52%)", maxWidth: "clamp(180px, 25vw, 240px)", fontSize: "clamp(13px, 3.5vw, 15px)" }}>divert to essentials</p>
+            <StatBlock position="right-6 md:right-24 top-[14%]" number="70% energy reduction" label="up to" labelAbove={true} dividerRotate={20} dividerSide="left" alignRight={true} />
             <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent to-black"></div>
+            <StatBlock position="left-6 md:left-20 bottom-32 md:bottom-40" number="+reallocate" label="" dividerRotate={-20} dividerSide="right" alignRight={false} />
+            <StatBlock position="right-6 md:right-20 bottom-32 md:bottom-36" number="+decarbonise" label="reuse > redo" dividerRotate={-20} dividerSide="left" alignRight={true} />
 
             {/* Scroll indicator */}
             <div style={{ position: "absolute", bottom: "clamp(16px, 3vw, 32px)", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", animation: "scrollBob 2.4s ease-in-out infinite", pointerEvents: "none" }}>
