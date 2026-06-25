@@ -165,7 +165,7 @@
             </button>
 
             {mobileMenuOpen && (
-              <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "rgba(0,0,0,0.98)", borderTop: "1px solid rgba(255,255,255,0.1)", padding: "clamp(12px, 3vw, 16px)", maxHeight: "calc(100vh - 60px)", overflowY: "auto", zIndex: 40 }}>
+              <div style={{ position: "fixed", top: "60px", left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.95)", backdropFilter: "blur(8px)", borderTop: "1px solid rgba(255,255,255,0.1)", padding: "clamp(12px, 3vw, 16px)", overflowY: "auto", zIndex: 40 }}>
                 {navItems.map(({ label, href, dropdown, strategyDropdown, feasibilityDropdown, reportDropdown }) => {
                   const handleMobileNavClick = () => setMobileMenuOpen(false);
                   if (strategyDropdown) return (
